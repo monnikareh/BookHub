@@ -1,3 +1,4 @@
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer;
@@ -11,12 +12,10 @@ public class BookHubDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        // var dbPath = Path.Join(Environment.GetFolderPath(folder), "seminar02.db");
-
+        var pgpass = ConfigurationManager.AppSettings.Get("pgpass");
+        Console.WriteLine($"PG password: {pgpass}");
         optionsBuilder
-            .UseNpgsql(
-                "Host=10.16.63.135;Database=pv179;Username=pv179;Password=wi6wIN6KhvuGGkq0DWM6YDiU0qi9PAWpTpHGzCqBRQjKzK2rO6PKv3KhOZQN6ian");
+            .UseNpgsql($"Host=10.16.63.135;Database=pv179;Username=pv179;Password={pgpass}");
     }
 
     // https://docs.microsoft.com/en-us/ef/core/modeling/
