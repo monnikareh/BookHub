@@ -95,6 +95,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("GenreId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Price")
                         .HasColumnType("integer");
 

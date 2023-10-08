@@ -5,7 +5,7 @@ namespace DataAccessLayer.Entities;
 
 public class Book : BaseEntity
 {
-    
+    public String Name { get; set; }
     public int GenreId { get; set; }
     [ForeignKey("GenreId")]
     public Genre Genre { get; set; } = null!;
