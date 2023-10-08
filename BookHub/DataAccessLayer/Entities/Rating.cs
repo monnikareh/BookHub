@@ -2,17 +2,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccessLayer.Entities;
 
-public class Ratings
+public class Rating
 {
-    [ForeignKey("UserId")]
     public int UserId { get; set; }
+    [ForeignKey("UserId")] 
     public User User { get; set; }
     
-    [ForeignKey("BookId")]
     public int BookId { get; set; }
+    [ForeignKey("BookId")]
     public Book Book { get; set; }
     
-    public int Rating { get; set; }
+    public int Value { get; set; }
     
     public string? Comment { get; set; }
 }

@@ -6,16 +6,16 @@ namespace DataAccessLayer.Entities;
 public class Book : BaseEntity
 {
     
-    [ForeignKey("GenreId")]
     public int GenreId { get; set; }
+    [ForeignKey("GenreId")]
     public Genre Genre { get; set; }
     
-    [ForeignKey("AuthorId")]
     public int AuthorId { get; set; }
+    [ForeignKey("AuthorId")]
     public Author Author { get; set; }
     
-    [ForeignKey("PublisherId")]
     public int PublisherId{ get; set; }
+    [ForeignKey("PublisherId")] 
     public Publisher Publisher { get; set; }
     
     public int Raring { get; set; }

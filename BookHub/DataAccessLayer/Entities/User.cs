@@ -9,7 +9,7 @@ public class User
 
     public bool IsAdmin { get; set; }
 
-    // public ICollection<Book> Wishlist { get; set; }
+    // public IEnumerable<Book> Wishlist { get; set; }
     //
     // public Dictionary<Book, int> Ratings { get; set; }
 

@@ -1,9 +1,21 @@
+using System.Security.Cryptography.X509Certificates;
+using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccessLayer;
 
 public class BookHubDbContext : DbContext
 {
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<Book> Books { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<Inventory> Inventories { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<Publisher> Publishers { get; set; }
+    public DbSet<Rating> Ratings { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Wishlist> Wishlists { get; set; }
+
     public BookHubDbContext()
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
