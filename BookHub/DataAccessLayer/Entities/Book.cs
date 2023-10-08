@@ -8,21 +8,18 @@ public class Book : BaseEntity
     
     public int GenreId { get; set; }
     [ForeignKey("GenreId")]
-    public Genre Genre { get; set; }
-    
-    public int AuthorId { get; set; }
-    [ForeignKey("AuthorId")]
-    public Author Author { get; set; }
+    public Genre Genre { get; set; } = null!;
     
     public int PublisherId{ get; set; }
     [ForeignKey("PublisherId")] 
-    public Publisher Publisher { get; set; }
-    
-    public int Rating { get; set; }
+    public Publisher Publisher { get; set; } = null!;
+
+    public ICollection<Rating> Ratings { get; } = new List<Rating>();
         
     public int StockInStorage { get; set; }
-    
     public int Price { get; set; }
-
     
+    public ICollection<Order> Orders { get; } = new List<Order>();
+    public ICollection<Author> Authors { get; } = new List<Author>();
+    public ICollection<User> Users { get; } = new List<User>();
 }
