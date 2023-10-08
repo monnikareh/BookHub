@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccessLayer.Entities;
 
-public class Rating
+public class Rating : BaseEntity
 {
     public int UserId { get; set; }
     [ForeignKey("UserId")] 

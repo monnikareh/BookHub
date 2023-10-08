@@ -1,6 +1,6 @@
 namespace DataAccessLayer.Entities;
 
-public class User
+public class User : BaseEntity
 {
     // max length
     public string Name { get; set; }
