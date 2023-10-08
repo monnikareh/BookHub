@@ -16,7 +16,7 @@ public class BookHubDbContext : DbContext
 
         optionsBuilder
             .UseNpgsql(
-                "Host=10.16.63.135;Database=seminar02;Username=pv179;Password=wi6wIN6KhvuGGkq0DWM6YDiU0qi9PAWpTpHGzCqBRQjKzK2rO6PKv3KhOZQN6ian");
+                "Host=10.16.63.135;Database=pv179;Username=pv179;Password=wi6wIN6KhvuGGkq0DWM6YDiU0qi9PAWpTpHGzCqBRQjKzK2rO6PKv3KhOZQN6ian");
     }
 
     // https://docs.microsoft.com/en-us/ef/core/modeling/
