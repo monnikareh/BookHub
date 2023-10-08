@@ -11,9 +11,6 @@ public class Order : BaseEntity
     public IEnumerable<Book> Books { get; set; }
     
     public int TotalPrice { get; set; }
-    // public int BookId { get; set; }
-    // [ForeignKey("BookId")]
-    // public Book Book { get; set; }
-    
+
     public DateTime Date { get; set; }
 }

@@ -18,7 +18,11 @@ public class Book : BaseEntity
     [ForeignKey("PublisherId")] 
     public Publisher Publisher { get; set; }
     
-    public int Raring { get; set; }
+    public int Rating { get; set; }
+        
+    public int StockInStorage { get; set; }
+    
+    public int Price { get; set; }
 
     
 }

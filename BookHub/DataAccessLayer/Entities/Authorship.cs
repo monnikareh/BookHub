@@ -2,15 +2,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccessLayer.Entities;
 
-public class Inventory : BaseEntity
+public class Authorship
 {
-        
+    public int AuthorId { get; set; }
+    [ForeignKey("AuthorId")]
+    public Author Author { get; set; }
+    
     public int BookId { get; set; }
     [ForeignKey("BookId")]
     public Book Book { get; set; }
-    
-    public int CapacityInStorage { get; set; }
-    
-    public int Price { get; set; }
-
 }

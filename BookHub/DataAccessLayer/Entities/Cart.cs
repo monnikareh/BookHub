@@ -2,14 +2,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccessLayer.Entities;
 
-public class Wishlist : BaseEntity
+public class Cart
 {
-    public int UserId { get; set; }
-    [ForeignKey("UserId")]
-    public User User { get; set; }
+    public int OrderId { get; set; }
+    [ForeignKey("OrderId")]
+    public Order Order { get; set; }
     
     public int BookId { get; set; }
     [ForeignKey("BookId")]
     public Book Book { get; set; }
-    
 }
