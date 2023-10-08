@@ -23,7 +23,6 @@ public class BookHubDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var pgpass = ConfigurationManager.AppSettings.Get("pgpass");
-        Console.WriteLine($"PG password: {pgpass}");
         optionsBuilder
             .UseNpgsql($"Host=10.16.63.135;Database=pv179;Username=pv179;Password={pgpass}");
     }
