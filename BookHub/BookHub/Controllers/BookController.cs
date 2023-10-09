@@ -71,7 +71,7 @@ namespace BookHub.Controllers
             return book;
         }
 
-        
+
         [HttpGet("GetByGenreName/{genreName}")]
         public async Task<ActionResult<IEnumerable<Book>>> GetBookByGenreName(string genreName)
         {
@@ -95,8 +95,8 @@ namespace BookHub.Controllers
 
             return books;
         }
-        
-        
+
+
         [HttpGet("GetByPublisherName/{publisherName}")]
         public async Task<ActionResult<IEnumerable<Book>>> GetBookByPublisherName(string publisherName)
         {
@@ -120,7 +120,7 @@ namespace BookHub.Controllers
 
             return books;
         }
-        
+
         [HttpGet("GetByAuthorName/{authorName}")]
         public async Task<ActionResult<IEnumerable<Book>>> GetBookByAuthorName(string authorName)
         {
