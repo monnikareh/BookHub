@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookHub.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookHub.Controllers
 {
@@ -46,7 +48,7 @@ namespace BookHub.Controllers
 
             if (book == null)
             {
-                return NotFound();
+                return NotFound($"Book with ID:'{id}' not found");
             }
 
             return book;
@@ -65,7 +67,7 @@ namespace BookHub.Controllers
 
             if (book == null)
             {
-                return NotFound();
+                return NotFound($"Book '{name}' not found");
             }
 
             return book;
@@ -83,14 +85,14 @@ namespace BookHub.Controllers
             var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == genreName);
             if (genre == null)
             {
-                return NotFound();
+                return NotFound($"Genre '{genreName}' not found found");
             }
 
             var books = await _context.Books.Where(b => b.GenreId == genre.Id).ToListAsync();
 
             if (books == null)
             {
-                return NotFound();
+                return NotFound($"No books in genre '{genreName}' found");
             }
 
             return books;
@@ -108,14 +110,14 @@ namespace BookHub.Controllers
             var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == publisherName);
             if (publisher == null)
             {
-                return NotFound();
+                return NotFound($"Publisher '{publisherName}' not found");
             }
 
             var books = await _context.Books.Where(b => b.PublisherId == publisher.Id).ToListAsync();
 
             if (books == null)
             {
-                return NotFound();
+                return NotFound($"No books published by '{publisherName}' found");
             }
 
             return books;
@@ -135,60 +137,76 @@ namespace BookHub.Controllers
                 .FirstOrDefaultAsync(a => a.Name == authorName);
             if (books == null)
             {
-                return NotFound();
+                return NotFound($"No books written by '{authorName}' found");
             }
 
             return books.Books.ToList();
         }
 
-        // PUT: api/Book/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, Book book)
-        {
-            if (id != book.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(book).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BookExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Book
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook(Book book)
+        public async Task<ActionResult<Book>> PostBook(BookModel bookModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+
             if (_context.Books == null)
             {
                 return Problem("Entity set 'BookHubDbContext.Books'  is null.");
             }
 
+            if (bookModel.Authors.IsNullOrEmpty())
+            {
+                return Problem("Field Authors is null or empty");
+            }
+
+            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookModel.GenreName);
+            if (genre == null)
+            {
+                return NotFound($"Genre '{bookModel.GenreName}' could not be found");
+            }
+
+            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookModel.PublisherName);
+            if (publisher == null)
+            {
+                return NotFound($"Publisher '{bookModel.PublisherName}' could not be found");
+            }
+
+            var authors = new List<Author>();
+            foreach (var authorModel in bookModel.Authors)
+            {
+                var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == authorModel.Name);
+                if (author == null)
+                {
+                    return NotFound($"Author '{authorModel.Name}' could not be found");
+                }
+
+                authors.Add(author);
+            }
+
+            var book = new Book
+            {
+                Name = bookModel.Name,
+                Authors = authors,
+                Genre = genre,
+                GenreId = genre.Id,
+                Publisher = publisher,
+                PublisherId = publisher.Id,
+                Price = bookModel.Price,
+                StockInStorage = bookModel.StockInStorage
+            };
+            foreach (var author in authors)
+            {
+                author.Books.Add(book);
+            }
+            publisher.Books.Add(book);
+            genre.Books.Add(book);
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetBookById", new { id = book.Id }, book);
         }
 
-        // DELETE: api/Book/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {

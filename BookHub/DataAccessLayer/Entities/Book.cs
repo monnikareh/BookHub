@@ -20,6 +20,6 @@ public class Book : BaseEntity
     public int Price { get; set; }
     
     public ICollection<Order> Orders { get; } = new List<Order>();
-    public ICollection<Author> Authors { get; } = new List<Author>();
+    public ICollection<Author> Authors { get; set; } = new List<Author>();
     public ICollection<User> Users { get; } = new List<User>();
 }
