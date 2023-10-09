@@ -34,7 +34,7 @@ namespace BookHub.Controllers
         }
 
         // GET: api/Book/5
-        [HttpGet("/GetById/{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<ActionResult<Book>> GetBookById(int id)
         {
             if (_context.Books == null)
@@ -53,7 +53,7 @@ namespace BookHub.Controllers
         }
 
         // GET: api/Book/name
-        [HttpGet("/GetByName/{name}")]
+        [HttpGet("GetByName/{name}")]
         public async Task<ActionResult<Book>> GetBookByName(string name)
         {
             if (_context.Books == null)
@@ -72,7 +72,7 @@ namespace BookHub.Controllers
         }
 
         
-        [HttpGet("/GetByGenreName/{genreName}")]
+        [HttpGet("GetByGenreName/{genreName}")]
         public async Task<ActionResult<IEnumerable<Book>>> GetBookByGenreName(string genreName)
         {
             if (_context.Books == null)
@@ -97,7 +97,7 @@ namespace BookHub.Controllers
         }
         
         
-        [HttpGet("/GetByPublisherName/{publisherName}")]
+        [HttpGet("GetByPublisherName/{publisherName}")]
         public async Task<ActionResult<IEnumerable<Book>>> GetBookByPublisherName(string publisherName)
         {
             if (_context.Books == null)
@@ -121,7 +121,7 @@ namespace BookHub.Controllers
             return books;
         }
         
-        [HttpGet("/GetByAuthorName/{authorName}")]
+        [HttpGet("GetByAuthorName/{authorName}")]
         public async Task<ActionResult<IEnumerable<Book>>> GetBookByAuthorName(string authorName)
         {
             if (_context.Books == null)
