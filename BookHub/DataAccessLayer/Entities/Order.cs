@@ -6,12 +6,12 @@ public class Order : BaseEntity
 {
     public int UserId { get; set; }
     [ForeignKey("UserId")]
-    public User User { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 
     public int TotalPrice { get; set; }
 
     public DateTime Date { get; set; }
     
-    public ICollection<Book> Books { get; } = new List<Book>();
+    public virtual ICollection<Book> Books { get; } = new List<Book>();
     
 }

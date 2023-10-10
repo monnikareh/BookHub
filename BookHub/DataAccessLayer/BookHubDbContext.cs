@@ -2,6 +2,8 @@ using System.Security.Cryptography.X509Certificates;
 using DataAccessLayer.Entities;
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using NuGet.Protocol;
 
 namespace DataAccessLayer;
 
@@ -22,7 +24,15 @@ public class BookHubDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings.Get("ConnectionString"));
+        optionsBuilder
+            .UseLoggerFactory(LoggerFactory.Create(
+                builder =>
+                {
+                    builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name
+                                                           && level == LogLevel.Information).AddConsole();
+                })).EnableSensitiveDataLogging()
+            .UseLazyLoadingProxies()
+            .UseNpgsql(ConfigurationManager.AppSettings.Get("ConnectionString"));
     }
 
     // https://docs.microsoft.com/en-us/ef/core/modeling/

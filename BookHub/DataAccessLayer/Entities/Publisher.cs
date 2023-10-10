@@ -4,5 +4,5 @@ public class Publisher : BaseEntity
 {
     public string Name { get; set; }
 
-    public ICollection<Book> Books { get; } = new List<Book>();
+    public virtual ICollection<Book> Books { get; } = new List<Book>();
 }

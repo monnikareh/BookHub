@@ -9,7 +9,7 @@ public class User : BaseEntity
 
     public bool IsAdmin { get; set; }
     
-    public ICollection<Order> Orders { get; } = new List<Order>();
-    public ICollection<Book> Books { get; } = new List<Book>();
+    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+    public virtual ICollection<Book> Books { get; } = new List<Book>();
     
 }
