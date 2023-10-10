@@ -22,9 +22,7 @@ public class BookHubDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var pgpass = ConfigurationManager.AppSettings.Get("pgpass");
-        optionsBuilder
-            .UseNpgsql($"Host=10.16.63.135;Database=pv179;Username=pv179;Password={pgpass}");
+        optionsBuilder.UseNpgsql(ConfigurationManager.AppSettings.Get("ConnectionString"));
     }
 
     // https://docs.microsoft.com/en-us/ef/core/modeling/
