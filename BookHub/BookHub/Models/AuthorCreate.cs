@@ -1,6 +1,6 @@
 namespace BookHub.Models;
 
-public class AuthorModel
+public class AuthorCreate
 {
     public string Name { get; set; }
 }

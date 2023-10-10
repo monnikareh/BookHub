@@ -25,7 +25,7 @@ namespace BookHub.Controllers
 
         // GET: api/Book
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookModel>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks()
         {
             if (_context.Books == null)
             {
@@ -43,7 +43,7 @@ namespace BookHub.Controllers
 
         // GET: api/Book/5
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<BookModel>> GetBookById(int id)
+        public async Task<ActionResult<BookDetail>> GetBookById(int id)
         {
             if (_context.Books == null)
             {
@@ -67,7 +67,7 @@ namespace BookHub.Controllers
 
         // GET: api/Book/name
         [HttpGet("GetByName/{name}")]
-        public async Task<ActionResult<BookModel>> GetBookByName(string name)
+        public async Task<ActionResult<BookDetail>> GetBookByName(string name)
         {
             if (_context.Books == null)
             {
@@ -91,7 +91,7 @@ namespace BookHub.Controllers
 
 
         [HttpGet("GetByGenreName/{genreName}")]
-        public async Task<ActionResult<IEnumerable<BookModel>>> GetBookByGenreName(string genreName)
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBookByGenreName(string genreName)
         {
             if (_context.Books == null)
             {
@@ -122,7 +122,7 @@ namespace BookHub.Controllers
 
 
         [HttpGet("GetByPublisherName/{publisherName}")]
-        public async Task<ActionResult<IEnumerable<BookModel>>> GetBookByPublisherName(string publisherName)
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBookByPublisherName(string publisherName)
         {
             if (_context.Books == null)
             {
@@ -152,7 +152,7 @@ namespace BookHub.Controllers
         }
 
         [HttpGet("GetByAuthorName/{authorName}")]
-        public async Task<ActionResult<IEnumerable<BookModel>>> GetBookByAuthorName(string authorName)
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBookByAuthorName(string authorName)
         {
             if (_context.Books == null)
             {
@@ -179,7 +179,7 @@ namespace BookHub.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BookModel>> PostBook(BookModel bookModel)
+        public async Task<ActionResult<BookDetail>> PostBook(BookCreate bookCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -191,25 +191,25 @@ namespace BookHub.Controllers
                 return Problem("Entity set 'BookHubDbContext.Books'  is null.");
             }
 
-            if (bookModel.Authors.IsNullOrEmpty())
+            if (bookCreate.Authors.IsNullOrEmpty())
             {
                 return Problem("Field Authors is null or empty");
             }
 
-            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookModel.GenreName);
+            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.GenreName);
             if (genre == null)
             {
-                return NotFound($"Genre '{bookModel.GenreName}' could not be found");
+                return NotFound($"Genre '{bookCreate.GenreName}' could not be found");
             }
 
-            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookModel.PublisherName);
+            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.PublisherName);
             if (publisher == null)
             {
-                return NotFound($"Publisher '{bookModel.PublisherName}' could not be found");
+                return NotFound($"Publisher '{bookCreate.PublisherName}' could not be found");
             }
 
             var authors = new List<Author>();
-            foreach (var authorModel in bookModel.Authors)
+            foreach (var authorModel in bookCreate.Authors)
             {
                 var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == authorModel.Name);
                 if (author == null)
@@ -222,14 +222,14 @@ namespace BookHub.Controllers
 
             var book = new Book
             {
-                Name = bookModel.Name,
+                Name = bookCreate.Name,
                 Authors = authors,
                 Genre = genre,
                 GenreId = genre.Id,
                 Publisher = publisher,
                 PublisherId = publisher.Id,
-                Price = bookModel.Price,
-                StockInStorage = bookModel.StockInStorage
+                Price = bookCreate.Price,
+                StockInStorage = bookCreate.StockInStorage
             };
             foreach (var author in authors)
             {

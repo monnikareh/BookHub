@@ -31,7 +31,7 @@ public class BookHubDbContext : DbContext
                     builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name
                                                            && level == LogLevel.Information).AddConsole();
                 })).EnableSensitiveDataLogging()
-            .UseLazyLoadingProxies()
+            // .UseLazyLoadingProxies()
             .UseNpgsql(ConfigurationManager.AppSettings.Get("ConnectionString"));
     }
 

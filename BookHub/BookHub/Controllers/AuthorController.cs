@@ -26,10 +26,14 @@ namespace BookHub.Controllers
                 return NotFound();
             }
             
-            return await _context.Authors
+            return (await _context.Authors
                 .Include(a => a.Books)
-                .Select(a => ControllerHelpers.MapAuthorToAuthorDetail(a))
-                .ToListAsync();
+                    .ThenInclude(b => b.Publisher)
+                .Include(a => a.Books)
+                    .ThenInclude(b => b.Genre)
+                .ToListAsync())
+                .Select(ControllerHelpers.MapAuthorToAuthorDetail)
+                .ToList();
         }
         
         [HttpGet("GetById/{id}")]
@@ -43,6 +47,9 @@ namespace BookHub.Controllers
             var author = await _context
                 .Authors
                 .Include(a => a.Books)
+                    .ThenInclude(b => b.Publisher)
+                .Include(a => a.Books)
+                    .ThenInclude(b => b.Genre)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (author == null)
@@ -65,6 +72,9 @@ namespace BookHub.Controllers
             var author = await _context
                 .Authors
                 .Include(a => a.Books)
+                    .ThenInclude(b => b.Publisher)
+                .Include(a => a.Books)
+                    .ThenInclude(b => b.Genre)
                 .FirstOrDefaultAsync(b => b.Name == name);
 
             if (author == null)
@@ -76,7 +86,7 @@ namespace BookHub.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<AuthorDetail>> PostAuthor(AuthorModel authorModel)
+        public async Task<ActionResult<AuthorDetail>> PostAuthor(AuthorCreate authorCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +101,7 @@ namespace BookHub.Controllers
 
             var author = new Author()
             {
-                Name = authorModel.Name,
+                Name = authorCreate.Name,
             };
 
             _context.Authors.Add(author);

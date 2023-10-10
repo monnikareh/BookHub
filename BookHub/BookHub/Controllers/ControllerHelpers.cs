@@ -4,16 +4,17 @@ using DataAccessLayer.Entities;
 
 namespace BookHub.Controllers;
 
-public class ControllerHelpers
+public static class ControllerHelpers
 {
-    public static BookModel MapBookToBookModel(Book book)
+    public static BookDetail MapBookToBookModel(Book book)
     {
-        return new BookModel
+        return new BookDetail
         {
+            Id = book.Id,
             Name = book.Name,
             GenreName = book.Genre.Name,
             PublisherName = book.Publisher.Name,
-            Authors = book.Authors.Select(a => new AuthorModel { Name = a.Name }).ToList(),
+            Authors = book.Authors.Select(a => new AuthorCreate { Name = a.Name }).ToList(),
             Price = book.Price,
             StockInStorage = book.StockInStorage
         };
@@ -24,7 +25,7 @@ public class ControllerHelpers
         return new AuthorDetail
         {
             Name = author.Name,
-            BookNames = author.Books.Select(b => b.Name).ToList()
+            Books = author.Books.Select(MapBookToBookModel).ToList()
         };
     }
 }
