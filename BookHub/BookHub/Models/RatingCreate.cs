@@ -2,9 +2,8 @@ using DataAccessLayer.Entities;
 
 namespace BookHub.Models;
 
-public class RatingDetail
+public class RatingCreate
 {
-    public int Id { get; set; }
     public ModelRelated<User> User { get; set; }
     public ModelRelated<Book> Book { get; set; }
     public int Value { get; set; }
