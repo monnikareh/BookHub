@@ -36,7 +36,7 @@ namespace BookHub.Controllers
                 .Include(g => g.Genre)
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
-                .Select(b => ControllerHelpers.MapBookToBookModel(b))
+                .Select(b => ControllerHelpers.MapBookToBookDetail(b))
                 .ToListAsync();
             return books;
         }
@@ -62,7 +62,7 @@ namespace BookHub.Controllers
                 return NotFound($"Book with ID:'{id}' not found");
             }
 
-            return ControllerHelpers.MapBookToBookModel(book);
+            return ControllerHelpers.MapBookToBookDetail(book);
         }
 
         // GET: api/Book/name
@@ -86,7 +86,7 @@ namespace BookHub.Controllers
                 return NotFound($"Book '{name}' not found");
             }
 
-            return ControllerHelpers.MapBookToBookModel(book);
+            return ControllerHelpers.MapBookToBookDetail(book);
         }
 
 
@@ -117,7 +117,7 @@ namespace BookHub.Controllers
                 return NotFound($"No books in genre '{genreName}' found");
             }
 
-            return books.Select(ControllerHelpers.MapBookToBookModel).ToList();
+            return books.Select(ControllerHelpers.MapBookToBookDetail).ToList();
         }
 
 
@@ -148,7 +148,7 @@ namespace BookHub.Controllers
                 return NotFound($"No books published by '{publisherName}' found");
             }
 
-            return books.Select(ControllerHelpers.MapBookToBookModel).ToList();
+            return books.Select(ControllerHelpers.MapBookToBookDetail).ToList();
         }
 
         [HttpGet("GetByAuthorName/{authorName}")]
@@ -167,12 +167,13 @@ namespace BookHub.Controllers
             {
                 return NotFound($"No books written by '{authorName}' found");
             }
+
             var books = await _context.Books
                 .Include(g => g.Genre)
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
                 .Where(b => b.Authors.Contains(author))
-                .Select(b => ControllerHelpers.MapBookToBookModel(b))
+                .Select(b => ControllerHelpers.MapBookToBookDetail(b))
                 .ToListAsync();
 
             return books;
@@ -196,25 +197,30 @@ namespace BookHub.Controllers
                 return Problem("Field Authors is null or empty");
             }
 
-            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.GenreName);
+            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.Genre.Name
+                                                                       || g.Id == bookCreate.Genre.Id);
             if (genre == null)
             {
-                return NotFound($"Genre '{bookCreate.GenreName}' could not be found");
+                return NotFound(
+                    $"Genre 'Name={bookCreate.Genre.Name}' <OR> 'ID={bookCreate.Genre.Id}' could not be found");
             }
 
-            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.PublisherName);
+            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.Publisher.Name
+                                                                               || p.Id == bookCreate.Publisher.Id);
             if (publisher == null)
             {
-                return NotFound($"Publisher '{bookCreate.PublisherName}' could not be found");
+                return NotFound(
+                    $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
             }
 
             var authors = new List<Author>();
-            foreach (var authorModel in bookCreate.Authors)
+            foreach (var authorRelatedModel in bookCreate.Authors)
             {
-                var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == authorModel.Name);
+                var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == authorRelatedModel.Name);
                 if (author == null)
                 {
-                    return NotFound($"Author '{authorModel.Name}' could not be found");
+                    return NotFound(
+                        $"Author 'Name={authorRelatedModel.Name}' <OR> 'ID={authorRelatedModel.Id}' could not be found");
                 }
 
                 authors.Add(author);
@@ -231,16 +237,17 @@ namespace BookHub.Controllers
                 Price = bookCreate.Price,
                 StockInStorage = bookCreate.StockInStorage
             };
-            foreach (var author in authors)
-            {
-                author.Books.Add(book);
-            }
+            // APPARENTLY NOT NECESSARY
+            // foreach (var author in authors)
+            // {
+            //     author.Books.Add(book);
+            // }
 
-            publisher.Books.Add(book);
-            genre.Books.Add(book);
+            // publisher.Books.Add(book);
+            // genre.Books.Add(book);
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
-            return ControllerHelpers.MapBookToBookModel(book);
+            return ControllerHelpers.MapBookToBookDetail(book);
         }
 
         [HttpDelete("{id}")]

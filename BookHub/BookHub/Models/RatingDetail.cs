@@ -1,4 +1,4 @@
-namespace BookHub.Models.Details;
+namespace BookHub.Models;
 
 public class RatingDetail
 {
