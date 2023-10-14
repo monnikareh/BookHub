@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(BookHubDbContext))]
-    [Migration("20231008202838_Initial")]
+    [Migration("20231014202827_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -38,6 +38,35 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("BooksId");
 
                     b.ToTable("AuthorBook");
+
+                    b.HasData(
+                        new
+                        {
+                            AuthorsId = 2,
+                            BooksId = 1
+                        });
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.Property<int>("BooksId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GenresId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BooksId", "GenresId");
+
+                    b.HasIndex("GenresId");
+
+                    b.ToTable("BookGenre");
+
+                    b.HasData(
+                        new
+                        {
+                            BooksId = 1,
+                            GenresId = 1
+                        });
                 });
 
             modelBuilder.Entity("BookOrder", b =>
@@ -85,6 +114,23 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "J. K. Rowling"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "George Orwell"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Peter Popluhar"
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Book", b =>
@@ -95,15 +141,15 @@ namespace DataAccessLayer.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GenreId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Price")
+                    b.Property<int>("OverallRating")
                         .HasColumnType("integer");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
 
                     b.Property<int>("PublisherId")
                         .HasColumnType("integer");
@@ -113,11 +159,20 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GenreId");
-
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Books");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "1984",
+                            OverallRating = 100,
+                            Price = 15.300000000000001,
+                            PublisherId = 1,
+                            StockInStorage = 21
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Genre", b =>
@@ -135,6 +190,23 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Dystopian"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Political fiction"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Social science fiction"
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Order", b =>
@@ -176,6 +248,13 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Publishers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Secker & Warburg"
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Rating", b =>
@@ -246,6 +325,21 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entities.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BookOrder", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.Book", null)
@@ -278,19 +372,11 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Book", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.Genre", "Genre")
-                        .WithMany("Books")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DataAccessLayer.Entities.Publisher", "Publisher")
                         .WithMany("Books")
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Genre");
 
                     b.Navigation("Publisher");
                 });
@@ -328,11 +414,6 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("DataAccessLayer.Entities.Book", b =>
                 {
                     b.Navigation("Ratings");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entities.Genre", b =>
-                {
-                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Publisher", b =>

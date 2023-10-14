@@ -29,7 +29,7 @@ namespace BookHub.Controllers
                 .Include(a => a.Books)
                     .ThenInclude(b => b.Publisher)
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Genre)
+                    .ThenInclude(b => b.Genres)
                 .ToListAsync())
                 .Select(ControllerHelpers.MapAuthorToAuthorDetail)
                 .ToList();
@@ -48,7 +48,7 @@ namespace BookHub.Controllers
                 .Include(a => a.Books)
                     .ThenInclude(b => b.Publisher)
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Genre)
+                    .ThenInclude(b => b.Genres)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (author == null)
@@ -73,7 +73,7 @@ namespace BookHub.Controllers
                 .Include(a => a.Books)
                     .ThenInclude(b => b.Publisher)
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Genre)
+                    .ThenInclude(b => b.Genres)
                 .FirstOrDefaultAsync(b => b.Name == name);
 
             if (author == null)

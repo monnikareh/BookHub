@@ -44,7 +44,7 @@ public class BookHubDbContext : DbContext
         }
         base.OnModelCreating(modelBuilder);
         
-        // modelBuilder.Seed();
+        modelBuilder.Seed();
         base.OnModelCreating(modelBuilder);
     }
 }

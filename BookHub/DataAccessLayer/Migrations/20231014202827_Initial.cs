@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DataAccessLayer.Migrations
 {
     /// <inheritdoc />
@@ -73,20 +75,14 @@ namespace DataAccessLayer.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    GenreId = table.Column<int>(type: "integer", nullable: false),
                     PublisherId = table.Column<int>(type: "integer", nullable: false),
                     StockInStorage = table.Column<int>(type: "integer", nullable: false),
-                    Price = table.Column<int>(type: "integer", nullable: false)
+                    Price = table.Column<double>(type: "double precision", nullable: false),
+                    OverallRating = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Books", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Books_Genres_GenreId",
-                        column: x => x.GenreId,
-                        principalTable: "Genres",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Books_Publishers_PublisherId",
                         column: x => x.PublisherId,
@@ -136,6 +132,30 @@ namespace DataAccessLayer.Migrations
                         name: "FK_AuthorBook_Books_BooksId",
                         column: x => x.BooksId,
                         principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BookGenre",
+                columns: table => new
+                {
+                    BooksId = table.Column<int>(type: "integer", nullable: false),
+                    GenresId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookGenre", x => new { x.BooksId, x.GenresId });
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Books_BooksId",
+                        column: x => x.BooksId,
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BookGenre_Genres_GenresId",
+                        column: x => x.GenresId,
+                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -216,20 +236,60 @@ namespace DataAccessLayer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Authors",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "J. K. Rowling" },
+                    { 2, "George Orwell" },
+                    { 3, "Peter Popluhar" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Genres",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Dystopian" },
+                    { 2, "Political fiction" },
+                    { 3, "Social science fiction" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Publishers",
+                columns: new[] { "Id", "Name" },
+                values: new object[] { 1, "Secker & Warburg" });
+
+            migrationBuilder.InsertData(
+                table: "Books",
+                columns: new[] { "Id", "Name", "OverallRating", "Price", "PublisherId", "StockInStorage" },
+                values: new object[] { 1, "1984", 100, 15.300000000000001, 1, 21 });
+
+            migrationBuilder.InsertData(
+                table: "AuthorBook",
+                columns: new[] { "AuthorsId", "BooksId" },
+                values: new object[] { 2, 1 });
+
+            migrationBuilder.InsertData(
+                table: "BookGenre",
+                columns: new[] { "BooksId", "GenresId" },
+                values: new object[] { 1, 1 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AuthorBook_BooksId",
                 table: "AuthorBook",
                 column: "BooksId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BookGenre_GenresId",
+                table: "BookGenre",
+                column: "GenresId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_BookOrder_OrdersId",
                 table: "BookOrder",
                 column: "OrdersId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_GenreId",
-                table: "Books",
-                column: "GenreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_PublisherId",
@@ -264,6 +324,9 @@ namespace DataAccessLayer.Migrations
                 name: "AuthorBook");
 
             migrationBuilder.DropTable(
+                name: "BookGenre");
+
+            migrationBuilder.DropTable(
                 name: "BookOrder");
 
             migrationBuilder.DropTable(
@@ -276,6 +339,9 @@ namespace DataAccessLayer.Migrations
                 name: "Authors");
 
             migrationBuilder.DropTable(
+                name: "Genres");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
@@ -283,9 +349,6 @@ namespace DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "Publishers");

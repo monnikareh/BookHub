@@ -48,7 +48,7 @@ public static class ControllerHelpers
         {
             Id = book.Id,
             Name = book.Name,
-            Genre = MaToRelated(book.Genre),
+            Genres = book.Genres.Select(MaToRelated).ToList(),
             Publisher = MaToRelated(book.Publisher),
             Authors = book.Authors.Select(MaToRelated).ToList(),
             OverallRating = book.OverallRating,

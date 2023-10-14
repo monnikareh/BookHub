@@ -33,14 +33,14 @@ namespace BookHub.Controllers
             }
 
             var books = _context.Books
-                .Include(g => g.Genre)
+                .Include(g => g.Genres)
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
                 .AsQueryable();
             var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == genreName || g.Id == genreId);
             if (genre != null)
             {
-                books = books.Where(b => b.Genre.Id == genre.Id);
+                books = books.Where(b => b.Genres.Contains(genre));
             }
 
             var publisher =
@@ -72,7 +72,7 @@ namespace BookHub.Controllers
 
             var book = await _context
                 .Books
-                .Include(g => g.Genre)
+                .Include(g => g.Genres)
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
                 .FirstOrDefaultAsync(b => b.Id == id);
@@ -95,7 +95,7 @@ namespace BookHub.Controllers
 
             var book = await _context
                 .Books
-                .Include(g => g.Genre)
+                .Include(g => g.Genres)
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
                 .FirstOrDefaultAsync(b => b.Name == name);
@@ -127,13 +127,13 @@ namespace BookHub.Controllers
                 return Problem("Field Authors is null or empty");
             }
 
-            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.Genre.Name
-                                                                       || g.Id == bookCreate.Genre.Id);
-            if (genre == null)
-            {
-                return NotFound(
-                    $"Genre 'Name={bookCreate.Genre.Name}' <OR> 'ID={bookCreate.Genre.Id}' could not be found");
-            }
+            // var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.Genre.Name
+            //                                                            || g.Id == bookCreate.Genre.Id);
+            // if (genre == null)
+            // {
+            //     return NotFound(
+            //         $"Genre 'Name={bookCreate.Genre.Name}' <OR> 'ID={bookCreate.Genre.Id}' could not be found");
+            // }
 
             var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.Publisher.Name
                                                                                || p.Id == bookCreate.Publisher.Id);
@@ -143,10 +143,25 @@ namespace BookHub.Controllers
                     $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
             }
 
+            var genres = new List<Genre>();
+            foreach (var genreRelatedModel in bookCreate.Genres)
+            {
+                var genre = await _context.Genres.FirstOrDefaultAsync(g =>
+                    g.Name == genreRelatedModel.Name || g.Id == genreRelatedModel.Id);
+                if (genre == null)
+                {
+                    return NotFound(
+                        $"Genre 'Name={genreRelatedModel.Name}' <OR> 'ID={genreRelatedModel.Id}' could not be found");
+                }
+
+                genres.Add(genre);
+            }
+
             var authors = new List<Author>();
             foreach (var authorRelatedModel in bookCreate.Authors)
             {
-                var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == authorRelatedModel.Name);
+                var author = await _context.Authors.FirstOrDefaultAsync(a =>
+                    a.Name == authorRelatedModel.Name || a.Id == authorRelatedModel.Id);
                 if (author == null)
                 {
                     return NotFound(
@@ -160,8 +175,7 @@ namespace BookHub.Controllers
             {
                 Name = bookCreate.Name,
                 Authors = authors,
-                Genre = genre,
-                GenreId = genre.Id,
+                Genres = genres,
                 Publisher = publisher,
                 PublisherId = publisher.Id,
                 Price = bookCreate.Price,
@@ -204,6 +218,5 @@ namespace BookHub.Controllers
         {
             return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        
     }
 }
