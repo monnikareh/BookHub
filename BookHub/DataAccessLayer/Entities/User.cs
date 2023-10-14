@@ -1,6 +1,8 @@
+using BookHub.Models;
+
 namespace DataAccessLayer.Entities;
 
-public class User : BaseEntity
+public class User : BaseEntity, IModelRelated
 {
     // max length
     public string Name { get; set; }

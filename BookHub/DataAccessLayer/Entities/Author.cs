@@ -1,6 +1,8 @@
+using BookHub.Models;
+
 namespace DataAccessLayer.Entities;
 
-public class Author : BaseEntity
+public class Author : BaseEntity, IModelRelated
 {
     public string Name { get; set; }
     

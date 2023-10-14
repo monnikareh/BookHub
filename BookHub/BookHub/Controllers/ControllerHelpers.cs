@@ -5,68 +5,16 @@ namespace BookHub.Controllers;
 
 public static class ControllerHelpers
 {
-    public static ModelRelated<Book> MapBookToBookRelated(Book book)
+  
+    public static ModelRelated<T> MaToRelated<T>(T model) where T: IModelRelated
     {
-        return new ModelRelated<Book>
+        return new ModelRelated<T>
         {
-            Id = book.Id,
-            Name = book.Name,
+            Id = model.Id,
+            Name = model.Name,
         };
     }
     
-    public static ModelRelated<Publisher> MapPublisherToPublisherRelated(Publisher publisher)
-    {
-        return new ModelRelated<Publisher>
-        {
-            Id = publisher.Id,
-            Name = publisher.Name,
-        };
-    }
-    
-    public static ModelRelated<Genre> MapGenreToGenreRelated(Genre genre)
-    {
-        return new ModelRelated<Genre>
-        {
-            Id = genre.Id,
-            Name = genre.Name,
-        };
-    }
-    
-    public static ModelRelated<User> MapUserToUserRelated(User user)
-    {
-        return new ModelRelated<User>
-        {
-            Id = user.Id,
-            Name = user.Name,
-        };
-    }
-    
-    public static ModelRelated<Rating> MapRatingToRatingRelated(Rating rating)
-    {
-        return new ModelRelated<Rating>
-        {
-            Id = rating.Id,
-            Name = rating.Value.ToString()
-        };
-    }
-    
-    public static ModelRelated<Order> MapOrderToOrderRelated(Order order)
-    {
-        return new ModelRelated<Order>
-        {
-            Id = order.Id,
-            Name = order.Id.ToString(),
-        };
-    }
-    
-    public static ModelRelated<Author> MapAuthorToAuthorRelated(Author author)
-    {
-        return new ModelRelated<Author>
-        {
-            Id = author.Id,
-            Name = author.Name,
-        };
-    }
     
     public static AuthorDetail MapAuthorToAuthorDetail(Author author)
     {
@@ -74,7 +22,7 @@ public static class ControllerHelpers
         {
             Id = author.Id,
             Name = author.Name,
-            Books = author.Books.Select(MapBookToBookRelated).ToList()
+            Books = author.Books.Select(MaToRelated).ToList()
         };
     }
     
@@ -83,7 +31,7 @@ public static class ControllerHelpers
         return new GenreDetail
         {
             Name = genre.Name,
-            Books = genre.Books.Select(MapBookToBookRelated).ToList()
+            Books = genre.Books.Select(MaToRelated).ToList()
         };
     }
     
@@ -92,7 +40,7 @@ public static class ControllerHelpers
         return new PublisherDetail
         {
             Name = publisher.Name,
-            Books = publisher.Books.Select(MapBookToBookRelated).ToList()
+            Books = publisher.Books.Select(MaToRelated).ToList()
         };
     }
     public static BookDetail MapBookToBookDetail(Book book)
@@ -101,9 +49,9 @@ public static class ControllerHelpers
         {
             Id = book.Id,
             Name = book.Name,
-            Genre = MapGenreToGenreRelated(book.Genre),
-            Publisher = MapPublisherToPublisherRelated(book.Publisher),
-            Authors = book.Authors.Select(MapAuthorToAuthorRelated).ToList(),
+            Genre = MaToRelated(book.Genre),
+            Publisher = MaToRelated(book.Publisher),
+            Authors = book.Authors.Select(MaToRelated).ToList(),
             OverallRating = book.OverallRating,
             Price = book.Price,
             StockInStorage = book.StockInStorage
@@ -114,8 +62,8 @@ public static class ControllerHelpers
         return new RatingDetail
         {
             Id = rating.Id,
-            Book = MapBookToBookRelated(rating.Book),
-            User = MapUserToUserRelated(rating.User),
+            Book = MaToRelated(rating.Book),
+            User = MaToRelated(rating.User),
             Value = rating.Value,
             Comment = rating.Comment
         };

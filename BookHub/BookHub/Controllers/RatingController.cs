@@ -142,19 +142,6 @@ namespace BookHub.Controllers
         {
             return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-
-        // public ICollection<BookModel> MapBooksToBookModels(ICollection<Book> books)
-        // {
-        //     var bookModels = books.Select(b => new BookModel()
-        //     {
-        //         Name = b.Name,
-        //         GenreName = b.Genre.Name,
-        //         PublisherName = b.Publisher.Name,
-        //         Authors = b.Authors.Select(a => new AuthorModel() { Name = a.Name }).ToList(),
-        //         Price = b.Price,
-        //         StockInStorage = b.StockInStorage
-        //     }).ToList();
-        //     return bookModels;
-        // }
+        
     }
 }

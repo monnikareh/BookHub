@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BookHub.Models;
 
 namespace DataAccessLayer.Entities;
 
-public class Book : BaseEntity
+public class Book : BaseEntity, IModelRelated
 {
     public String Name { get; set; }
     public int GenreId { get; set; }
