@@ -15,7 +15,6 @@ public static class ControllerHelpers
         };
     }
     
-    
     public static AuthorDetail MapAuthorToAuthorDetail(Author author)
     {
         return new AuthorDetail
