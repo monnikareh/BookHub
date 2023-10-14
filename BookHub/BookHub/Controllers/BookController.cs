@@ -23,25 +23,45 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-        // GET: api/Book
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks()
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(int? genreId, string? genreName,
+            int? publisherId, string? publisherName, int? authorId, string? authorName)
         {
             if (_context.Books == null)
             {
                 return NotFound();
             }
 
-            var books = await _context.Books
+            var books = _context.Books
                 .Include(g => g.Genre)
                 .Include(b => b.Publisher)
                 .Include(b => b.Authors)
-                .Select(b => ControllerHelpers.MapBookToBookDetail(b))
-                .ToListAsync();
-            return books;
+                .AsQueryable();
+            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == genreName || g.Id == genreId);
+            if (genre != null)
+            {
+                books = books.Where(b => b.Genre.Id == genre.Id);
+            }
+
+            var publisher =
+                await _context.Publishers.FirstOrDefaultAsync(p => p.Name == publisherName || p.Id == publisherId);
+            if (publisher != null)
+            {
+                books = books.Where(b => b.Publisher.Id == publisher.Id);
+            }
+
+            var author = await _context
+                .Authors
+                .Include(a => a.Books)
+                .FirstOrDefaultAsync(a => a.Name == authorName || a.Id == authorId);
+            if (author != null)
+            {
+                books = books.Where(b => b.Authors.Contains(author));
+            }
+
+            return await books.Select(b => ControllerHelpers.MapBookToBookDetail(b)).ToListAsync();
         }
 
-        // GET: api/Book/5
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<BookDetail>> GetBookById(int id)
         {
@@ -65,7 +85,6 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapBookToBookDetail(book);
         }
 
-        // GET: api/Book/name
         [HttpGet("GetByName/{name}")]
         public async Task<ActionResult<BookDetail>> GetBookByName(string name)
         {
@@ -89,95 +108,6 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapBookToBookDetail(book);
         }
 
-
-        [HttpGet("GetByGenreName/{genreName}")]
-        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBookByGenreName(string genreName)
-        {
-            if (_context.Books == null)
-            {
-                return NotFound();
-            }
-
-            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == genreName);
-            if (genre == null)
-            {
-                return NotFound($"Genre '{genreName}' not found found");
-            }
-
-            var books = await _context
-                .Books
-                .Include(g => g.Genre)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .Where(b => b.GenreId == genre.Id)
-                .ToListAsync();
-
-            if (books == null)
-            {
-                return NotFound($"No books in genre '{genreName}' found");
-            }
-
-            return books.Select(ControllerHelpers.MapBookToBookDetail).ToList();
-        }
-
-
-        [HttpGet("GetByPublisherName/{publisherName}")]
-        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBookByPublisherName(string publisherName)
-        {
-            if (_context.Books == null)
-            {
-                return NotFound();
-            }
-
-            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == publisherName);
-            if (publisher == null)
-            {
-                return NotFound($"Publisher '{publisherName}' not found");
-            }
-
-            var books = await _context
-                .Books
-                .Include(g => g.Genre)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .Where(b => b.PublisherId == publisher.Id)
-                .ToListAsync();
-
-            if (books == null)
-            {
-                return NotFound($"No books published by '{publisherName}' found");
-            }
-
-            return books.Select(ControllerHelpers.MapBookToBookDetail).ToList();
-        }
-
-        [HttpGet("GetByAuthorName/{authorName}")]
-        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBookByAuthorName(string authorName)
-        {
-            if (_context.Books == null)
-            {
-                return NotFound();
-            }
-
-            var author = await _context
-                .Authors
-                .Include(a => a.Books)
-                .FirstOrDefaultAsync(a => a.Name == authorName);
-            if (author == null)
-            {
-                return NotFound($"No books written by '{authorName}' found");
-            }
-
-            var books = await _context.Books
-                .Include(g => g.Genre)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .Where(b => b.Authors.Contains(author))
-                .Select(b => ControllerHelpers.MapBookToBookDetail(b))
-                .ToListAsync();
-
-            return books;
-        }
 
         [HttpPost]
         public async Task<ActionResult<BookDetail>> PostBook(BookCreate bookCreate)

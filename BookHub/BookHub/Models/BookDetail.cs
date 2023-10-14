@@ -11,4 +11,5 @@ public class BookDetail
     public int StockInStorage { get; set; }
     public int Price { get; set; }
     public ICollection<ModelRelated<Author>> Authors { get; set; } = new List<ModelRelated<Author>>();
+    public int OverallRating { get; set; }
 }

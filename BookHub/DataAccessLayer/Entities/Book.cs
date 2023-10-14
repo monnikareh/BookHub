@@ -19,6 +19,8 @@ public class Book : BaseEntity
     public int StockInStorage { get; set; }
     public int Price { get; set; }
     
+    public int OverallRating { get; set; }
+    
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
     public virtual ICollection<Author> Authors { get; set; } = new List<Author>();
     public virtual ICollection<User> Users { get; } = new List<User>();

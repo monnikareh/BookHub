@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookHub.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookHub.Controllers
 {
@@ -21,104 +24,137 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-        // GET: api/Rating
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rating>>> GetRatings()
-        {
-          if (_context.Ratings == null)
-          {
-              return NotFound();
-          }
-            return await _context.Ratings.ToListAsync();
-        }
-
-        // GET: api/Rating/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Rating>> GetRating(int id)
-        {
-          if (_context.Ratings == null)
-          {
-              return NotFound();
-          }
-            var rating = await _context.Ratings.FindAsync(id);
-
-            if (rating == null)
-            {
-                return NotFound();
-            }
-
-            return rating;
-        }
-
-        // PUT: api/Rating/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRating(int id, Rating rating)
-        {
-            if (id != rating.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(rating).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RatingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Rating
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Rating>> PostRating(Rating rating)
-        {
-          if (_context.Ratings == null)
-          {
-              return Problem("Entity set 'BookHubDbContext.Ratings'  is null.");
-          }
-            _context.Ratings.Add(rating);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRating", new { id = rating.Id }, rating);
-        }
-
-        // DELETE: api/Rating/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRating(int id)
+        public async Task<ActionResult<IEnumerable<RatingDetail>>> GetRatings(int? userId, string? userName,
+            int? bookId, string? bookName)
         {
             if (_context.Ratings == null)
             {
                 return NotFound();
             }
-            var rating = await _context.Ratings.FindAsync(id);
-            if (rating == null)
+
+            var ratings = _context.Ratings
+                .Include(r => r.User)
+                .Include(r => r.Book)
+                .AsQueryable();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == userName || u.Id == userId);
+            if (user != null)
+            {
+                ratings = ratings.Where(r => r.User.Id == user.Id);
+            }
+
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == bookName || b.Id == bookId);
+            if (book != null)
+            {
+                ratings = ratings.Where(r => r.Book.Id == book.Id);
+            }
+
+            return await ratings.Select(r => ControllerHelpers.MapRatingToRatingDetail(r)).ToListAsync();
+        }
+
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<RatingDetail>> GetRatingById(int id)
+        {
+            if (_context.Ratings == null)
             {
                 return NotFound();
             }
 
-            _context.Ratings.Remove(rating);
+            var rating = await _context
+                .Ratings
+                .Include(r => r.User)
+                .Include(r => r.Book)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (rating == null)
+            {
+                return NotFound($"Rating with ID:'{id}' not found");
+            }
+
+            return ControllerHelpers.MapRatingToRatingDetail(rating);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult<RatingDetail>> PostRating(RatingCreate ratingCreate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+
+            if (_context.Books == null)
+            {
+                return Problem("Entity set 'BookHubDbContext.Books'  is null.");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == ratingCreate.User.Name
+                                                                     || u.Id == ratingCreate.User.Id);
+            if (user == null)
+            {
+                return NotFound(
+                    $"User Name={ratingCreate.User.Name}' <OR> 'ID={ratingCreate.User.Id}' could not be found");
+            }
+
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == ratingCreate.Book.Name
+                                                                     || b.Id == ratingCreate.Book.Id);
+            if (book == null)
+            {
+                return NotFound(
+                    $"Book 'Name={ratingCreate.Book.Name}' <OR> 'ID={ratingCreate.Book.Id}' could not be found");
+            }
+
+            var rating = new Rating
+            {
+                UserId = user.Id,
+                User = user,
+                BookId = book.Id,
+                Book = book,
+                Value = ratingCreate.Value,
+                Comment = ratingCreate.Comment
+            };
+            _context.Ratings.Add(rating);
+            await _context.SaveChangesAsync();
+            return ControllerHelpers.MapRatingToRatingDetail(rating);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(int id)
+        {
+            if (_context.Books == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.Books.FindAsync(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            _context.Books.Remove(book);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool RatingExists(int id)
+        private bool BookExists(int id)
         {
-            return (_context.Ratings?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        // public ICollection<BookModel> MapBooksToBookModels(ICollection<Book> books)
+        // {
+        //     var bookModels = books.Select(b => new BookModel()
+        //     {
+        //         Name = b.Name,
+        //         GenreName = b.Genre.Name,
+        //         PublisherName = b.Publisher.Name,
+        //         Authors = b.Authors.Select(a => new AuthorModel() { Name = a.Name }).ToList(),
+        //         Price = b.Price,
+        //         StockInStorage = b.StockInStorage
+        //     }).ToList();
+        //     return bookModels;
+        // }
     }
 }
