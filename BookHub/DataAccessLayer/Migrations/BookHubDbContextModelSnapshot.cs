@@ -291,6 +291,16 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BookId = 1,
+                            Comment = "Skvela kniha ale dalo mi to existencnu krizu vacsiu ako som mal predtym.",
+                            UserId = 1,
+                            Value = 98
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
@@ -315,6 +325,29 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsAdmin = true,
+                            Name = "Monca",
+                            Password = "leo123"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsAdmin = true,
+                            Name = "Betka",
+                            Password = "madarskoFtW123"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsAdmin = true,
+                            Name = "Romik",
+                            Password = "coturobimvlastne"
+                        });
                 });
 
             modelBuilder.Entity("AuthorBook", b =>

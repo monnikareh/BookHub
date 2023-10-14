@@ -262,6 +262,16 @@ namespace DataAccessLayer.Migrations
                 values: new object[] { 1, "Secker & Warburg" });
 
             migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "IsAdmin", "Name", "Password" },
+                values: new object[,]
+                {
+                    { 1, true, "Monca", "leo123" },
+                    { 2, true, "Betka", "madarskoFtW123" },
+                    { 3, true, "Romik", "coturobimvlastne" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Books",
                 columns: new[] { "Id", "Name", "OverallRating", "Price", "PublisherId", "StockInStorage" },
                 values: new object[] { 1, "1984", 100, 15.300000000000001, 1, 21 });
@@ -274,7 +284,17 @@ namespace DataAccessLayer.Migrations
             migrationBuilder.InsertData(
                 table: "BookGenre",
                 columns: new[] { "BooksId", "GenresId" },
-                values: new object[] { 1, 1 });
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 1, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Ratings",
+                columns: new[] { "Id", "BookId", "Comment", "UserId", "Value" },
+                values: new object[] { 1, 1, "Skvela kniha ale dalo mi to existencnu krizu vacsiu ako som mal predtym.", 1, 98 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuthorBook_BooksId",

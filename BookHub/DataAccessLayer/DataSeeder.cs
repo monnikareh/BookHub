@@ -8,14 +8,12 @@ public static class DataSeeder
     public static void Seed(this ModelBuilder modelBuilder)
     {
         Console.WriteLine("Seeding!");
-        var authors = PrepareAuthors();
-        var publishers = PreparePublishers();
-        var genres = PrepareGenres();
-        var books = PrepareBooks();
-        modelBuilder.Entity<Author>().HasData(authors);
-        modelBuilder.Entity<Publisher>().HasData(publishers);
-        modelBuilder.Entity<Genre>().HasData(genres);
-        modelBuilder.Entity<Book>().HasData(books);
+        modelBuilder.Entity<Author>().HasData(PrepareAuthors());
+        modelBuilder.Entity<User>().HasData(PrepareUsers());
+        modelBuilder.Entity<Publisher>().HasData(PreparePublishers());
+        modelBuilder.Entity<Genre>().HasData(PrepareGenres());
+        modelBuilder.Entity<Book>().HasData(PrepareBooks());
+        modelBuilder.Entity<Rating>().HasData(PrepareRatings());
         modelBuilder.Entity("AuthorBook").HasData(new { AuthorsId = 2, BooksId = 1 });
         modelBuilder.Entity("BookGenre").HasData(new { BooksId = 1, GenresId = 1 },
             new { BooksId = 1, GenresId = 2 },
@@ -90,6 +88,48 @@ public static class DataSeeder
                 StockInStorage = 21,
                 Price = 15.3,
                 OverallRating = 100,
+            }
+        };
+    }
+
+    private static List<User> PrepareUsers()
+    {
+        return new List<User>
+        {
+            new User
+            {
+                Id = 1,
+                Name = "Monca",
+                Password = "leo123",
+                IsAdmin = true
+            },
+            new User
+            {
+                Id = 2,
+                Name = "Betka",
+                Password = "madarskoFtW123",
+                IsAdmin = true
+            },
+            new User
+            {
+                Id = 3,
+                Name = "Romik",
+                Password = "coturobimvlastne",
+                IsAdmin = true
+            }
+        };
+    }
+    private static List<Rating> PrepareRatings()
+    {
+        return new List<Rating>
+        {
+            new Rating
+            {
+                Id = 1,
+                UserId = 1,
+                BookId = 1,
+                Value = 98,
+                Comment = "Skvela kniha ale dalo mi to existencnu krizu vacsiu ako som mal predtym."
             }
         };
     }

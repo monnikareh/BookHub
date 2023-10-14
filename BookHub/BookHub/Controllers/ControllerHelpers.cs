@@ -29,6 +29,7 @@ public static class ControllerHelpers
     {
         return new GenreDetail
         {
+            Id = genre.Id,
             Name = genre.Name,
             Books = genre.Books.Select(MaToRelated).ToList()
         };
@@ -38,6 +39,7 @@ public static class ControllerHelpers
     {
         return new PublisherDetail
         {
+            Id = publisher.Id,
             Name = publisher.Name,
             Books = publisher.Books.Select(MaToRelated).ToList()
         };

@@ -113,6 +113,10 @@ namespace BookHub.Controllers
                 Value = ratingCreate.Value,
                 Comment = ratingCreate.Comment
             };
+            var bookRatings = _context.Ratings
+                .Where(r => r.Book.Id == book.Id);
+            book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value) 
+                / (bookRatings.Count() + 1);
             _context.Ratings.Add(rating);
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapRatingToRatingDetail(rating);
@@ -142,6 +146,5 @@ namespace BookHub.Controllers
         {
             return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        
     }
 }

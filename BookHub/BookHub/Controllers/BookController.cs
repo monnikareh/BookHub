@@ -179,7 +179,8 @@ namespace BookHub.Controllers
                 Publisher = publisher,
                 PublisherId = publisher.Id,
                 Price = bookCreate.Price,
-                StockInStorage = bookCreate.StockInStorage
+                StockInStorage = bookCreate.StockInStorage,
+                OverallRating = bookCreate.OverallRating
             };
             // APPARENTLY NOT NECESSARY
             // foreach (var author in authors)
