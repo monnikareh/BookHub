@@ -1,5 +1,3 @@
-using DataAccessLayer.Entities;
-
 namespace BookHub.Models;
 
 public class UserDetail
@@ -8,6 +6,6 @@ public class UserDetail
     public string Name { get; set; }
     public string Password { get; set; }
     public bool IsAdmin { get; set; }
-    public virtual ICollection<ModelRelated<Order>> Orders { get; set; } = new List<ModelRelated<Order>>();
-    public virtual ICollection<ModelRelated<Book>> Books { get; set; } = new List<ModelRelated<Book>>();
+    public virtual ICollection<ModelRelated> Orders { get; set; } = new List<ModelRelated>();
+    public virtual ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
 }

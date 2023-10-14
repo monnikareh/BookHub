@@ -1,6 +1,6 @@
 namespace BookHub.Models;
 
-public class ModelRelated<T>
+public class ModelRelated
 {
     public int Id { get; set; }
     public string Name { get; set; }

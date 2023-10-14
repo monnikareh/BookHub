@@ -6,9 +6,9 @@ namespace BookHub.Controllers;
 public static class ControllerHelpers
 {
   
-    public static ModelRelated<T> MaToRelated<T>(T model) where T: IModelRelated
+    public static ModelRelated MaToRelated<T>(T model) where T: IModelRelated
     {
-        return new ModelRelated<T>
+        return new ModelRelated
         {
             Id = model.Id,
             Name = model.Name,
