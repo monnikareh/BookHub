@@ -7,11 +7,11 @@ namespace BookHub.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly BookHubDbContext _context;
 
-        public OrderController(BookHubDbContext context)
+        public UserController(BookHubDbContext context)
         {
             _context = context;
         }
