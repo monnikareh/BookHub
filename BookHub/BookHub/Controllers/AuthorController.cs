@@ -94,7 +94,7 @@ namespace BookHub.Controllers
 
             if (_context.Authors == null)
             {
-                return Problem("Entity set 'BookHubDbContext.Books'  is null.");
+                return Problem("Entity set 'BookHubDbContext.Authors'  is null.");
             }
             
 

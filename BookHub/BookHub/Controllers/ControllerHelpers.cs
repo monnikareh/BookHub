@@ -59,8 +59,27 @@ public static class ControllerHelpers
     {
         return new AuthorDetail
         {
+            Id = author.Id,
             Name = author.Name,
             Books = author.Books.Select(MapBookToBookRelated).ToList()
+        };
+    }
+    
+    public static GenreDetail MapGenreToGenreDetail(Genre genre)
+    {
+        return new GenreDetail
+        {
+            Name = genre.Name,
+            Books = genre.Books.Select(MapBookToBookRelated).ToList()
+        };
+    }
+    
+    public static PublisherDetail MapPublisherToPublisherDetail(Publisher publisher)
+    {
+        return new PublisherDetail
+        {
+            Name = publisher.Name,
+            Books = publisher.Books.Select(MapBookToBookRelated).ToList()
         };
     }
 }
