@@ -17,7 +17,7 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<User> Users { get; set; }
 
-    public BookHubDbContext() 
+    public BookHubDbContext(DbContextOptions options) : base(options) 
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
@@ -30,9 +30,8 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
                 {
                     builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name
                                                            && level == LogLevel.Information).AddConsole();
-                })).EnableSensitiveDataLogging()
-            // .UseLazyLoadingProxies()
-            .UseNpgsql(ConfigurationManager.AppSettings.Get("ConnectionString"));
+                })).EnableSensitiveDataLogging();
+        // .UseLazyLoadingProxies()
     }
 
     // https://docs.microsoft.com/en-us/ef/core/modeling/
