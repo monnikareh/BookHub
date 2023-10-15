@@ -12,8 +12,8 @@ builder.Services.AddControllers()
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
     );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var connectionString = builder.Configuration.GetConnectionString("BookHubDbContextConnection") ??
-                       throw new InvalidOperationException("Connection string 'BookHubDbContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("ConnectionString") ??
+                       throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
 builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
