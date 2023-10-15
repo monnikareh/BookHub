@@ -1,14 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 using BookHub.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace DataAccessLayer.Entities;
 
-public class User : BaseEntity, IModelRelated
+public class User : IdentityUser<int>, IModelRelated
 {
-    // max length
+    public int Id { get; set; }
     public string Name { get; set; }
-
-    public string Password { get; set; }
-
     public bool IsAdmin { get; set; }
     
     public virtual ICollection<Order> Orders { get; } = new List<Order>();

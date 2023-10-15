@@ -1,13 +1,13 @@
-using System.Security.Cryptography.X509Certificates;
 using DataAccessLayer.Entities;
 using System.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using NuGet.Protocol;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DataAccessLayer;
 
-public class BookHubDbContext : DbContext
+public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     public DbSet<Author> Authors { get; set; }
     public DbSet<Book> Books { get; set; }
@@ -17,7 +17,7 @@ public class BookHubDbContext : DbContext
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<User> Users { get; set; }
 
-    public BookHubDbContext()
+    public BookHubDbContext() 
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }

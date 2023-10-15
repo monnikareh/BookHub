@@ -9,6 +9,7 @@ public static class DataSeeder
     {
         Console.WriteLine("Seeding!");
         modelBuilder.Entity<Author>().HasData(PrepareAuthors());
+        modelBuilder.Entity<User>().HasKey(u => u.Id);
         modelBuilder.Entity<User>().HasData(PrepareUsers());
         modelBuilder.Entity<Publisher>().HasData(PreparePublishers());
         modelBuilder.Entity<Genre>().HasData(PrepareGenres());
@@ -100,23 +101,23 @@ public static class DataSeeder
             {
                 Id = 1,
                 Name = "Monca",
-                Password = "leo123",
+                UserName = "vidlacka",
                 IsAdmin = true
             },
             new User
             {
                 Id = 2,
+                UserName = "betatesting",
                 Name = "Betka",
-                Password = "madarskoFtW123",
                 IsAdmin = true
             },
             new User
             {
                 Id = 3,
+                UserName = "maromcik",
                 Name = "Romik",
-                Password = "coturobimvlastne",
                 IsAdmin = true
-            }
+            },
         };
     }
     private static List<Rating> PrepareRatings()
