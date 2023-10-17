@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookHub.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthorController : ControllerBase
     {
         private readonly BookHubDbContext _context;
@@ -16,7 +18,9 @@ namespace BookHub.Controllers
         {
             _context = context;
         }
-        
+
+
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors()
         {
@@ -24,17 +28,17 @@ namespace BookHub.Controllers
             {
                 return NotFound();
             }
-            
+
             return (await _context.Authors
-                .Include(a => a.Books)
+                    .Include(a => a.Books)
                     .ThenInclude(b => b.Publisher)
-                .Include(a => a.Books)
+                    .Include(a => a.Books)
                     .ThenInclude(b => b.Genres)
-                .ToListAsync())
+                    .ToListAsync())
                 .Select(ControllerHelpers.MapAuthorToAuthorDetail)
                 .ToList();
         }
-        
+
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<AuthorDetail>> GetAuthorById(int id)
         {
@@ -46,9 +50,9 @@ namespace BookHub.Controllers
             var author = await _context
                 .Authors
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Publisher)
+                .ThenInclude(b => b.Publisher)
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Genres)
+                .ThenInclude(b => b.Genres)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (author == null)
@@ -71,9 +75,9 @@ namespace BookHub.Controllers
             var author = await _context
                 .Authors
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Publisher)
+                .ThenInclude(b => b.Publisher)
                 .Include(a => a.Books)
-                    .ThenInclude(b => b.Genres)
+                .ThenInclude(b => b.Genres)
                 .FirstOrDefaultAsync(b => b.Name == name);
 
             if (author == null)
@@ -83,7 +87,7 @@ namespace BookHub.Controllers
 
             return ControllerHelpers.MapAuthorToAuthorDetail(author);
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<AuthorDetail>> PostAuthor(AuthorCreate authorCreate)
         {
@@ -96,7 +100,7 @@ namespace BookHub.Controllers
             {
                 return Problem("Entity set 'BookHubDbContext.Authors'  is null.");
             }
-            
+
 
             var author = new Author()
             {
