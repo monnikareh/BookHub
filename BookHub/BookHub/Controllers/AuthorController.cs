@@ -19,8 +19,7 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-
-        [Authorize]
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors()
         {
