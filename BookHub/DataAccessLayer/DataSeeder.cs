@@ -15,6 +15,7 @@ public static class DataSeeder
         modelBuilder.Entity<Genre>().HasData(PrepareGenres());
         modelBuilder.Entity<Book>().HasData(PrepareBooks());
         modelBuilder.Entity<Rating>().HasData(PrepareRatings());
+        modelBuilder.Entity<Order>().HasData(PrepareOrders());
         modelBuilder.Entity("AuthorBook").HasData(
             new { AuthorsId = 1, BooksId = 1 }, 
             new { AuthorsId = 1, BooksId = 2 },
@@ -28,14 +29,14 @@ public static class DataSeeder
             new { BooksId = 4, GenresId = 5 });
         // Wishlist
         modelBuilder.Entity("BookUser").HasData(
-            new { BooksId = 1, UserId = 1 },
-            new { BooksId = 2, UserId = 1 },
-            new { BooksId = 3, UserId = 3 },
-            new { BooksId = 4, UserId = 2 });
+            new { BooksId = 1, UsersId = 1 },
+            new { BooksId = 2, UsersId = 1 },
+            new { BooksId = 3, UsersId = 3 },
+            new { BooksId = 4, UsersId = 2 });
         modelBuilder.Entity("BookOrder").HasData(
-            new { BooksId = 1, UserId = 1 },
-            new { BooksId = 2, UserId = 1 },
-            new { BooksId = 4, UserId = 3 });
+            new { BooksId = 1, OrdersId = 1 },
+            new { BooksId = 2, OrdersId = 1 },
+            new { BooksId = 4, OrdersId = 2 });
     }
 
     private static IEnumerable<Author> PrepareAuthors()
@@ -71,14 +72,14 @@ public static class DataSeeder
             },
             new Publisher
             {
-            Id = 2,
-            Name = "Secker & Warburg"
+                Id = 2,
+                Name = "Secker & Warburg"
             },
             new Publisher
             {
-            Id = 3,
-            Name = "Reynal & Hitchcock"
-        }
+                Id = 3,
+                Name = "Reynal & Hitchcock"
+            }
         };
     }
 
@@ -231,8 +232,7 @@ public static class DataSeeder
                 BookId = 1,
                 Value = 91,
                 Comment = "Harry Potter and the Sorcerer's Stone is the ultimate tale of what happens when a boy who's been living in a cupboard under the stairs discovers a world of magic. I mean, who knew that an owl could deliver mail or that a cloak could make you disappear faster than an introvert at a party?"
-            }
-            ,
+            },
             new Rating
             {
                 Id = 4,
@@ -240,8 +240,7 @@ public static class DataSeeder
                 BookId = 2,
                 Value = 88,
                 Comment = "Harry Potter and the Chamber of Secrets is like a laugh potion that will have you chuckling faster than you can say \"Expelliarmus!\" The boy who lived is back, and this time, he's got a flying car and a house-elf who's obsessed with socks. In this book, you'll discover that Hogwarts doesn't just have ghosts in the hallways; it also has diary-possessing dark lords, giant snakes with dental issues, and a loony professor who could probably talk to garden gnomes."
-            }
-            ,
+            },
             new Rating
             {
                 Id = 5,
