@@ -26,6 +26,7 @@ namespace BookHub.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly IUserStore<User> _userStore;
         private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -34,12 +35,14 @@ namespace BookHub.Areas.Identity.Pages.Account
         public RegisterModel(
             UserManager<User> userManager,
             IUserStore<User> userStore,
+            RoleManager<IdentityRole<int>> roleManager,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
+            _roleManager = roleManager;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
@@ -118,12 +121,22 @@ namespace BookHub.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                    await _roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Admin));
+                if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                    await _roleManager.CreateAsync(new IdentityRole<int>(UserRoles.User));
                 var user = CreateUser();
                 user.Name = Input.Name;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                
+                if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+                    await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+                }
+       
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

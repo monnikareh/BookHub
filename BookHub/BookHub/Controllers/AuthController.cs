@@ -20,13 +20,15 @@ public class AuthController : ControllerBase
     private readonly BookHubDbContext _context;
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
+    private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IConfiguration _configuration;
 
-    public AuthController(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration configuration)
+    public AuthController(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
     {
         _context = context;
         _signInManager = signInManager;
         _userManager = userManager;
+        _roleManager = roleManager;
         _configuration = configuration;
     }
 
@@ -38,15 +40,17 @@ public class AuthController : ControllerBase
         {
             return NotFound($"User {userSignIn.UserName} not found");
         }
+
+        var userRoles = await _userManager.GetRolesAsync(user);
         var authClaims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.Name, user.UserName),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
-        
+        authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
         var token = GetToken(authClaims);
-        var a = await _signInManager.PasswordSignInAsync(userSignIn.UserName, userSignIn.Password, false, false);
-        if (a.Succeeded)
+        var signIn = await _signInManager.PasswordSignInAsync(userSignIn.UserName, userSignIn.Password, false, false);
+        if (signIn.Succeeded)
         {
             return Ok(new
             {

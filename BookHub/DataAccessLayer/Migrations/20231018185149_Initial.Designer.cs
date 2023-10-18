@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(BookHubDbContext))]
-    [Migration("20231017210251_Initial")]
+    [Migration("20231018185149_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -383,7 +383,7 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f41ab883-1bd0-425b-abe4-12671bdd0089",
+                            ConcurrencyStamp = "c97135e2-a522-45ab-b3d6-1f002717386e",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
@@ -396,7 +396,7 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "abbb920a-0ce3-40f0-8376-1324daa137e6",
+                            ConcurrencyStamp = "f40140ad-1e69-44d5-a43b-0e21bc4e96d0",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
@@ -409,7 +409,7 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d24391a8-eeed-4db0-83b1-745d56975c92",
+                            ConcurrencyStamp = "9a389677-3ffe-46d0-865f-62f8af391f66",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
@@ -500,12 +500,10 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -541,12 +539,10 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");

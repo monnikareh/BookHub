@@ -20,8 +20,10 @@ var connectionString = configuration.GetConnectionString("ConnectionString") ??
                        throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
 builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<BookHubDbContext>();
+builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<BookHubDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -50,17 +52,29 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiPlayground", Version = "v1" });
-    c.AddSecurityDefinition("token", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.Http,
-        In = ParameterLocation.Header,
-        Name = HeaderNames.Authorization,
-        Scheme = "Bearer"
+    c.SwaggerDoc("v1", new OpenApiInfo { 
+        Title = "My API", 
+        Version = "v1" 
     });
-    // dont add global security requirement
-    // c.AddSecurityRequirement(/*...*/);
-    c.OperationFilter<SecureEndpointAuthRequirementFilter>();
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+        In = ParameterLocation.Header, 
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey 
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        { 
+            new OpenApiSecurityScheme 
+            { 
+                Reference = new OpenApiReference 
+                { 
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer" 
+                } 
+            },
+            new string[] { } 
+        } 
+    });
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
@@ -82,8 +96,9 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
+app.UseCors();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.MapRazorPages();
 
