@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BookHub.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthorController : ControllerBase

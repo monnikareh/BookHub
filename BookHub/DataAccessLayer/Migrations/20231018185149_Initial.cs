@@ -142,8 +142,8 @@ namespace DataAccessLayer.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    ProviderKey = table.Column<string>(type: "text", nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -187,8 +187,8 @@ namespace DataAccessLayer.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -375,9 +375,9 @@ namespace DataAccessLayer.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsAdmin", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "f41ab883-1bd0-425b-abe4-12671bdd0089", null, false, true, false, null, "Monca", null, null, null, null, false, null, false, "vidlacka" },
-                    { 2, 0, "abbb920a-0ce3-40f0-8376-1324daa137e6", null, false, true, false, null, "Betka", null, null, null, null, false, null, false, "betatesting" },
-                    { 3, 0, "d24391a8-eeed-4db0-83b1-745d56975c92", null, false, true, false, null, "Romik", null, null, null, null, false, null, false, "maromcik" }
+                    { 1, 0, "c97135e2-a522-45ab-b3d6-1f002717386e", null, false, true, false, null, "Monca", null, null, null, null, false, null, false, "vidlacka" },
+                    { 2, 0, "f40140ad-1e69-44d5-a43b-0e21bc4e96d0", null, false, true, false, null, "Betka", null, null, null, null, false, null, false, "betatesting" },
+                    { 3, 0, "9a389677-3ffe-46d0-865f-62f8af391f66", null, false, true, false, null, "Romik", null, null, null, null, false, null, false, "maromcik" }
                 });
 
             migrationBuilder.InsertData(
