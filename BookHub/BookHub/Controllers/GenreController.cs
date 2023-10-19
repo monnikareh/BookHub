@@ -19,7 +19,7 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetGenres")]
         public async Task<ActionResult<IEnumerable<GenreDetail>>> GetGenres()
         {
             if (_context.Genres == null)
@@ -78,7 +78,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapGenreToGenreDetail(genre);
         }
 
-        [HttpPost]
+        [HttpPost("CreateGenre")]
         public async Task<ActionResult<GenreDetail>> PostGenre(GenreCreate genreCreate)
         {
             if (!ModelState.IsValid)
@@ -102,7 +102,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapGenreToGenreDetail(genre);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteGenre/{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
             if (_context.Genres == null)
