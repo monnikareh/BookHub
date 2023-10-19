@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,7 +52,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "My API", 
+        Title = "BookHub API", 
         Version = "v1" 
     });
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
@@ -72,7 +71,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer" 
                 } 
             },
-            new string[] { } 
+            Array.Empty<string>()
         } 
     });
 });

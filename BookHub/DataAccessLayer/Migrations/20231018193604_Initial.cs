@@ -209,7 +209,7 @@ namespace DataAccessLayer.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    TotalPrice = table.Column<int>(type: "integer", nullable: false),
+                    TotalPrice = table.Column<double>(type: "double precision", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
@@ -375,9 +375,9 @@ namespace DataAccessLayer.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsAdmin", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "c97135e2-a522-45ab-b3d6-1f002717386e", null, false, true, false, null, "Monca", null, null, null, null, false, null, false, "vidlacka" },
-                    { 2, 0, "f40140ad-1e69-44d5-a43b-0e21bc4e96d0", null, false, true, false, null, "Betka", null, null, null, null, false, null, false, "betatesting" },
-                    { 3, 0, "9a389677-3ffe-46d0-865f-62f8af391f66", null, false, true, false, null, "Romik", null, null, null, null, false, null, false, "maromcik" }
+                    { 1, 0, "383289df-8630-43e7-becf-0538a62156b7", null, false, true, false, null, "Monca", null, null, null, null, false, null, false, "vidlacka" },
+                    { 2, 0, "6d3d14c4-7790-472d-bea5-37bd9732915a", null, false, true, false, null, "Betka", null, null, null, null, false, null, false, "betatesting" },
+                    { 3, 0, "64c4e5ba-11ca-4417-b54c-23783529666f", null, false, true, false, null, "Romik", null, null, null, null, false, null, false, "maromcik" }
                 });
 
             migrationBuilder.InsertData(
@@ -387,7 +387,7 @@ namespace DataAccessLayer.Migrations
                 {
                     { 1, "J. K. Rowling" },
                     { 2, "George Orwell" },
-                    { 3, "Peter Popluhar" }
+                    { 3, "Antoine de Saint-Exupéry" }
                 });
 
             migrationBuilder.InsertData(
@@ -397,38 +397,96 @@ namespace DataAccessLayer.Migrations
                 {
                     { 1, "Dystopian" },
                     { 2, "Political fiction" },
-                    { 3, "Social science fiction" }
+                    { 3, "Social science fiction" },
+                    { 4, "Horor" },
+                    { 5, "Fantasy" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Publishers",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "Secker & Warburg" });
+                values: new object[,]
+                {
+                    { 1, "Bloomsbury" },
+                    { 2, "Secker & Warburg" },
+                    { 3, "Reynal & Hitchcock" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Books",
                 columns: new[] { "Id", "Name", "OverallRating", "Price", "PublisherId", "StockInStorage" },
-                values: new object[] { 1, "1984", 100, 15.300000000000001, 1, 21 });
+                values: new object[,]
+                {
+                    { 1, "Harry Potter and the Philosopher's Stone", 97, 15.300000000000001, 1, 42 },
+                    { 2, "Harry Potter and the Chamber of Secrets", 92, 12.73, 1, 6 },
+                    { 3, "1984", 87, 19.100000000000001, 2, 15 },
+                    { 4, "The Little Prince", 99, 9.9900000000000002, 3, 23 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "Id", "Date", "TotalPrice", "UserId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local), 28.030000000000001, 1 },
+                    { 2, new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local), 9.9900000000000002, 2 }
+                });
 
             migrationBuilder.InsertData(
                 table: "AuthorBook",
                 columns: new[] { "AuthorsId", "BooksId" },
-                values: new object[] { 2, 1 });
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 2 },
+                    { 2, 3 },
+                    { 3, 4 }
+                });
 
             migrationBuilder.InsertData(
                 table: "BookGenre",
                 columns: new[] { "BooksId", "GenresId" },
                 values: new object[,]
                 {
+                    { 1, 5 },
+                    { 2, 5 },
+                    { 3, 2 },
+                    { 3, 3 },
+                    { 4, 5 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BookOrder",
+                columns: new[] { "BooksId", "OrdersId" },
+                values: new object[,]
+                {
                     { 1, 1 },
-                    { 1, 2 },
-                    { 1, 3 }
+                    { 2, 1 },
+                    { 4, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BookUser",
+                columns: new[] { "BooksId", "UsersId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 },
+                    { 3, 3 },
+                    { 4, 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Ratings",
                 columns: new[] { "Id", "BookId", "Comment", "UserId", "Value" },
-                values: new object[] { 1, 1, "Skvela kniha ale dalo mi to existencnu krizu vacsiu ako som mal predtym.", 1, 98 });
+                values: new object[,]
+                {
+                    { 1, 4, "Great book but it gave me an existential crisis bigger than I had before", 1, 98 },
+                    { 2, 3, "", 2, 42 },
+                    { 3, 1, "Harry Potter and the Sorcerer's Stone is the ultimate tale of what happens when a boy who's been living in a cupboard under the stairs discovers a world of magic. I mean, who knew that an owl could deliver mail or that a cloak could make you disappear faster than an introvert at a party?", 3, 91 },
+                    { 4, 2, "Harry Potter and the Chamber of Secrets is like a laugh potion that will have you chuckling faster than you can say \"Expelliarmus!\" The boy who lived is back, and this time, he's got a flying car and a house-elf who's obsessed with socks. In this book, you'll discover that Hogwarts doesn't just have ghosts in the hallways; it also has diary-possessing dark lords, giant snakes with dental issues, and a loony professor who could probably talk to garden gnomes.", 1, 88 },
+                    { 5, 2, "Apparently, Hogwarts' idea of school security is letting students fight giant serpents, navigate secret chambers, and brew potions that make them look like their arch-enemies (because that's definitely a practical skill for later life). So, if you're in the mood for a hilarious lesson on \"what not to do in school,\" Harry Potter and the Chamber of Secrets is your go-to guide. Just remember, when a disembodied voice tells you to \"follow the spiders,\" it's probably best to just stay indoors and read a good book instead.", 3, 71 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

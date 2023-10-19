@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(BookHubDbContext))]
-    [Migration("20231018185149_Initial")]
+    [Migration("20231018193604_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -42,8 +42,23 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            AuthorsId = 2,
+                            AuthorsId = 1,
                             BooksId = 1
+                        },
+                        new
+                        {
+                            AuthorsId = 1,
+                            BooksId = 2
+                        },
+                        new
+                        {
+                            AuthorsId = 2,
+                            BooksId = 3
+                        },
+                        new
+                        {
+                            AuthorsId = 3,
+                            BooksId = 4
                         });
                 });
 
@@ -65,17 +80,27 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             BooksId = 1,
-                            GenresId = 1
+                            GenresId = 5
                         },
                         new
                         {
-                            BooksId = 1,
+                            BooksId = 2,
+                            GenresId = 5
+                        },
+                        new
+                        {
+                            BooksId = 3,
                             GenresId = 2
                         },
                         new
                         {
-                            BooksId = 1,
+                            BooksId = 3,
                             GenresId = 3
+                        },
+                        new
+                        {
+                            BooksId = 4,
+                            GenresId = 5
                         });
                 });
 
@@ -92,6 +117,23 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("OrdersId");
 
                     b.ToTable("BookOrder");
+
+                    b.HasData(
+                        new
+                        {
+                            BooksId = 1,
+                            OrdersId = 1
+                        },
+                        new
+                        {
+                            BooksId = 2,
+                            OrdersId = 1
+                        },
+                        new
+                        {
+                            BooksId = 4,
+                            OrdersId = 2
+                        });
                 });
 
             modelBuilder.Entity("BookUser", b =>
@@ -107,6 +149,28 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("BookUser");
+
+                    b.HasData(
+                        new
+                        {
+                            BooksId = 1,
+                            UsersId = 1
+                        },
+                        new
+                        {
+                            BooksId = 2,
+                            UsersId = 1
+                        },
+                        new
+                        {
+                            BooksId = 3,
+                            UsersId = 3
+                        },
+                        new
+                        {
+                            BooksId = 4,
+                            UsersId = 2
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Author", b =>
@@ -139,7 +203,7 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = 3,
-                            Name = "Peter Popluhar"
+                            Name = "Antoine de Saint-Exupéry"
                         });
                 });
 
@@ -177,11 +241,38 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "1984",
-                            OverallRating = 100,
+                            Name = "Harry Potter and the Philosopher's Stone",
+                            OverallRating = 97,
                             Price = 15.300000000000001,
                             PublisherId = 1,
-                            StockInStorage = 21
+                            StockInStorage = 42
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Harry Potter and the Chamber of Secrets",
+                            OverallRating = 92,
+                            Price = 12.73,
+                            PublisherId = 1,
+                            StockInStorage = 6
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "1984",
+                            OverallRating = 87,
+                            Price = 19.100000000000001,
+                            PublisherId = 2,
+                            StockInStorage = 15
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "The Little Prince",
+                            OverallRating = 99,
+                            Price = 9.9900000000000002,
+                            PublisherId = 3,
+                            StockInStorage = 23
                         });
                 });
 
@@ -216,6 +307,16 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 3,
                             Name = "Social science fiction"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Horor"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Fantasy"
                         });
                 });
 
@@ -230,8 +331,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("TotalPrice")
-                        .HasColumnType("integer");
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("double precision");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
@@ -241,6 +342,22 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Date = new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            TotalPrice = 28.030000000000001,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Date = new DateTime(2023, 10, 18, 0, 0, 0, 0, DateTimeKind.Local),
+                            TotalPrice = 9.9900000000000002,
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Publisher", b =>
@@ -263,7 +380,17 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = 1,
+                            Name = "Bloomsbury"
+                        },
+                        new
+                        {
+                            Id = 2,
                             Name = "Secker & Warburg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Reynal & Hitchcock"
                         });
                 });
 
@@ -299,10 +426,42 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             Id = 1,
-                            BookId = 1,
-                            Comment = "Skvela kniha ale dalo mi to existencnu krizu vacsiu ako som mal predtym.",
+                            BookId = 4,
+                            Comment = "Great book but it gave me an existential crisis bigger than I had before",
                             UserId = 1,
                             Value = 98
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BookId = 3,
+                            Comment = "",
+                            UserId = 2,
+                            Value = 42
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BookId = 1,
+                            Comment = "Harry Potter and the Sorcerer's Stone is the ultimate tale of what happens when a boy who's been living in a cupboard under the stairs discovers a world of magic. I mean, who knew that an owl could deliver mail or that a cloak could make you disappear faster than an introvert at a party?",
+                            UserId = 3,
+                            Value = 91
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BookId = 2,
+                            Comment = "Harry Potter and the Chamber of Secrets is like a laugh potion that will have you chuckling faster than you can say \"Expelliarmus!\" The boy who lived is back, and this time, he's got a flying car and a house-elf who's obsessed with socks. In this book, you'll discover that Hogwarts doesn't just have ghosts in the hallways; it also has diary-possessing dark lords, giant snakes with dental issues, and a loony professor who could probably talk to garden gnomes.",
+                            UserId = 1,
+                            Value = 88
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BookId = 2,
+                            Comment = "Apparently, Hogwarts' idea of school security is letting students fight giant serpents, navigate secret chambers, and brew potions that make them look like their arch-enemies (because that's definitely a practical skill for later life). So, if you're in the mood for a hilarious lesson on \"what not to do in school,\" Harry Potter and the Chamber of Secrets is your go-to guide. Just remember, when a disembodied voice tells you to \"follow the spiders,\" it's probably best to just stay indoors and read a good book instead.",
+                            UserId = 3,
+                            Value = 71
                         });
                 });
 
@@ -383,7 +542,7 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c97135e2-a522-45ab-b3d6-1f002717386e",
+                            ConcurrencyStamp = "383289df-8630-43e7-becf-0538a62156b7",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
@@ -396,7 +555,7 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f40140ad-1e69-44d5-a43b-0e21bc4e96d0",
+                            ConcurrencyStamp = "6d3d14c4-7790-472d-bea5-37bd9732915a",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
@@ -409,7 +568,7 @@ namespace DataAccessLayer.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a389677-3ffe-46d0-865f-62f8af391f66",
+                            ConcurrencyStamp = "64c4e5ba-11ca-4417-b54c-23783529666f",
                             EmailConfirmed = false,
                             IsAdmin = true,
                             LockoutEnabled = false,
