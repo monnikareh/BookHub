@@ -19,7 +19,7 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetPublishers")]
         public async Task<ActionResult<IEnumerable<PublisherDetail>>> GetPublishers()
         {
             if (_context.Publishers == null)
@@ -78,7 +78,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
         }
 
-        [HttpPost]
+        [HttpPost("CreatePublisher")]
         public async Task<ActionResult<PublisherDetail>> PostGenre(PublisherCreate publisherCreate)
         {
             if (!ModelState.IsValid)
@@ -102,7 +102,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeletePublisher/{id}")]
         public async Task<IActionResult> DeletePublisher(int id)
         {
             if (_context.Publishers == null)

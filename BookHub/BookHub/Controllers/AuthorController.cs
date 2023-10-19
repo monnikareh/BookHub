@@ -20,7 +20,7 @@ namespace BookHub.Controllers
         }
 
         
-        [HttpGet]
+        [HttpGet("GetAuthors")]
         public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors()
         {
             if (_context.Authors == null)
@@ -87,7 +87,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapAuthorToAuthorDetail(author);
         }
 
-        [HttpPost]
+        [HttpPost("CreateAuthor")]
         public async Task<ActionResult<AuthorDetail>> PostAuthor(AuthorCreate authorCreate)
         {
             if (!ModelState.IsValid)
@@ -111,7 +111,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapAuthorToAuthorDetail(author);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteAuthor/{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
             if (_context.Authors == null)

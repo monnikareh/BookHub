@@ -26,7 +26,7 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetRatings")]
         public async Task<ActionResult<IEnumerable<RatingDetail>>> GetRatings(int? userId, string? userName,
             int? bookId, string? bookName)
         {
@@ -77,7 +77,7 @@ namespace BookHub.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("CreateRating")]
         public async Task<ActionResult<RatingDetail>> PostRating(RatingCreate ratingCreate)
         {
             if (!ModelState.IsValid)
@@ -124,7 +124,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapRatingToRatingDetail(rating);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteRating/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             if (_context.Books == null)

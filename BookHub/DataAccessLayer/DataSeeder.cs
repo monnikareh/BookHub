@@ -166,22 +166,30 @@ public static class DataSeeder
             {
                 Id = 1,
                 UserName = "vidlacka",
+                NormalizedUserName = "VIDLACKA",
                 Name = "Monca",
-                IsAdmin = true
+                Email = "m@m.com",
+                NormalizedEmail = "M@M.COM",
+                EmailConfirmed = true,
             },
             new User
             {
                 Id = 2,
                 UserName = "betatesting",
+                NormalizedUserName = "BETATESTING",
                 Name = "Betka",
-                IsAdmin = true
+                Email = "b@b.com",
+                NormalizedEmail = "B@B.COM",
+                EmailConfirmed = true,
             },
             new User
             {
                 Id = 3,
                 UserName = "maromcik",
+                NormalizedUserName = "MAROMCIK",
                 Name = "Romik",
-                IsAdmin = true
+                Email = "r@r.com",
+                EmailConfirmed = true,
             },
         };
     }

@@ -25,7 +25,7 @@ namespace BookHub.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetBooks")]
         public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(int? genreId, string? genreName,
             int? publisherId, string? publisherName, int? authorId, string? authorName)
         {
@@ -111,7 +111,7 @@ namespace BookHub.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("CreateBook")]
         public async Task<ActionResult<BookDetail>> PostBook(BookCreate bookCreate)
         {
             if (!ModelState.IsValid)
@@ -197,7 +197,7 @@ namespace BookHub.Controllers
             return ControllerHelpers.MapBookToBookDetail(book);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteBook/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             if (_context.Books == null)
