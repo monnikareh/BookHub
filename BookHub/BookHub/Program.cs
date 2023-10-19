@@ -18,6 +18,8 @@ var configuration = builder.Configuration;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 var connectionString = configuration.GetConnectionString("ConnectionString") ??
                        throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
+
+builder.Services.AddLogging();
 builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)

@@ -1,0 +1,4 @@
+[19. 10. 2023 23:31:39] Request: GET /
+[19. 10. 2023 23:31:39] Request: GET /
+[19. 10. 2023 23:31:41] Request: GET /BookHubApp.styles.css
+[19. 10. 2023 23:31:58] Request: POST /api/Auth/login
