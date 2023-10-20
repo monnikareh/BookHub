@@ -202,14 +202,12 @@ public static class DataSeeder
                 Id = 1,
                 UserId = 1,
                 TotalPrice = 28.03,
-                Date = DateTime.Today
             },
             new Order
             {
                 Id = 2,
                 UserId = 2,
                 TotalPrice = 9.99,
-                Date = DateTime.Today
             },
         };
     }
