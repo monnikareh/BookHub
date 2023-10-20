@@ -88,3 +88,8 @@
 [20. 10. 2023 18:34:41] Request: GET /api/Order/GetById/1
 [20. 10. 2023 18:35:04] Request: GET /api/Order/GetByName/Monca
 [20. 10. 2023 18:35:10] Request: GET /api/Order/GetByName/Betka
+[20. 10. 2023 19:08:23] Request: POST /api/Order/CreateOrder
+[20. 10. 2023 19:09:36] Request: POST /api/Order/CreateOrder
+[20. 10. 2023 19:09:46] Request: POST /api/Order/CreateOrder
+[20. 10. 2023 23:08:21] Request: POST /api/Order/CreateOrder
+[20. 10. 2023 23:08:54] Request: POST /api/Order/CreateOrder

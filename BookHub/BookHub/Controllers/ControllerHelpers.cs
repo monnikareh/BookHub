@@ -69,4 +69,15 @@ public static class ControllerHelpers
             Comment = rating.Comment
         };
     }
+    public static OrderDetail MapOrderToOrderDetail(Order order)
+    {
+        return new OrderDetail
+        {
+            Id = order.Id,
+            User = MapModelToRelated(order.User),
+            TotalPrice = order.TotalPrice,
+            Date = order.Date,
+            Books = order.Books.Select(MapModelToRelated).ToList()
+        };
+    }
 }

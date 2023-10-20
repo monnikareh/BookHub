@@ -3,6 +3,6 @@ namespace BookHub.Models;
 public class OrderCreate
 {
     public ModelRelated User { get; set; }
-    public int TotalPrice { get; set; }
-    public virtual ICollection<ModelRelated> Books { get; } = new List<ModelRelated>();
+    public double TotalPrice { get; set; }
+    public ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
 }

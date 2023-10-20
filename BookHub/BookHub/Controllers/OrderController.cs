@@ -126,6 +126,64 @@ namespace BookHub.Controllers
 
             return orderDetails;
         }
+        
+        [HttpPost("CreateOrder")]
+        public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+
+            if (_context.Orders == null)
+            {
+                return Problem("Entity set 'BookHubDbContext.Orders' is null.");
+            }
+
+            if (orderCreate.User == null)
+            {
+                return Problem("User is null");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
+                u.Name == orderCreate.User.Name || u.Id == orderCreate.User.Id);
+            if (user == null)
+            {
+                return NotFound(
+                    $"User 'Name={orderCreate.User.Name}' <OR> 'ID={orderCreate.User.Id}' could not be found");
+            }
+
+            var order = new Order
+            {
+                User = user,
+                TotalPrice = orderCreate.TotalPrice
+            };
+
+            if (orderCreate.Books == null || orderCreate.Books.Count == 0)
+            {
+                return BadRequest("No books specified in the order");
+            }
+
+            foreach (var bookRelatedModel in orderCreate.Books)
+            {
+                var book = await _context.Books.FirstOrDefaultAsync(b =>
+                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
+                if (book == null)
+                {
+                    return NotFound(
+                        $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                }
+
+                order.Books.Add(book);
+            }
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            return ControllerHelpers.MapOrderToOrderDetail(order);
+        }
+
+
+
         /*
         [HttpPost]
         public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
