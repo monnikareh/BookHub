@@ -3,10 +3,11 @@ using DataAccessLayer;
 using BookHub.Models; 
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 
-//TODO
 namespace BookHub.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase

@@ -27,12 +27,9 @@ namespace BookHub.Controllers
             {
                 return NotFound();
             }
-            // TODO ThenInclude dat prec
             return (await _context.Authors
                     .Include(a => a.Books)
-                    .ThenInclude(b => b.Publisher)
                     .Include(a => a.Books)
-                    .ThenInclude(b => b.Genres)
                     .ToListAsync())
                 .Select(ControllerHelpers.MapAuthorToAuthorDetail)
                 .ToList();
