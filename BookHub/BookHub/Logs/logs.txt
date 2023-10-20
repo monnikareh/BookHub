@@ -93,3 +93,5 @@
 [20. 10. 2023 19:09:46] Request: POST /api/Order/CreateOrder
 [20. 10. 2023 23:08:21] Request: POST /api/Order/CreateOrder
 [20. 10. 2023 23:08:54] Request: POST /api/Order/CreateOrder
+[20. 10. 2023 23:24:16] Request: PUT /api/Order/UpdateOrder/4
+[20. 10. 2023 23:24:45] Request: DELETE /api/Order/DeleteOrder/4

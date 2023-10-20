@@ -181,70 +181,68 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
-
-
-
-        /*
-        [HttpPost]
-        public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
+        
+        [HttpPut("UpdateOrder/{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, OrderDetail orderDetail)
         {
-            var user = await _context.Users.FindAsync(orderCreate.User.Id);
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("User not found.");
+                return BadRequest("Model is not valid!");
             }
 
-            var bookIds = orderCreate.Books.Select(b => b.Id).ToList();
-            var books = await _context.Books.Where(b => bookIds.Contains(b.Id)).ToListAsync();
-            if (books.Count != orderCreate.Books.Count)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
-                return BadRequest("One or more books not found.");
+                return NotFound($"Order with ID {id} not found");
             }
 
-            var order = new Order
-            {
-                User = user,
-                TotalPrice = orderCreate.TotalPrice,
-                Date = DateTime.Now
-            };
+            order.TotalPrice = orderDetail.TotalPrice;
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            var orderDetail = new OrderDetail
+            order.Books.Clear();
+            foreach (var bookRelatedModel in orderDetail.Books)
             {
-                Id = order.Id,
-                User = new ModelRelated { Id = user.Id, Name = user.Name },
-                TotalPrice = order.TotalPrice,
-                Date = order.Date,
-                Books = books.Select(b => new ModelRelated
+                var book = await _context.Books.FirstOrDefaultAsync(b =>
+                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
+                if (book == null)
                 {
-                    Id = b.Id,
-                    Name = b.Name,
-                }).ToList()
-            };
+                    return NotFound(
+                        $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                }
 
-            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, orderDetail);
+                order.Books.Add(book);
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error updating order: {ex.Message}");
+            }
         }
-    /*
-        // PUT: api/Order/5
-        [HttpPut("{id}")]
-        public IActionResult PutOrder(int id, OrderDetail orderDetail)
+        
+        [HttpDelete("DeleteOrder/{id}")]
+        public async Task<ActionResult> DeleteOrder(int id)
         {
-            // Implement code to update an existing order by its ID based on the provided OrderDetail object.
-            // You can use _context to update the order.
-            // Ensure proper error handling.
-            // Return appropriate responses (e.g., NoContent, BadRequest, NotFound).
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
+            {
+                return NotFound($"Order with ID {id} not found");
+            }
+
+            try
+            {
+                _context.Orders.Remove(order);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error deleting order: {ex.Message}");
+            }
         }
 
-        // DELETE: api/Order/5
-        [HttpDelete("{id}")]
-        public IActionResult DeleteOrder(int id)
-        {
-            // Implement code to delete an existing order by its ID from the database.
-            // You can use _context to remove the order.
-            // Ensure proper error handling.
-            // Return appropriate responses (e.g., NoContent, NotFound).
-        }*/
     } 
 }
