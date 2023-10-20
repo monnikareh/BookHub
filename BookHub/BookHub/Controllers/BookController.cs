@@ -33,7 +33,7 @@ namespace BookHub.Controllers
             {
                 return NotFound();
             }
-
+            
             var books = _context.Books
                 .Include(g => g.Genres)
                 .Include(b => b.Publisher)

@@ -6,7 +6,7 @@ namespace BookHub.Controllers;
 public static class ControllerHelpers
 {
   
-    public static ModelRelated MaToRelated<T>(T model) where T: IModelRelated
+    public static ModelRelated MapModelToRelated<T>(T model) where T: IModelRelated
     {
         return new ModelRelated
         {
@@ -21,7 +21,7 @@ public static class ControllerHelpers
         {
             Id = author.Id,
             Name = author.Name,
-            Books = author.Books.Select(MaToRelated).ToList()
+            Books = author.Books.Select(MapModelToRelated).ToList()
         };
     }
     
@@ -31,7 +31,7 @@ public static class ControllerHelpers
         {
             Id = genre.Id,
             Name = genre.Name,
-            Books = genre.Books.Select(MaToRelated).ToList()
+            Books = genre.Books.Select(MapModelToRelated).ToList()
         };
     }
     
@@ -41,7 +41,7 @@ public static class ControllerHelpers
         {
             Id = publisher.Id,
             Name = publisher.Name,
-            Books = publisher.Books.Select(MaToRelated).ToList()
+            Books = publisher.Books.Select(MapModelToRelated).ToList()
         };
     }
     public static BookDetail MapBookToBookDetail(Book book)
@@ -50,9 +50,9 @@ public static class ControllerHelpers
         {
             Id = book.Id,
             Name = book.Name,
-            Genres = book.Genres.Select(MaToRelated).ToList(),
-            Publisher = MaToRelated(book.Publisher),
-            Authors = book.Authors.Select(MaToRelated).ToList(),
+            Genres = book.Genres.Select(MapModelToRelated).ToList(),
+            Publisher = MapModelToRelated(book.Publisher),
+            Authors = book.Authors.Select(MapModelToRelated).ToList(),
             OverallRating = book.OverallRating,
             Price = book.Price,
             StockInStorage = book.StockInStorage
@@ -63,8 +63,8 @@ public static class ControllerHelpers
         return new RatingDetail
         {
             Id = rating.Id,
-            Book = MaToRelated(rating.Book),
-            User = MaToRelated(rating.User),
+            Book = MapModelToRelated(rating.Book),
+            User = MapModelToRelated(rating.User),
             Value = rating.Value,
             Comment = rating.Comment
         };

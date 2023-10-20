@@ -93,11 +93,9 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-// be careful about the order of the following middleware configuration.
 app.UseMiddleware<RequestLoggerMiddleware>();
 
 app.UseHttpsRedirection();
