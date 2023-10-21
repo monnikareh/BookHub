@@ -21,7 +21,16 @@ public class RequestLoggerMiddleware
     {
         var logText = $"[{DateTime.Now}] Request: {context.Request.Method} {context.Request.Path}\n";
         _logger.LogInformation($"{logText}");
-        await File.AppendAllTextAsync("Logs/logs.txt", logText);
+
+        var logFilePath = "Logs/logs.txt";
+        if (!File.Exists(logFilePath))
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
+            File.Create(logFilePath).Dispose();
+        }
+
+        await File.AppendAllTextAsync(logFilePath, logText);
         await _next(context);
     }
+
 }
