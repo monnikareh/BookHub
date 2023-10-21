@@ -29,7 +29,6 @@ namespace BookHub.Controllers
             }
             return (await _context.Authors
                     .Include(a => a.Books)
-                    .Include(a => a.Books)
                     .ToListAsync())
                 .Select(ControllerHelpers.MapAuthorToAuthorDetail)
                 .ToList();
@@ -107,7 +106,51 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapAuthorToAuthorDetail(author);
         }
+        
+        [HttpPut("UpdateAuthor/{id}")]
+        public async Task<IActionResult> UpdateAuthor(int id, AuthorDetail authorDetail)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
 
+            var author = await _context.Authors.FindAsync(id);
+            if (author == null)
+            {
+                return NotFound($"Author with ID {id} not found");
+            }
+
+            author.Name = authorDetail.Name;
+
+            if (authorDetail.Books != null && authorDetail.Books.Count != 0)
+            {
+                author.Books.Clear();
+                foreach (var bookRelatedModel in authorDetail.Books)
+                {
+                    var book = await _context.Books.FirstOrDefaultAsync(b =>
+                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
+                    if (book == null)
+                    {
+                        return NotFound(
+                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                    }
+
+                    author.Books.Add(book);
+                }
+            }
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error updating author: {ex.Message}");
+            }
+        }
+        
         [HttpDelete("DeleteAuthor/{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {

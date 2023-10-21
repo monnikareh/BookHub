@@ -101,6 +101,51 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
         }
+        
+        [HttpPut("UpdatePublisher/{id}")]
+        public async Task<IActionResult> UpdatePublisher(int id, PublisherDetail publisherDetail)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+
+            var publisher = await _context.Publishers.FindAsync(id);
+            if (publisher == null)
+            {
+                return NotFound($"Publisher with ID {id} not found");
+            }
+
+            publisher.Name = publisherDetail.Name;
+
+            if (publisherDetail.Books != null && publisherDetail.Books.Count != 0)
+            {
+                publisher.Books.Clear();
+                foreach (var bookRelatedModel in publisherDetail.Books)
+                {
+                    var book = await _context.Books.FirstOrDefaultAsync(b =>
+                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
+                    if (book == null)
+                    {
+                        return NotFound(
+                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                    }
+
+                    publisher.Books.Add(book);
+                }
+            }
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error updating publisher: {ex.Message}");
+            }
+        }
+
 
         [HttpDelete("DeletePublisher/{id}")]
         public async Task<IActionResult> DeletePublisher(int id)

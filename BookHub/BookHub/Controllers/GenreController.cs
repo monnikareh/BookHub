@@ -101,7 +101,51 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapGenreToGenreDetail(genre);
         }
+        
+        [HttpPut("UpdateGenre/{id}")]
+        public async Task<IActionResult> UpdateGenre(int id, GenreDetail genreDetail)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
 
+            var genre = await _context.Genres.FindAsync(id);
+            if (genre == null)
+            {
+                return NotFound($"Genre with ID {id} not found");
+            }
+
+            genre.Name = genreDetail.Name;
+
+            if (genreDetail.Books != null && genreDetail.Books.Count != 0)
+            {
+                genre.Books.Clear();
+                foreach (var bookRelatedModel in genreDetail.Books)
+                {
+                    var book = await _context.Books.FirstOrDefaultAsync(b =>
+                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
+                    if (book == null)
+                    {
+                        return NotFound(
+                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                    }
+
+                    genre.Books.Add(book);
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error updating genre: {ex.Message}");
+            }
+        }
+        
         [HttpDelete("DeleteGenre/{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {

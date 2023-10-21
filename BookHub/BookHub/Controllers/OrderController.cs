@@ -199,18 +199,21 @@ namespace BookHub.Controllers
 
             order.TotalPrice = orderDetail.TotalPrice;
 
-            order.Books.Clear();
-            foreach (var bookRelatedModel in orderDetail.Books)
+            if (orderDetail.Books != null && orderDetail.Books.Count != 0)
             {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
+                order.Books.Clear();
+                foreach (var bookRelatedModel in orderDetail.Books)
                 {
-                    return NotFound(
-                        $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
+                    var book = await _context.Books.FirstOrDefaultAsync(b =>
+                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
+                    if (book == null)
+                    {
+                        return NotFound(
+                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                    }
 
-                order.Books.Add(book);
+                    order.Books.Add(book);
+                }
             }
 
             try

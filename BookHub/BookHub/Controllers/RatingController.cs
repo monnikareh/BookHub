@@ -123,6 +123,62 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapRatingToRatingDetail(rating);
         }
+        
+        [HttpPut("UpdateRating/{id}")]
+        public async Task<ActionResult> UpdateRating(int id, RatingDetail ratingDetail)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+
+            var rating = await _context.Ratings.FindAsync(id);
+            if (rating == null)
+            {
+                return NotFound($"Rating with ID {id} not found");
+            }
+
+            rating.Value = ratingDetail.Value;
+
+            if (rating.Comment != "string")
+            {
+                rating.Comment = ratingDetail.Comment;
+            }
+
+            if (ratingDetail.User.Name != "string")
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == ratingDetail.User.Name);
+                if (user == null)
+                {
+                    return NotFound($"User with name '{ratingDetail.User.Name}' not found");
+                }
+
+                rating.User = user;
+                rating.UserId = user.Id;
+            }
+
+            if (ratingDetail.Book.Name != "string")
+            {
+                var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == ratingDetail.Book.Name);
+                if (book == null)
+                {
+                    return NotFound($"Book with name '{ratingDetail.Book.Name}' not found");
+                }
+
+                rating.Book = book;
+                rating.BookId = book.Id;
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error updating rating: {ex.Message}");
+            }
+        }
 
         [HttpDelete("DeleteRating/{id}")]
         public async Task<IActionResult> DeleteBook(int id)

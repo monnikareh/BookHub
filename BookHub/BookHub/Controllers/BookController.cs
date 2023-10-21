@@ -196,6 +196,92 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapBookToBookDetail(book);
         }
+        
+        [HttpPut("UpdateBook/{id}")]
+        public async Task<ActionResult> UpdateBook(int id, BookDetail bookDetail)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+
+            var book = await _context.Books
+                .Include(b => b.Genres)
+                .Include(b => b.Publisher)
+                .Include(b => b.Authors)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+            {
+                return NotFound($"Book with ID {id} not found");
+            }
+
+            book.Name = bookDetail.Name;
+
+            if (bookDetail.Genres != null && bookDetail.Genres.Count > 0)
+            {
+                book.Genres.Clear();
+                foreach (var genreRelatedModel in bookDetail.Genres)
+                {
+                    var genre = await _context.Genres.FirstOrDefaultAsync(g =>
+                        g.Name == genreRelatedModel.Name || g.Id == genreRelatedModel.Id);
+                    if (genre == null)
+                    {
+                        return NotFound(
+                            $"Genre 'Name={genreRelatedModel.Name}' <OR> 'ID={genreRelatedModel.Id}' could not be found");
+                    }
+
+                    book.Genres.Add(genre);
+                }
+            }
+
+            if (bookDetail.Publisher != null && bookDetail.Publisher.Name != "string")
+            {
+                var publisher = await _context.Publishers.FirstOrDefaultAsync(p =>
+                    p.Name == bookDetail.Publisher.Name || p.Id == bookDetail.Publisher.Id);
+                if (publisher == null)
+                {
+                    return NotFound(
+                        $"Publisher 'Name={bookDetail.Publisher.Name}' <OR> 'ID={bookDetail.Publisher.Id}' could not be found");
+                }
+
+                book.Publisher = publisher;
+                book.PublisherId = publisher.Id;
+            }
+
+            book.Price = bookDetail.Price;
+            book.StockInStorage = bookDetail.StockInStorage;
+            book.OverallRating = bookDetail.OverallRating;
+
+            if (bookDetail.Authors != null && bookDetail.Authors.Count > 0)
+            {
+                book.Authors.Clear();
+                foreach (var authorRelatedModel in bookDetail.Authors)
+                {
+                    var author = await _context.Authors.FirstOrDefaultAsync(a =>
+                        a.Name == authorRelatedModel.Name || a.Id == authorRelatedModel.Id);
+                    if (author == null)
+                    {
+                        return NotFound(
+                            $"Author 'Name={authorRelatedModel.Name}' <OR> 'ID={authorRelatedModel.Id}' could not be found");
+                    }
+
+                    book.Authors.Add(author);
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return Problem($"Error updating book: {ex.Message}");
+            }
+        }
+
+
 
         [HttpDelete("DeleteBook/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
