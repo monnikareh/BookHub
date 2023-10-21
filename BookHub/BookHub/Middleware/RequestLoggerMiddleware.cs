@@ -26,7 +26,7 @@ public class RequestLoggerMiddleware
         if (!File.Exists(logFilePath))
         {
             Directory.CreateDirectory(Path.GetDirectoryName(logFilePath));
-            File.Create(logFilePath).Dispose();
+            await File.Create(logFilePath).DisposeAsync();
         }
 
         await File.AppendAllTextAsync(logFilePath, logText);
