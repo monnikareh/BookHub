@@ -136,9 +136,8 @@ namespace BookHub.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                    if (await _roleManager.RoleExistsAsync(UserRoles.User))
                     {
-                        await _userManager.AddToRoleAsync(user, UserRoles.Admin);
                         await _userManager.AddToRoleAsync(user, UserRoles.User);
                     }
                     var userId = await _userManager.GetUserIdAsync(user);
