@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BookHub.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class GenreController : ControllerBase

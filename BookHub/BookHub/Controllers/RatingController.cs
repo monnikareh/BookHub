@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BookHub.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class RatingController : ControllerBase
