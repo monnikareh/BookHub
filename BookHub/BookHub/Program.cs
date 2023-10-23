@@ -1,5 +1,4 @@
 using System.Text;
-using BookHub.Middleware;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
