@@ -80,4 +80,15 @@ public static class ControllerHelpers
             Books = order.Books.Select(MapModelToRelated).ToList()
         };
     }
+    
+    public static UserDetail MapUserToUserDetail(User user)
+    {
+        return new UserDetail
+        {
+            Id = user.Id,
+            Name = user.Name, 
+            Books = user.Books.Select(MapModelToRelated).ToList()
+            
+        };
+    }
 }
