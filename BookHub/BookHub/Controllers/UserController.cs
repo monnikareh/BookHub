@@ -35,7 +35,7 @@ namespace BookHub.Controllers
         }
 
         [HttpGet("GetUserById/{id}")]
-        public async Task<ActionResult<User>> GetUserById(int id)
+        public async Task<ActionResult<UserDetail>> GetUserById(int id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -44,7 +44,7 @@ namespace BookHub.Controllers
                 return NotFound($"User with ID '{id}' not found");
             }
 
-            return user;
+            return ControllerHelpers.MapUserToUserDetail(user);
         }
 
         [HttpPost("CreateUser")]
