@@ -43,21 +43,8 @@ namespace BookHub.Controllers
             {
                 orders = orders.Where(o => o.Date <= endDate.Value);
             }
-
-            var orderList = await orders.Select(o => new OrderDetail
-            {
-                Id = o.Id,
-                User = new ModelRelated { Id = o.User.Id, Name = o.User.Name },
-                TotalPrice = o.TotalPrice,
-                Date = o.Date,
-                Books = o.Books.Select(b => new ModelRelated
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                  //  Price = b.Price,
-                  //  Authors = b.Authors.Select(a => new ModelRelated { Name = a.Name }).ToList()
-                }).ToList()
-            }).ToListAsync();
+            
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
             if (!orderList.Any())
             {
                 return NotFound("No orders found for the specified date range.");
@@ -80,52 +67,32 @@ namespace BookHub.Controllers
             {
                 return NotFound("Order not found.");
             }
-
-            var orderDetail = new OrderDetail
-            {
-                Id = order.Id,
-                User = new ModelRelated { Id = order.User.Id, Name = order.User.Name },
-                TotalPrice = order.TotalPrice,
-                Date = order.Date,
-                Books = order.Books.Select(b => new ModelRelated
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                }).ToList()
-            };
-
-            return orderDetail;
+            return ControllerHelpers.MapOrderToOrderDetail(order);
         }
         
-        [HttpGet("GetByName/{username}")]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string username)
+        [HttpGet("GetByName/{name}")]
+        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string name)
         {
-            var orders = await _context.Orders
+            if (_context.Orders == null)
+            {
+                return NotFound();
+            }
+
+            var orders = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
                 .ThenInclude(b => b.Authors)
-                .Where(o => o.User.Name == username)
-                .ToListAsync();
+                .Where(o => o.User.Name == name)
+                .AsQueryable();
 
-            if (orders == null || !orders.Any())
+            
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
+            if (!orderList.Any())
             {
-                return NotFound("No orders found for the specified username.");
+                return NotFound("No orders found for the specified date range.");
             }
 
-            var orderDetails = orders.Select(o => new OrderDetail
-            {
-                Id = o.Id,
-                User = new ModelRelated { Id = o.User.Id, Name = o.User.Name },
-                TotalPrice = o.TotalPrice,
-                Date = o.Date,
-                Books = o.Books.Select(b => new ModelRelated
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                }).ToList()
-            }).ToList();
-
-            return orderDetails;
+            return orderList;
         }
         
         [HttpPost("CreateOrder")]
