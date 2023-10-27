@@ -19,13 +19,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("GetBooks")]
-        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(int? bookId, string? bookName, int? genreId,
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(string? bookName, int? genreId,
             string? genreName,
             int? publisherId, string? publisherName, int? authorId, string? authorName)
         {
             try
             {
-                return Ok(await _bookService.GetBooksAsync(bookId, bookName, genreId, genreName, publisherId,
+                return Ok(await _bookService.GetBooksAsync(bookName, genreId, genreName, publisherId,
                     publisherName, authorId, authorName));
             }
             catch (Exception e)

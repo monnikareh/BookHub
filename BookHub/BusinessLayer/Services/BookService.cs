@@ -19,7 +19,7 @@ public class BookService : IBookService
     }
 
 
-    public async Task<IEnumerable<BookDetail>> GetBooksAsync(int? bookId, string? bookName, int? genreId,
+    public async Task<IEnumerable<BookDetail>> GetBooksAsync(string? bookName, int? genreId,
         string? genreName,
         int? publisherId, string? publisherName, int? authorId, string? authorName)
     {
@@ -50,11 +50,6 @@ public class BookService : IBookService
         if (author != null)
         {
             books = books.Where(b => b.Authors.Contains(author));
-        }
-
-        if (bookId is > 0)
-        {
-            books = books.Where(b => b.Id == bookId);
         }
         
         if (!bookName.IsNullOrEmpty())
