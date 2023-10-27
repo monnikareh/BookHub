@@ -2,6 +2,7 @@ using BookHub.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using BusinessLayer.Mapper;
+using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,47 +14,20 @@ namespace WebAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly BookHubDbContext _context;
+        private readonly IOrderService _orderService;
 
-        public OrderController(BookHubDbContext context)
+        public OrderController(IOrderService orderService)
         {
-            _context = context;
+            _orderService = orderService;
         }
         
         // GET: api/Order
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(DateTime? startDate, DateTime? endDate)
+        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersAsync(DateTime? startDate, DateTime? endDate)
         {
-            if (_context.Orders == null)
-            {
-                return NotFound();
-            }
-
-            var orders = _context.Orders
-                .Include(o => o.User)
-                .Include(o => o.Books)
-                .ThenInclude(b => b.Authors)
-                .AsQueryable();
-
-            if (startDate.HasValue)
-            {
-                orders = orders.Where(o => o.Date >= startDate.Value);
-            }
-
-            if (endDate.HasValue)
-            {
-                orders = orders.Where(o => o.Date <= endDate.Value);
-            }
-            
-            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
-            if (!orderList.Any())
-            {
-                return NotFound("No orders found for the specified date range.");
-            }
-
-            return orderList;
+            return Ok(await _orderService.GetOrdersAsync(startDate, endDate));
         }
-
+        /*
         // GET: api/Order/5
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
@@ -214,7 +188,7 @@ namespace WebAPI.Controllers
             {
                 return Problem($"Error deleting order: {ex.Message}");
             }
-        }
+        } */
 
     } 
 }
