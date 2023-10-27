@@ -1,4 +1,5 @@
 using BookHub.Models;
+using BusinessLayer.Exceptions;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using BusinessLayer.Mapper;
@@ -22,11 +23,92 @@ namespace WebAPI.Controllers
         }
         
         // GET: api/Order
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersAsync(DateTime? startDate, DateTime? endDate)
+        [HttpGet("GetOrders")]
+        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersAsync(int? userId, string? username,
+            DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName)
         {
-            return Ok(await _orderService.GetOrdersAsync(startDate, endDate));
+            try
+            {
+                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName));
+            }
+            catch (Exception e)
+            {
+                return HandleOrderException(e);
+            }
         }
+        
+        // GET: api/Order/5
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
+        {
+            try
+            {
+                return Ok(await _orderService.GetOrderByIdAsync(id));
+            }
+            catch (Exception e)
+            {
+                return HandleOrderException(e);
+            }
+        }
+        
+        [HttpPost("CreateOrder")]
+        public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+            try
+            {
+                return Ok(await _orderService.PostOrderAsync(orderCreate));
+            }
+            catch (Exception e)
+            {
+                return HandleOrderException(e);
+            }
+        }
+        
+        [HttpPut("UpdateOrder/{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, OrderUpdate orderUpdate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Model is not valid!");
+            }
+            try
+            {
+                return Ok(await _orderService.UpdateOrderAsync(id, orderUpdate));
+            }
+            catch (Exception e)
+            {
+                return HandleOrderException(e);
+            }
+        }
+        
+        [HttpDelete("DeleteOrder/{id}")]
+        public async Task<ActionResult> DeleteOrder(int id)
+        {
+            try
+            {
+                await _orderService.DeleteOrderAsync(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleOrderException(e);
+            }
+        } 
+        
+        private ActionResult HandleOrderException(Exception e)
+        {
+            return e is OrderNotFoundException or UserNotFoundException
+                or BookNotFoundException
+                ? NotFound(e.Message)
+                : Problem(e is BooksEmptyException or EntityUpdateException
+                    ? e.Message
+                    : "Unknown problem occured");
+        }
+        
         /*
         // GET: api/Order/5
         [HttpGet("GetById/{id}")]
@@ -43,31 +125,6 @@ namespace WebAPI.Controllers
                 return NotFound("Order not found.");
             }
             return ControllerHelpers.MapOrderToOrderDetail(order);
-        }
-        
-        [HttpGet("GetByName/{name}")]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string name)
-        {
-            if (_context.Orders == null)
-            {
-                return NotFound();
-            }
-
-            var orders = _context.Orders
-                .Include(o => o.User)
-                .Include(o => o.Books)
-                .ThenInclude(b => b.Authors)
-                .Where(o => o.User.Name == name)
-                .AsQueryable();
-
-            
-            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
-            if (!orderList.Any())
-            {
-                return NotFound("No orders found for the specified date range.");
-            }
-
-            return orderList;
         }
         
         [HttpPost("CreateOrder")]

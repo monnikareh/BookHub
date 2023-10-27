@@ -4,7 +4,10 @@ namespace BusinessLayer.Services;
 
 public interface IOrderService
 {
-    public Task<IEnumerable<OrderDetail>> GetOrdersAsync(
-        DateTime? startDate, DateTime? endDate
-        );
+    Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
+        DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName);
+    Task<OrderDetail> GetOrderByIdAsync(int id);
+    Task<OrderDetail> PostOrderAsync(OrderCreate orderCreate);
+    Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
+    Task DeleteOrderAsync(int id);
 }

@@ -1,9 +1,11 @@
 using BookHub.Models;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
+using BusinessLayer.Exceptions;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BusinessLayer.Services
 {
@@ -15,14 +17,27 @@ namespace BusinessLayer.Services
         {
             _context = context;
         }
+        
+        //TODO pridat kontroly
 
-        public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(DateTime? startDate, DateTime? endDate)
+        public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
+            DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName)
         {
             var orders = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
                 .ThenInclude(b => b.Authors)
                 .AsQueryable();
+            
+            if (userId.HasValue)
+            {
+                orders = orders.Where(o => o.User.Id == userId.Value);
+            }
+            
+            if (!string.IsNullOrEmpty(username))
+            {
+                orders = orders.Where(o => o.User.Name == username);
+            }
 
             if (startDate.HasValue)
             {
@@ -34,97 +49,61 @@ namespace BusinessLayer.Services
                 orders = orders.Where(o => o.Date <= endDate.Value);
             }
 
+            if (totalPrice.HasValue)
+            {
+                orders = orders.Where(o => Math.Abs(o.TotalPrice - totalPrice.Value) < 0.0001);
+            }
+
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == bookName || b.Id == bookId);
+            if (book != null)
+            {
+                orders = orders.Where(o => o.Books.Contains(book));
+            }
+
             var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
             return orderList;
         }
-
-        /*
-        public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
+        
+        public async Task<OrderDetail> GetOrderByIdAsync(int id)
         {
             var order = await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
                 .ThenInclude(b => b.Authors)
                 .FirstOrDefaultAsync(o => o.Id == id);
-
             if (order == null)
             {
-                return NotFound("Order not found.");
+                throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
             }
-
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
 
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string name)
+        public async Task<OrderDetail> PostOrderAsync(OrderCreate orderCreate)
         {
-            if (_context.Orders == null)
+            if (orderCreate.Books.IsNullOrEmpty())
             {
-                return NotFound();
+                throw new BooksEmptyException("Collection Books is empty");
             }
-
-            var orders = _context.Orders
-                .Include(o => o.User)
-                .Include(o => o.Books)
-                .ThenInclude(b => b.Authors)
-                .Where(o => o.User.Name == name)
-                .AsQueryable();
-
-
-            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
-            if (!orderList.Any())
-            {
-                return NotFound("No orders found for the specified date range.");
-            }
-
-            return orderList;
-        }
-
-        public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model is not valid!");
-            }
-
-            if (_context.Orders == null)
-            {
-                return Problem("Entity set 'BookHubDbContext.Orders' is null.");
-            }
-
-            if (orderCreate.User == null)
-            {
-                return Problem("User is null");
-            }
-
             var user = await _context.Users.FirstOrDefaultAsync(u =>
                 u.Name == orderCreate.User.Name || u.Id == orderCreate.User.Id);
             if (user == null)
             {
-                return NotFound(
-                    $"User 'Name={orderCreate.User.Name}' <OR> 'ID={orderCreate.User.Id}' could not be found");
+                throw new UserNotFoundException($"User 'Name={orderCreate.User.Name}' <OR> 'ID={orderCreate.User.Id}' could not be found");
             }
-
             var order = new Order
             {
                 User = user,
                 TotalPrice = orderCreate.TotalPrice
             };
-
-            if (orderCreate.Books == null || orderCreate.Books.Count == 0)
-            {
-                return BadRequest("No books specified in the order");
-            }
-
+            
             foreach (var bookRelatedModel in orderCreate.Books)
             {
                 var book = await _context.Books.FirstOrDefaultAsync(b =>
                     b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
                 if (book == null)
                 {
-                    return NotFound(
-                        $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                    throw new BookNotFoundException($"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
                 }
-
                 order.Books.Add(book);
             }
 
@@ -133,34 +112,27 @@ namespace BusinessLayer.Services
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
 
-        public async Task<ActionResult> UpdateOrder(int id, OrderDetail orderDetail)
+        public async Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Model is not valid!");
-            }
-
             var order = await _context.Orders.FindAsync(id);
             if (order == null)
             {
-                return NotFound($"Order with ID {id} not found");
+                throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
             }
+            
+            order.TotalPrice = orderUpdate.TotalPrice;
 
-            order.TotalPrice = orderDetail.TotalPrice;
-
-            if (orderDetail.Books != null && orderDetail.Books.Count != 0)
+            if (orderUpdate.Books.Count != 0)
             {
                 order.Books.Clear();
-                foreach (var bookRelatedModel in orderDetail.Books)
+                foreach (var bookRelatedModel in orderUpdate.Books)
                 {
                     var book = await _context.Books.FirstOrDefaultAsync(b =>
                         b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
                     if (book == null)
                     {
-                        return NotFound(
-                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
+                        throw new BookNotFoundException($"Book 'ID={id}' could not be found");
                     }
-
                     order.Books.Add(book);
                 }
             }
@@ -168,32 +140,30 @@ namespace BusinessLayer.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return NoContent();
+                return ControllerHelpers.MapOrderToOrderDetail(order);
             }
             catch (Exception ex)
             {
-                return Problem($"Error updating order: {ex.Message}");
+                throw new EntityUpdateException($"Error updating order: {ex.Message}");
             }
         }
 
-        public async Task<ActionResult> DeleteOrder(int id)
+        public async Task DeleteOrderAsync(int id)
         {
             var order = await _context.Orders.FindAsync(id);
             if (order == null)
             {
-                return NotFound($"Order with ID {id} not found");
+                throw new BookNotFoundException($"Order 'ID={id}' could not be found");
             }
-
             try
             {
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
-                return NoContent();
             }
             catch (Exception ex)
             {
-                return Problem($"Error deleting order: {ex.Message}");
+                throw new EntityDeleteException($"Error deleting order: {ex.Message}");
             }
-        }*/
+        }
     } 
 }
