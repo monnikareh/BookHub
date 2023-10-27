@@ -1,7 +1,7 @@
 using BookHub.Models;
 using DataAccessLayer.Entities;
 
-namespace BookHub.Controllers;
+namespace WebAPI.Controllers;
 
 public static class ControllerHelpers
 {
