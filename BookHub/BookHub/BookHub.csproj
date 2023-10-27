@@ -22,12 +22,15 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
-    </ItemGroup>
+    
 
     <ItemGroup>
       <Folder Include="wwwroot\" />
+    </ItemGroup>
+    
+
+    <ItemGroup>
+      <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
+      <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
     </ItemGroup>
 </Project>

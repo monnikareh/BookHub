@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookHub", "BookHub\BookHub.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{C53972C6-F60E-440A-82F8-DAD2C9C3C3AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusinessLayer\BusinessLayer.csproj", "{8E3313B8-8968-4427-9488-B7A18500D130}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{215F61D3-E286-4438-8BCD-A4BF3F1622E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,5 +26,13 @@ Global
 		{4129D416-1BDD-4A05-A12C-A0A542E3EF7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4129D416-1BDD-4A05-A12C-A0A542E3EF7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4129D416-1BDD-4A05-A12C-A0A542E3EF7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E3313B8-8968-4427-9488-B7A18500D130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E3313B8-8968-4427-9488-B7A18500D130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E3313B8-8968-4427-9488-B7A18500D130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E3313B8-8968-4427-9488-B7A18500D130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{215F61D3-E286-4438-8BCD-A4BF3F1622E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{215F61D3-E286-4438-8BCD-A4BF3F1622E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{215F61D3-E286-4438-8BCD-A4BF3F1622E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{215F61D3-E286-4438-8BCD-A4BF3F1622E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

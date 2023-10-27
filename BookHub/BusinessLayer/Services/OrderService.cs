@@ -1,33 +1,23 @@
-using Microsoft.AspNetCore.Mvc;
+using BookHub.Models;
 using DataAccessLayer;
-using BookHub.Models; 
-using Microsoft.EntityFrameworkCore;
+using BusinessLayer.Mapper;
 using DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace BookHub.Controllers
+namespace BusinessLayer.Services
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderService : IOrderService
     {
         private readonly BookHubDbContext _context;
 
-        public OrderController(BookHubDbContext context)
+        public OrderService(BookHubDbContext context)
         {
             _context = context;
         }
-        
-        // GET: api/Order
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(DateTime? startDate, DateTime? endDate)
-        {
-            if (_context.Orders == null)
-            {
-                return NotFound();
-            }
 
+        public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(DateTime? startDate, DateTime? endDate)
+        {
             var orders = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
@@ -44,30 +34,11 @@ namespace BookHub.Controllers
                 orders = orders.Where(o => o.Date <= endDate.Value);
             }
 
-            var orderList = await orders.Select(o => new OrderDetail
-            {
-                Id = o.Id,
-                User = new ModelRelated { Id = o.User.Id, Name = o.User.Name },
-                TotalPrice = o.TotalPrice,
-                Date = o.Date,
-                Books = o.Books.Select(b => new ModelRelated
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                  //  Price = b.Price,
-                  //  Authors = b.Authors.Select(a => new ModelRelated { Name = a.Name }).ToList()
-                }).ToList()
-            }).ToListAsync();
-            if (!orderList.Any())
-            {
-                return NotFound("No orders found for the specified date range.");
-            }
-
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
             return orderList;
         }
 
-        // GET: api/Order/5
-        [HttpGet("GetById/{id}")]
+        /*
         public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
         {
             var order = await _context.Orders
@@ -81,54 +52,33 @@ namespace BookHub.Controllers
                 return NotFound("Order not found.");
             }
 
-            var orderDetail = new OrderDetail
-            {
-                Id = order.Id,
-                User = new ModelRelated { Id = order.User.Id, Name = order.User.Name },
-                TotalPrice = order.TotalPrice,
-                Date = order.Date,
-                Books = order.Books.Select(b => new ModelRelated
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                }).ToList()
-            };
-
-            return orderDetail;
+            return ControllerHelpers.MapOrderToOrderDetail(order);
         }
-        
-        [HttpGet("GetByName/{username}")]
-        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string username)
+
+        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string name)
         {
-            var orders = await _context.Orders
+            if (_context.Orders == null)
+            {
+                return NotFound();
+            }
+
+            var orders = _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
                 .ThenInclude(b => b.Authors)
-                .Where(o => o.User.Name == username)
-                .ToListAsync();
+                .Where(o => o.User.Name == name)
+                .AsQueryable();
 
-            if (orders == null || !orders.Any())
+
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
+            if (!orderList.Any())
             {
-                return NotFound("No orders found for the specified username.");
+                return NotFound("No orders found for the specified date range.");
             }
 
-            var orderDetails = orders.Select(o => new OrderDetail
-            {
-                Id = o.Id,
-                User = new ModelRelated { Id = o.User.Id, Name = o.User.Name },
-                TotalPrice = o.TotalPrice,
-                Date = o.Date,
-                Books = o.Books.Select(b => new ModelRelated
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                }).ToList()
-            }).ToList();
-
-            return orderDetails;
+            return orderList;
         }
-        
-        [HttpPost("CreateOrder")]
+
         public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
         {
             if (!ModelState.IsValid)
@@ -182,8 +132,7 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
-        
-        [HttpPut("UpdateOrder/{id}")]
+
         public async Task<ActionResult> UpdateOrder(int id, OrderDetail orderDetail)
         {
             if (!ModelState.IsValid)
@@ -226,8 +175,7 @@ namespace BookHub.Controllers
                 return Problem($"Error updating order: {ex.Message}");
             }
         }
-        
-        [HttpDelete("DeleteOrder/{id}")]
+
         public async Task<ActionResult> DeleteOrder(int id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -246,7 +194,6 @@ namespace BookHub.Controllers
             {
                 return Problem($"Error deleting order: {ex.Message}");
             }
-        }
-
+        }*/
     } 
 }
