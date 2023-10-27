@@ -4,20 +4,42 @@ using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BookHub.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly BookHubDbContext _context;
+        private readonly IUserStore<User> _userStore;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        private readonly IUserEmailStore<User> _emailStore;
 
-        public UserController(BookHubDbContext context)
+
+
+        public UserController(
+            BookHubDbContext context, 
+            IUserStore<User> userStore, 
+            UserManager<User> userManager,
+            RoleManager<IdentityRole<int>> roleManager)
         {
             _context = context;
+            _userStore = userStore;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            if (!_userManager.SupportsUserEmail)
+            {
+                throw new NotSupportedException("The default UI requires a user store with email support.");
+            }
+            _emailStore = (IUserEmailStore<User>)_userStore;
+
         }
+
 
         [HttpGet("GetUsers")]
         public async Task<ActionResult<IEnumerable<UserDetail>>> GetUsers()
@@ -48,49 +70,56 @@ namespace BookHub.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public async Task<ActionResult<UserDetail>> PostUser(User user)
+        public async Task<ActionResult<UserDetail>> PostUser(UserCreate userCreate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model is not valid!");
             }
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetUserById", new { id = user.Id }, user);
+            User user;
+            try
+            {
+                user = Activator.CreateInstance<User>();
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
+            }
+            user.Name = userCreate.Name;
+            await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
+            await _emailStore.SetEmailAsync(user, userCreate.Email, CancellationToken.None);
+            var result = await _userManager.CreateAsync(user, userCreate.Password);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
+            }
+            if (await _roleManager.RoleExistsAsync(UserRoles.User))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.User);
+            } 
+            return ControllerHelpers.MapUserToUserDetail(user);
         }
 
         [HttpPut("UpdateUser/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserDetail user)
+        public async Task<IActionResult> UpdateUser(int id, UserCreate userCreate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model is not valid!");
             }
 
-            if (id != user.Id)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
-                return BadRequest("User ID in the request does not match the ID in the data.");
+                return NotFound($"Order with ID {id} not found");
             }
+            user.Name = userCreate.Name;
+            user.UserName = userCreate.UserName;
+            user.Email = userCreate.Email;
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userCreate.Password);
 
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound($"User with ID {id} not found");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _userManager.UpdateAsync(user);
             return NoContent();
         }
 
@@ -100,18 +129,12 @@ namespace BookHub.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return NotFound();
+                return NotFound($"Order with ID {id} not found");
             }
-
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

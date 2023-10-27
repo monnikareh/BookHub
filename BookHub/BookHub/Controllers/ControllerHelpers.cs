@@ -86,9 +86,10 @@ public static class ControllerHelpers
         return new UserDetail
         {
             Id = user.Id,
-            Name = user.Name, 
-            Books = user.Books.Select(MapModelToRelated).ToList()
-            
+            Name = user.Name ?? "", 
+            UserName = user.UserName ?? "",
+            Email = user.Email ?? "",
+            Books = user.Books.Select(MapModelToRelated).ToList(),
         };
     }
 }
