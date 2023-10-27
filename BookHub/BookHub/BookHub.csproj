@@ -31,5 +31,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
+      <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
     </ItemGroup>
 </Project>
