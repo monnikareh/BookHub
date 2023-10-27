@@ -18,21 +18,11 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly BookHubDbContext _context;
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
-    private readonly IConfiguration _configuration;
     private readonly IAuthService _authService;
 
     public AuthController(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager,
         RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration, IAuthService authService)
     {
-        _context = context;
-        _signInManager = signInManager;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _configuration = configuration;
         _authService = authService;
     }
 
