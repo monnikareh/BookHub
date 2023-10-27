@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using BookHub.Models;
 using BusinessLayer.Exceptions;
-using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -12,42 +11,53 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace WebAPI.Controllers;
+namespace BusinessLayer.Services;
 
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+public class AuthService : IAuthService
 {
     private readonly BookHubDbContext _context;
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IConfiguration _configuration;
-    private readonly IAuthService _authService;
 
-    public AuthController(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration, IAuthService authService)
+    public AuthService(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager,
+        RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
     {
         _context = context;
         _signInManager = signInManager;
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
-        _authService = authService;
     }
-
-    [HttpPost("login")]
-    public async Task<ActionResult<AuthToken>> Login(UserSignIn userSignIn)
+    
+    public async Task<AuthToken> Login(UserSignIn userSignIn)
     {
-        try
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userSignIn.UserName);
+        if (user == null)
         {
-            return Ok(await _authService.Login(userSignIn));
+            throw new UserNotFoundException($"User {userSignIn.UserName} not found");
+        }
 
-        }
-        catch (Exception e)
+        var userRoles = await _userManager.GetRolesAsync(user);
+        var authClaims = new List<Claim>
         {
-            return HandleAuthorizationException(e);
+            new(ClaimTypes.Name, user.UserName),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        };
+        authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
+        var token = GetToken(authClaims);
+        var signIn = await _signInManager.PasswordSignInAsync(userSignIn.UserName, userSignIn.Password, false, false);
+        if (signIn.Succeeded)
+        {
+            return new AuthToken()
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
+            };
         }
+
+        throw new UnauthorizedApiAccess();
     }
 
     private JwtSecurityToken GetToken(List<Claim> authClaims)
@@ -63,15 +73,5 @@ public class AuthController : ControllerBase
         );
 
         return token;
-    }
-
-    private ActionResult HandleAuthorizationException(Exception e)
-    {
-        return e switch
-        {
-            UserNotFoundException => NotFound(e.Message),
-            UnauthorizedApiAccess => Unauthorized(),
-            _ => Problem("Unknown problem occured")
-        };
     }
 }

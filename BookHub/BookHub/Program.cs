@@ -83,6 +83,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
