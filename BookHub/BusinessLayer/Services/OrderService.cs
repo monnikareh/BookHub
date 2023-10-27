@@ -38,6 +38,7 @@ namespace BusinessLayer.Services
             return orderList;
         }
 
+        /*
         public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
         {
             var order = await _context.Orders
@@ -193,6 +194,6 @@ namespace BusinessLayer.Services
             {
                 return Problem($"Error deleting order: {ex.Message}");
             }
-        }
-    }
+        }*/
+    } 
 }

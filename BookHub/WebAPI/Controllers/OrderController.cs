@@ -1,31 +1,57 @@
-using Microsoft.AspNetCore.Mvc;
-using DataAccessLayer;
 using BookHub.Models;
-using BusinessLayer.Mapper;
-using BusinessLayer.Services;
-using Microsoft.EntityFrameworkCore;
+using DataAccessLayer;
 using DataAccessLayer.Entities;
+using BusinessLayer.Mapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace BookHub.Controllers
+namespace WebAPI.Controllers
 {
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderService _orderService;
+        private readonly BookHubDbContext _context;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(BookHubDbContext context)
         {
-            _orderService = orderService;
+            _context = context;
         }
         
         // GET: api/Order
         [HttpGet]
-        public async Task<ActionResult> GetOrders(DateTime? startDate, DateTime? endDate)
+        public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(DateTime? startDate, DateTime? endDate)
         {
-            return Ok(await _orderService.GetOrdersAsync(startDate, endDate));
+            if (_context.Orders == null)
+            {
+                return NotFound();
+            }
+
+            var orders = _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Books)
+                .ThenInclude(b => b.Authors)
+                .AsQueryable();
+
+            if (startDate.HasValue)
+            {
+                orders = orders.Where(o => o.Date >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                orders = orders.Where(o => o.Date <= endDate.Value);
+            }
+            
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
+            if (!orderList.Any())
+            {
+                return NotFound("No orders found for the specified date range.");
+            }
+
+            return orderList;
         }
 
         // GET: api/Order/5

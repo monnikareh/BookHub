@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BookHub.Models;
-using BusinessLayer.Mapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
+using BusinessLayer.Mapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BookHub.Controllers
+namespace WebAPI.Controllers
 {
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]

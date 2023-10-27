@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -48,7 +49,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-    );
+    ).AddApplicationPart(Assembly.Load("WebAPI"));
 builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
