@@ -1,35 +1,43 @@
-using Microsoft.AspNetCore.Mvc;
-using DataAccessLayer;
 using BookHub.Models;
+using DataAccessLayer;
 using BusinessLayer.Mapper;
-using BusinessLayer.Services;
-using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace BookHub.Controllers
+namespace BusinessLayer.Services
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderService : IOrderService
     {
-        private readonly IOrderService _orderService;
+        private readonly BookHubDbContext _context;
 
-        public OrderController(IOrderService orderService)
+        public OrderService(BookHubDbContext context)
         {
-            _orderService = orderService;
-        }
-        
-        // GET: api/Order
-        [HttpGet]
-        public async Task<ActionResult> GetOrders(DateTime? startDate, DateTime? endDate)
-        {
-            return Ok(await _orderService.GetOrdersAsync(startDate, endDate));
+            _context = context;
         }
 
-        // GET: api/Order/5
-        [HttpGet("GetById/{id}")]
+        public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(DateTime? startDate, DateTime? endDate)
+        {
+            var orders = _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Books)
+                .ThenInclude(b => b.Authors)
+                .AsQueryable();
+
+            if (startDate.HasValue)
+            {
+                orders = orders.Where(o => o.Date >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                orders = orders.Where(o => o.Date <= endDate.Value);
+            }
+
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
+            return orderList;
+        }
+
         public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
         {
             var order = await _context.Orders
@@ -42,10 +50,10 @@ namespace BookHub.Controllers
             {
                 return NotFound("Order not found.");
             }
+
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
-        
-        [HttpGet("GetByName/{name}")]
+
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrdersByUserName(string name)
         {
             if (_context.Orders == null)
@@ -60,7 +68,7 @@ namespace BookHub.Controllers
                 .Where(o => o.User.Name == name)
                 .AsQueryable();
 
-            
+
             var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
             if (!orderList.Any())
             {
@@ -69,8 +77,7 @@ namespace BookHub.Controllers
 
             return orderList;
         }
-        
-        [HttpPost("CreateOrder")]
+
         public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
         {
             if (!ModelState.IsValid)
@@ -124,8 +131,7 @@ namespace BookHub.Controllers
             await _context.SaveChangesAsync();
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
-        
-        [HttpPut("UpdateOrder/{id}")]
+
         public async Task<ActionResult> UpdateOrder(int id, OrderDetail orderDetail)
         {
             if (!ModelState.IsValid)
@@ -168,8 +174,7 @@ namespace BookHub.Controllers
                 return Problem($"Error updating order: {ex.Message}");
             }
         }
-        
-        [HttpDelete("DeleteOrder/{id}")]
+
         public async Task<ActionResult> DeleteOrder(int id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -189,6 +194,5 @@ namespace BookHub.Controllers
                 return Problem($"Error deleting order: {ex.Message}");
             }
         }
-
-    } 
+    }
 }
