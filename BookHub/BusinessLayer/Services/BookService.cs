@@ -19,7 +19,8 @@ public class BookService : IBookService
     }
 
 
-    public async Task<IEnumerable<BookDetail>> GetBooks(int? bookId, string? bookName, int? genreId, string? genreName,
+    public async Task<IEnumerable<BookDetail>> GetBooksAsync(int? bookId, string? bookName, int? genreId,
+        string? genreName,
         int? publisherId, string? publisherName, int? authorId, string? authorName)
     {
         var books = _context.Books
@@ -51,12 +52,20 @@ public class BookService : IBookService
             books = books.Where(b => b.Authors.Contains(author));
         }
 
-        books = books.Where(b => b.Id == bookId || b.Name == bookName);
+        if (bookId is > 0)
+        {
+            books = books.Where(b => b.Id == bookId);
+        }
+        
+        if (!bookName.IsNullOrEmpty())
+        {
+            books = books.Where(b => b.Name == bookName);
+        }
 
         return await books.Select(b => ControllerHelpers.MapBookToBookDetail(b)).ToListAsync();
     }
 
-    public async Task<BookDetail> GetBookById(int id)
+    public async Task<BookDetail> GetBookByIdAsync(int id)
     {
         var book = await _context
             .Books
@@ -73,7 +82,7 @@ public class BookService : IBookService
     }
 
 
-    public async Task<BookDetail> PostBook(BookCreate bookCreate)
+    public async Task<BookDetail> CreateBookAsync(BookCreate bookCreate)
     {
         if (bookCreate.Authors.IsNullOrEmpty())
         {
@@ -132,7 +141,7 @@ public class BookService : IBookService
         return ControllerHelpers.MapBookToBookDetail(book);
     }
 
-    public async Task<BookDetail> UpdateBook(int id, BookDetail bookDetail)
+    public async Task<BookDetail> UpdateBookAsync(int id, BookDetail bookDetail)
     {
         var book = await _context.Books
             .Include(b => b.Genres)
@@ -206,11 +215,11 @@ public class BookService : IBookService
         }
         catch (Exception ex)
         {
-            throw new EntityUpdateException("Error updating book: {ex.Message}");
+            throw new EntityUpdateException($"Error updating book: {ex.Message}");
         }
     }
 
-    public async Task DeleteBook(int id)
+    public async Task DeleteBookAsync(int id)
     {
         var book = await _context.Books.FindAsync(id);
         if (book == null)

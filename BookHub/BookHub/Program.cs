@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -81,6 +82,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddTransient<IBookService, BookService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

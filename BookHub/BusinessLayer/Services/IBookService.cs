@@ -4,10 +4,10 @@ namespace BusinessLayer.Services;
 
 public interface IBookService
 {
-    public Task<IEnumerable<BookDetail>> GetBooks(int? bookId, string? bookName, int? genreId, string? genreName,
+    public Task<IEnumerable<BookDetail>> GetBooksAsync(int? bookId, string? bookName, int? genreId, string? genreName,
         int? publisherId, string? publisherName, int? authorId, string? authorName);
-    public Task<BookDetail> GetBookById(int id);
-    public Task<BookDetail> PostBook(BookCreate bookCreate);
-    public Task<BookDetail> UpdateBook(int id, BookDetail bookDetail);
-    public Task DeleteBook(int id);
+    public Task<BookDetail> GetBookByIdAsync(int id);
+    public Task<BookDetail> CreateBookAsync(BookCreate bookCreate);
+    public Task<BookDetail> UpdateBookAsync(int id, BookDetail bookDetail);
+    public Task DeleteBookAsync(int id);
 }

@@ -1,11 +1,8 @@
 using BookHub.Models;
-using DataAccessLayer;
-using DataAccessLayer.Entities;
-using BusinessLayer.Mapper;
+using BusinessLayer.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using BusinessLayer.Services;
 
 namespace WebAPI.Controllers
 {
@@ -14,96 +11,40 @@ namespace WebAPI.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly BookHubDbContext _context;
+        private readonly IBookService _bookService;
 
-        public BookController(BookHubDbContext context)
+        public BookController(IBookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
         [HttpGet("GetBooks")]
-        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(int? genreId, string? genreName,
+        public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(int? bookId, string? bookName, int? genreId,
+            string? genreName,
             int? publisherId, string? publisherName, int? authorId, string? authorName)
         {
-            if (_context.Books == null)
+            try
             {
-                return NotFound();
+                return Ok(await _bookService.GetBooksAsync(bookId, bookName, genreId, genreName, publisherId,
+                    publisherName, authorId, authorName));
             }
-            
-            var books = _context.Books
-                .Include(g => g.Genres)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .AsQueryable();
-            var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == genreName || g.Id == genreId);
-            if (genre != null)
+            catch (Exception e)
             {
-                books = books.Where(b => b.Genres.Contains(genre));
+                return HandleBookException(e);
             }
-
-            var publisher =
-                await _context.Publishers.FirstOrDefaultAsync(p => p.Name == publisherName || p.Id == publisherId);
-            if (publisher != null)
-            {
-                books = books.Where(b => b.Publisher.Id == publisher.Id);
-            }
-
-            var author = await _context
-                .Authors
-                .Include(a => a.Books)
-                .FirstOrDefaultAsync(a => a.Name == authorName || a.Id == authorId);
-            if (author != null)
-            {
-                books = books.Where(b => b.Authors.Contains(author));
-            }
-
-            return await books.Select(b => ControllerHelpers.MapBookToBookDetail(b)).ToListAsync();
         }
 
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<BookDetail>> GetBookById(int id)
         {
-            if (_context.Books == null)
+            try
             {
-                return NotFound();
+                return Ok(await _bookService.GetBookByIdAsync(id));
             }
-
-            var book = await _context
-                .Books
-                .Include(g => g.Genres)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .FirstOrDefaultAsync(b => b.Id == id);
-
-            if (book == null)
+            catch (Exception e)
             {
-                return NotFound($"Book with ID:'{id}' not found");
+                return HandleBookException(e);
             }
-
-            return ControllerHelpers.MapBookToBookDetail(book);
-        }
-
-        [HttpGet("GetByName/{name}")]
-        public async Task<ActionResult<BookDetail>> GetBookByName(string name)
-        {
-            if (_context.Books == null)
-            {
-                return NotFound();
-            }
-
-            var book = await _context
-                .Books
-                .Include(g => g.Genres)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .FirstOrDefaultAsync(b => b.Name == name);
-
-            if (book == null)
-            {
-                return NotFound($"Book '{name}' not found");
-            }
-
-            return ControllerHelpers.MapBookToBookDetail(book);
         }
 
 
@@ -115,84 +56,16 @@ namespace WebAPI.Controllers
                 return BadRequest("Model is not valid!");
             }
 
-            if (_context.Books == null)
+            try
             {
-                return Problem("Entity set 'BookHubDbContext.Books'  is null.");
+                return Ok(await _bookService.CreateBookAsync(bookCreate));
             }
-
-            if (bookCreate.Authors.IsNullOrEmpty())
+            catch (Exception e)
             {
-                return Problem("Field Authors is null or empty");
+                return HandleBookException(e);
             }
-
-            // var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.Genre.Name
-            //                                                            || g.Id == bookCreate.Genre.Id);
-            // if (genre == null)
-            // {
-            //     return NotFound(
-            //         $"Genre 'Name={bookCreate.Genre.Name}' <OR> 'ID={bookCreate.Genre.Id}' could not be found");
-            // }
-
-            var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.Publisher.Name
-                                                                               || p.Id == bookCreate.Publisher.Id);
-            if (publisher == null)
-            {
-                return NotFound(
-                    $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
-            }
-
-            var genres = new List<Genre>();
-            foreach (var genreRelatedModel in bookCreate.Genres)
-            {
-                var genre = await _context.Genres.FirstOrDefaultAsync(g =>
-                    g.Name == genreRelatedModel.Name || g.Id == genreRelatedModel.Id);
-                if (genre == null)
-                {
-                    return NotFound(
-                        $"Genre 'Name={genreRelatedModel.Name}' <OR> 'ID={genreRelatedModel.Id}' could not be found");
-                }
-
-                genres.Add(genre);
-            }
-
-            var authors = new List<Author>();
-            foreach (var authorRelatedModel in bookCreate.Authors)
-            {
-                var author = await _context.Authors.FirstOrDefaultAsync(a =>
-                    a.Name == authorRelatedModel.Name || a.Id == authorRelatedModel.Id);
-                if (author == null)
-                {
-                    return NotFound(
-                        $"Author 'Name={authorRelatedModel.Name}' <OR> 'ID={authorRelatedModel.Id}' could not be found");
-                }
-
-                authors.Add(author);
-            }
-
-            var book = new Book
-            {
-                Name = bookCreate.Name,
-                Authors = authors,
-                Genres = genres,
-                Publisher = publisher,
-                PublisherId = publisher.Id,
-                Price = bookCreate.Price,
-                StockInStorage = bookCreate.StockInStorage,
-                OverallRating = bookCreate.OverallRating
-            };
-            // APPARENTLY NOT NECESSARY
-            // foreach (var author in authors)
-            // {
-            //     author.Books.Add(book);
-            // }
-
-            // publisher.Books.Add(book);
-            // genre.Books.Add(book);
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-            return ControllerHelpers.MapBookToBookDetail(book);
         }
-        
+
         [HttpPut("UpdateBook/{id}")]
         public async Task<ActionResult> UpdateBook(int id, BookDetail bookDetail)
         {
@@ -201,107 +74,39 @@ namespace WebAPI.Controllers
                 return BadRequest("Model is not valid!");
             }
 
-            var book = await _context.Books
-                .Include(b => b.Genres)
-                .Include(b => b.Publisher)
-                .Include(b => b.Authors)
-                .FirstOrDefaultAsync(b => b.Id == id);
-
-            if (book == null)
-            {
-                return NotFound($"Book with ID {id} not found");
-            }
-
-            book.Name = bookDetail.Name;
-
-            if (bookDetail.Genres != null && bookDetail.Genres.Count > 0)
-            {
-                book.Genres.Clear();
-                foreach (var genreRelatedModel in bookDetail.Genres)
-                {
-                    var genre = await _context.Genres.FirstOrDefaultAsync(g =>
-                        g.Name == genreRelatedModel.Name || g.Id == genreRelatedModel.Id);
-                    if (genre == null)
-                    {
-                        return NotFound(
-                            $"Genre 'Name={genreRelatedModel.Name}' <OR> 'ID={genreRelatedModel.Id}' could not be found");
-                    }
-
-                    book.Genres.Add(genre);
-                }
-            }
-
-            if (bookDetail.Publisher != null && bookDetail.Publisher.Name != "string")
-            {
-                var publisher = await _context.Publishers.FirstOrDefaultAsync(p =>
-                    p.Name == bookDetail.Publisher.Name || p.Id == bookDetail.Publisher.Id);
-                if (publisher == null)
-                {
-                    return NotFound(
-                        $"Publisher 'Name={bookDetail.Publisher.Name}' <OR> 'ID={bookDetail.Publisher.Id}' could not be found");
-                }
-
-                book.Publisher = publisher;
-                book.PublisherId = publisher.Id;
-            }
-
-            book.Price = bookDetail.Price;
-            book.StockInStorage = bookDetail.StockInStorage;
-            book.OverallRating = bookDetail.OverallRating;
-
-            if (bookDetail.Authors != null && bookDetail.Authors.Count > 0)
-            {
-                book.Authors.Clear();
-                foreach (var authorRelatedModel in bookDetail.Authors)
-                {
-                    var author = await _context.Authors.FirstOrDefaultAsync(a =>
-                        a.Name == authorRelatedModel.Name || a.Id == authorRelatedModel.Id);
-                    if (author == null)
-                    {
-                        return NotFound(
-                            $"Author 'Name={authorRelatedModel.Name}' <OR> 'ID={authorRelatedModel.Id}' could not be found");
-                    }
-
-                    book.Authors.Add(author);
-                }
-            }
-
             try
             {
-                await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok(await _bookService.UpdateBookAsync(id, bookDetail));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem($"Error updating book: {ex.Message}");
+                return HandleBookException(e);
             }
         }
-
 
 
         [HttpDelete("DeleteBook/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            if (_context.Books == null)
+            try
             {
-                return NotFound();
+                await _bookService.DeleteBookAsync(id);
+                return Ok();
             }
-
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return HandleBookException(e);
             }
-
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool BookExists(int id)
+        private ActionResult HandleBookException(Exception e)
         {
-            return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
+            return e is PublisherNotFoundException or GenreNotFoundException or AuthorNotFoundException
+                or BookNotFoundException
+                ? NotFound(e.Message)
+                : Problem(e is AuthorsEmptyException or EntityUpdateException
+                    ? e.Message
+                    : "Unknown problem occured");
         }
     }
 }
