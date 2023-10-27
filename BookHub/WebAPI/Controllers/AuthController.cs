@@ -4,12 +4,8 @@ using System.Text;
 using BookHub.Models;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Services;
-using DataAccessLayer;
-using DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Controllers;
@@ -18,21 +14,10 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly BookHubDbContext _context;
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
-    private readonly IConfiguration _configuration;
     private readonly IAuthService _authService;
 
-    public AuthController(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration, IAuthService authService)
+    public AuthController(IAuthService authService)
     {
-        _context = context;
-        _signInManager = signInManager;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _configuration = configuration;
         _authService = authService;
     }
 
