@@ -39,7 +39,7 @@ When a user interacts with the application, the request is first logged by the R
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 3. Install the required dependencies using the command dotnet restore.
-4. Rename `appsettings_template.json` to `appsettings.json`. The template is striped of any secrets, you need to provide your own or ask me for credentials to our DB. 
+4. Rename `appsettings_template.json` to `appsettings.json`. The template is striped of any secrets, you need to provide your own or ask me for credentials to our DB.
 5. Build the project using the command dotnet build.
 6. Setup an instance of Postgres database
 7. Run the project using the command dotnet run.
