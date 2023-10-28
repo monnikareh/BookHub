@@ -3,7 +3,7 @@ using DataAccessLayer.Entities;
 
 namespace BusinessLayer.Mapper;
 
-public static class ControllerHelpers
+public static class EntityMapper
 {
   
     public static ModelRelated MapModelToRelated<T>(T model) where T: IModelRelated

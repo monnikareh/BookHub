@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
             return (await _context.Publishers
                     .Include(p => p.Books)
                     .ToListAsync())
-                .Select(ControllerHelpers.MapPublisherToPublisherDetail)
+                .Select(EntityMapper.MapPublisherToPublisherDetail)
                 .ToList();
         }
 
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
                 return NotFound($"Publisher with ID:'{id}' not found");
             }
 
-            return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+            return EntityMapper.MapPublisherToPublisherDetail(publisher);
         }
 
         // GET: api/Book/name
@@ -76,7 +76,7 @@ namespace WebAPI.Controllers
                 return NotFound($"Publisher '{name}' not found");
             }
 
-            return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+            return EntityMapper.MapPublisherToPublisherDetail(publisher);
         }
 
         [HttpPost("CreatePublisher")]
@@ -100,7 +100,7 @@ namespace WebAPI.Controllers
 
             _context.Publishers.Add(publisher);
             await _context.SaveChangesAsync();
-            return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+            return EntityMapper.MapPublisherToPublisherDetail(publisher);
         }
         
         [HttpPut("UpdatePublisher/{id}")]

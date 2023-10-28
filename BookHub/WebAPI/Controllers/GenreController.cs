@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
             return (await _context.Genres
                     .Include(g => g.Books)
                     .ToListAsync())
-                .Select(ControllerHelpers.MapGenreToGenreDetail)
+                .Select(EntityMapper.MapGenreToGenreDetail)
                 .ToList();
         }
 
@@ -53,7 +53,7 @@ namespace WebAPI.Controllers
                 return NotFound($"Genre with ID:'{id}' not found");
             }
 
-            return ControllerHelpers.MapGenreToGenreDetail(genre);
+            return EntityMapper.MapGenreToGenreDetail(genre);
         }
 
         // GET: api/Book/name
@@ -76,7 +76,7 @@ namespace WebAPI.Controllers
                 return NotFound($"Genre '{name}' not found");
             }
 
-            return ControllerHelpers.MapGenreToGenreDetail(genre);
+            return EntityMapper.MapGenreToGenreDetail(genre);
         }
 
         [HttpPost("CreateGenre")]
@@ -100,7 +100,7 @@ namespace WebAPI.Controllers
 
             _context.Genres.Add(genre);
             await _context.SaveChangesAsync();
-            return ControllerHelpers.MapGenreToGenreDetail(genre);
+            return EntityMapper.MapGenreToGenreDetail(genre);
         }
         
         [HttpPut("UpdateGenre/{id}")]

@@ -52,7 +52,7 @@ namespace WebAPI.Controllers
                     .Include(u => u.Orders)
                     .Include(u => u.Books)
                     .ToListAsync())
-                .Select(ControllerHelpers.MapUserToUserDetail)
+                .Select(EntityMapper.MapUserToUserDetail)
                 .ToList();
         }
 
@@ -66,7 +66,7 @@ namespace WebAPI.Controllers
                 return NotFound($"User with ID '{id}' not found");
             }
 
-            return ControllerHelpers.MapUserToUserDetail(user);
+            return EntityMapper.MapUserToUserDetail(user);
         }
 
         [HttpPost("CreateUser")]
@@ -98,7 +98,7 @@ namespace WebAPI.Controllers
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             } 
-            return ControllerHelpers.MapUserToUserDetail(user);
+            return EntityMapper.MapUserToUserDetail(user);
         }
 
         [HttpPut("UpdateUser/{id}")]
