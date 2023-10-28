@@ -38,13 +38,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id);
-                if (user == null)
-                {
-                    return BadRequest("Model is not valid!");
-                }
-
-                return Ok(user);
+                return Ok(await _userService.GetUserByIdAsync(id));
             }
             catch (Exception e)
             {
@@ -78,11 +72,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                if (await _userService.UpdateUserAsync(id, userCreate))
-                {
-                    return NotFound($"User with ID {id} not found");
-                }
-
+                await _userService.UpdateUserAsync(id, userCreate);
                 return Ok();
             }
             catch (Exception e)
@@ -96,10 +86,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (await _userService.DeleteUserAsync(id))
-                {
-                    return NotFound($"User with ID {id} not found");
-                }
+                await _userService.DeleteUserAsync(id);
                 return Ok();
             }
             catch (Exception e)

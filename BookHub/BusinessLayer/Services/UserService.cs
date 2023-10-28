@@ -1,16 +1,14 @@
 using BookHub.Models;
-using Microsoft.AspNetCore.Mvc;
+using BusinessLayer.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.Mapper;
-using NuGet.Protocol.Plugins;
 
 namespace BusinessLayer.Services;
 
-public class UserSevice : IUserService
+public class UserService : IUserService
 {
     private readonly BookHubDbContext _context;
     private readonly IUserStore<User> _userStore;
@@ -19,7 +17,7 @@ public class UserSevice : IUserService
     private readonly IUserEmailStore<User> _emailStore;
     
     
-    public UserSevice(
+    public UserService(
         BookHubDbContext context, 
         IUserStore<User> userStore, 
         UserManager<User> userManager,
@@ -48,10 +46,15 @@ public class UserSevice : IUserService
                 .ToList();
         }
 
-        public async Task<UserDetail?> GetUserByIdAsync(int id)
+        public async Task<UserDetail> GetUserByIdAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            return user == null ? null : ControllerHelpers.MapUserToUserDetail(user);
+            if (user == null)
+            {
+                throw new UserNotFoundException($"User 'ID={id}' could not be found");
+            }
+
+            return ControllerHelpers.MapUserToUserDetail(user);
         }
 
         public async Task<UserDetail> PostUserAsync(UserCreate userCreate)
@@ -80,34 +83,31 @@ public class UserSevice : IUserService
             return ControllerHelpers.MapUserToUserDetail(user);
         }
 
-        public async Task<bool> UpdateUserAsync(int id, UserCreate userCreate)
+        public async Task UpdateUserAsync(int id, UserCreate userCreate)
         {
             
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return false;
+                throw new UserNotFoundException($"User with ID {id} not found");
             }
             user.Name = userCreate.Name;
             user.UserName = userCreate.UserName;
             user.Email = userCreate.Email;
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userCreate.Password);
-            
             await _userManager.UpdateAsync(user);
-            return true;
         }
 
-        public async Task<bool> DeleteUserAsync(int id)
+        public async Task DeleteUserAsync(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return false;
+                throw new UserNotFoundException($"User with ID {id} not found");
             }
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             
-            return true;
         }
     
 }

@@ -1,10 +1,9 @@
 using BookHub.Models;
-using DataAccessLayer;
-using DataAccessLayer.Entities;
-using BusinessLayer.Mapper;
+using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using BusinessLayer.Exceptions;
+
 
 namespace WebAPI.Controllers
 {
@@ -13,61 +12,40 @@ namespace WebAPI.Controllers
     [ApiController]
     public class RatingController : ControllerBase
     {
-        private readonly BookHubDbContext _context;
+        private readonly IRatingService _ratingService;
+        
 
-        public RatingController(BookHubDbContext context)
+        public RatingController(IRatingService ratingService)
         {
-            _context = context;
+            _ratingService = ratingService;
         }
+
 
         [HttpGet("GetRatings")]
         public async Task<ActionResult<IEnumerable<RatingDetail>>> GetRatings(int? userId, string? userName,
             int? bookId, string? bookName)
         {
-            if (_context.Ratings == null)
+            try
             {
-                return NotFound();
+                return Ok(await _ratingService.GetRatingsAsync(userId, userName, bookId, bookName));
             }
-
-            var ratings = _context.Ratings
-                .Include(r => r.User)
-                .Include(r => r.Book)
-                .AsQueryable();
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == userName || u.Id == userId);
-            if (user != null)
+            catch (Exception e)
             {
-                ratings = ratings.Where(r => r.User.Id == user.Id);
+                return HandleRatingException(e);
             }
-
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == bookName || b.Id == bookId);
-            if (book != null)
-            {
-                ratings = ratings.Where(r => r.Book.Id == book.Id);
-            }
-
-            return await ratings.Select(r => ControllerHelpers.MapRatingToRatingDetail(r)).ToListAsync();
         }
 
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<RatingDetail>> GetRatingById(int id)
         {
-            if (_context.Ratings == null)
+            try
             {
-                return NotFound();
+                return Ok(await _ratingService.GetRatingByIdAsync(id));
             }
-
-            var rating = await _context
-                .Ratings
-                .Include(r => r.User)
-                .Include(r => r.Book)
-                .FirstOrDefaultAsync(r => r.Id == id);
-
-            if (rating == null)
+            catch (Exception e)
             {
-                return NotFound($"Rating with ID:'{id}' not found");
+                return HandleRatingException(e);
             }
-
-            return ControllerHelpers.MapRatingToRatingDetail(rating);
         }
 
 
@@ -78,44 +56,14 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
-
-            if (_context.Books == null)
+            try
             {
-                return Problem("Entity set 'BookHubDbContext.Books'  is null.");
+                return Ok(await _ratingService.PostRatingAsync(ratingCreate));
             }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == ratingCreate.User.Name
-                                                                     || u.Id == ratingCreate.User.Id);
-            if (user == null)
+            catch (Exception e)
             {
-                return NotFound(
-                    $"User Name={ratingCreate.User.Name}' <OR> 'ID={ratingCreate.User.Id}' could not be found");
+                return HandleRatingException(e);
             }
-
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == ratingCreate.Book.Name
-                                                                     || b.Id == ratingCreate.Book.Id);
-            if (book == null)
-            {
-                return NotFound(
-                    $"Book 'Name={ratingCreate.Book.Name}' <OR> 'ID={ratingCreate.Book.Id}' could not be found");
-            }
-
-            var rating = new Rating
-            {
-                UserId = user.Id,
-                User = user,
-                BookId = book.Id,
-                Book = book,
-                Value = ratingCreate.Value,
-                Comment = ratingCreate.Comment
-            };
-            var bookRatings = _context.Ratings
-                .Where(r => r.Book.Id == book.Id);
-            book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value) 
-                / (bookRatings.Count() + 1);
-            _context.Ratings.Add(rating);
-            await _context.SaveChangesAsync();
-            return ControllerHelpers.MapRatingToRatingDetail(rating);
         }
         
         [HttpPut("UpdateRating/{id}")]
@@ -125,78 +73,40 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
-
-            var rating = await _context.Ratings.FindAsync(id);
-            if (rating == null)
-            {
-                return NotFound($"Rating with ID {id} not found");
-            }
-
-            rating.Value = ratingDetail.Value;
-
-            if (rating.Comment != "string")
-            {
-                rating.Comment = ratingDetail.Comment;
-            }
-
-            if (ratingDetail.User.Name != "string")
-            {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == ratingDetail.User.Name);
-                if (user == null)
-                {
-                    return NotFound($"User with name '{ratingDetail.User.Name}' not found");
-                }
-
-                rating.User = user;
-                rating.UserId = user.Id;
-            }
-
-            if (ratingDetail.Book.Name != "string")
-            {
-                var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == ratingDetail.Book.Name);
-                if (book == null)
-                {
-                    return NotFound($"Book with name '{ratingDetail.Book.Name}' not found");
-                }
-
-                rating.Book = book;
-                rating.BookId = book.Id;
-            }
-
             try
             {
-                await _context.SaveChangesAsync();
-                return NoContent();
+                await _ratingService.UpdateRatingAsync(id, ratingDetail);
+                return Ok();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem($"Error updating rating: {ex.Message}");
+                return HandleRatingException(e);
             }
         }
 
         [HttpDelete("DeleteRating/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            if (_context.Books == null)
+            try
             {
-                return NotFound();
+                await _ratingService.DeleteBookAsync(id);
+                return Ok();
+                
             }
-
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return HandleRatingException(e);
             }
-
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
-
-        private bool BookExists(int id)
+        
+        private ActionResult HandleRatingException(Exception e)
         {
-            return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
+            return e is OrderNotFoundException or UserNotFoundException
+                or BookNotFoundException or RatingNotFoundException
+                ? NotFound(e.Message)
+                : Problem(e is BooksEmptyException or EntityUpdateException
+                    ? e.Message
+                    : "Unknown problem occured");
         }
     }
 }

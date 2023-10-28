@@ -86,7 +86,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
-builder.Services.AddTransient<IUserService, UserSevice>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IRatingService, RatingService>();
 
 var app = builder.Build();
 
