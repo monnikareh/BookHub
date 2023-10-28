@@ -3,6 +3,9 @@
 @inject UserManager<User> UserManager
 
 <ul class="navbar-nav">
+    <li class="nav-item">
+        <a class="nav-link text-dark" href="/swagger/index.html">Swagger</a>
+    </li>
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
@@ -16,9 +19,6 @@
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" href="/swagger/index.html">Swagger</a>
-        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>
