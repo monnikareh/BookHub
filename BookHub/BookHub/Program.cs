@@ -88,6 +88,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
+builder.Services.AddTransient<IPublisherService, PublisherService>();
 
 var app = builder.Build();
 

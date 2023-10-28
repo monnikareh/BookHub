@@ -27,7 +27,8 @@ namespace WebAPI.Controllers
             try
             {
                 return Ok(await _userService.GetUsersAsync());
-            }            catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return HandleUserException(e);
             }

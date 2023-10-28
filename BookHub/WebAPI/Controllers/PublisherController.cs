@@ -1,10 +1,8 @@
 using BookHub.Models;
-using DataAccessLayer;
-using DataAccessLayer.Entities;
-using BusinessLayer.Mapper;
+using BusinessLayer.Exceptions;
+using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers
 {
@@ -13,70 +11,52 @@ namespace WebAPI.Controllers
     [ApiController]
     public class PublisherController : ControllerBase
     {
-        private readonly BookHubDbContext _context;
+        private readonly PublisherService _publisherService;
 
-        public PublisherController(BookHubDbContext context)
+        public PublisherController(PublisherService publisherService)
         {
-            _context = context;
+            _publisherService = publisherService;
         }
 
         [HttpGet("GetPublishers")]
         public async Task<ActionResult<IEnumerable<PublisherDetail>>> GetPublishers()
         {
-            if (_context.Publishers == null)
+            try
             {
-                return NotFound();
+                return Ok(await _publisherService.GetPublishersAsync());
             }
-
-            return (await _context.Publishers
-                    .Include(p => p.Books)
-                    .ToListAsync())
-                .Select(ControllerHelpers.MapPublisherToPublisherDetail)
-                .ToList();
+            catch (Exception e)
+            {
+                return HandlePublisherException(e);
+            }
+            
         }
 
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<PublisherDetail>> GetPublisherById(int id)
         {
-            if (_context.Publishers == null)
+            try
             {
-                return NotFound();
+                return Ok(await _publisherService.GetPublisherByIdAsync(id));
             }
-
-            var publisher = await _context
-                .Publishers
-                .Include(p => p.Books)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
-            if (publisher == null)
+            catch (Exception e)
             {
-                return NotFound($"Publisher with ID:'{id}' not found");
-            }
-
-            return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+                return HandlePublisherException(e);
+            }        
         }
 
         // GET: api/Book/name
         [HttpGet("GetByName/{name}")]
         public async Task<ActionResult<PublisherDetail>> GetGenreByName(string name)
         {
-            if (_context.Publishers == null)
+            try
             {
-                return NotFound();
+                return Ok(await _publisherService.GetGenreByNameAsync(name));
             }
-
-            var publisher = await _context
-                .Publishers
-                .Include(p => p.Books)
-                .FirstOrDefaultAsync(p => p.Name == name);
-
-
-            if (publisher == null)
+            catch (Exception e)
             {
-                return NotFound($"Publisher '{name}' not found");
-            }
-
-            return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+                return HandlePublisherException(e);
+            } 
         }
 
         [HttpPost("CreatePublisher")]
@@ -86,21 +66,15 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
-
-            if (_context.Publishers == null)
+            try
             {
-                return Problem("Entity set 'BookHubDbContext.Publisher'  is null.");
+                return Ok(await _publisherService.PostGenreAsync(publisherCreate));
             }
-
-
-            var publisher = new Publisher
+            catch (Exception e)
             {
-                Name = publisherCreate.Name,
-            };
-
-            _context.Publishers.Add(publisher);
-            await _context.SaveChangesAsync();
-            return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+                return HandlePublisherException(e);
+            } 
+           
         }
         
         [HttpPut("UpdatePublisher/{id}")]
@@ -110,67 +84,42 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
-
-            var publisher = await _context.Publishers.FindAsync(id);
-            if (publisher == null)
-            {
-                return NotFound($"Publisher with ID {id} not found");
-            }
-
-            publisher.Name = publisherDetail.Name;
-
-            if (publisherDetail.Books != null && publisherDetail.Books.Count != 0)
-            {
-                publisher.Books.Clear();
-                foreach (var bookRelatedModel in publisherDetail.Books)
-                {
-                    var book = await _context.Books.FirstOrDefaultAsync(b =>
-                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                    if (book == null)
-                    {
-                        return NotFound(
-                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                    }
-
-                    publisher.Books.Add(book);
-                }
-            }
-            
             try
             {
-                await _context.SaveChangesAsync();
-                return NoContent();
+                await _publisherService.UpdatePublisherAsync(id, publisherDetail);
+                return Ok();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem($"Error updating publisher: {ex.Message}");
-            }
+                return HandlePublisherException(e);
+            } 
         }
 
 
         [HttpDelete("DeletePublisher/{id}")]
         public async Task<IActionResult> DeletePublisher(int id)
         {
-            if (_context.Publishers == null)
+            try
             {
-                return NotFound();
+                await _publisherService.DeletePublisherAsync(id);
+                return Ok();
             }
-
-            var publisher = await _context.Publishers.FindAsync(id);
-            if (publisher == null)
+            catch (Exception e)
             {
-                return NotFound();
-            }
-
-            _context.Publishers.Remove(publisher);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+                return HandlePublisherException(e);
+            } 
         }
-
-        private bool PublisherExists(int id)
+        
+        private ActionResult HandlePublisherException(Exception e)
         {
-            return (_context.Publishers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return e is PublisherNotFoundException or UserNotFoundException
+                or BookNotFoundException
+                ? NotFound(e.Message)
+                : Problem(e is BooksEmptyException or EntityUpdateException
+                    ? e.Message
+                    : "Unknown problem occured");
         }
+
     }
+    
 }
