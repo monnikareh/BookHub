@@ -112,7 +112,9 @@ namespace BusinessLayer.Services
 
         public async Task<OrderUpdate> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.Books)
+                .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
                 throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
@@ -133,7 +135,8 @@ namespace BusinessLayer.Services
                     }
                     order.Books.Add(book);
                 }
-            }
+            } 
+ 
             try
             {
                 await _context.SaveChangesAsync();
@@ -147,7 +150,9 @@ namespace BusinessLayer.Services
 
         public async Task DeleteOrderAsync(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders
+                .Include(o => o.Books)
+                .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
                 throw new BookNotFoundException($"Order 'ID={id}' could not be found");

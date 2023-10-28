@@ -100,7 +100,7 @@ namespace WebAPI.Controllers
                 ? NotFound(e.Message)
                 : Problem(e is BooksEmptyException or EntityUpdateException
                     ? e.Message
-                    : "Unknown problem occured");
+                    : $"Unknown problem occured {e.Message}");
         }
     } 
 }
