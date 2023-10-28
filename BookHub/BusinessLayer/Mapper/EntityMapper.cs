@@ -3,7 +3,7 @@ using DataAccessLayer.Entities;
 
 namespace BusinessLayer.Mapper;
 
-public static class ControllerHelpers
+public static class EntityMapper
 {
   
     public static ModelRelated MapModelToRelated<T>(T model) where T: IModelRelated
@@ -24,7 +24,7 @@ public static class ControllerHelpers
             Books = author.Books.Select(MapModelToRelated).ToList()
         };
     }
-    
+   
     public static GenreDetail MapGenreToGenreDetail(Genre genre)
     {
         return new GenreDetail

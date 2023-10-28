@@ -5,6 +5,8 @@
 ## Overview
 
 BookHub is a comprehensive digital platform designed for the BookHub company, a renowned seller of books across various genres. The application facilitates easy browsing and purchasing of books, allowing customers to sort and filter by authors, publishers, and genres. Built using ASP.NET Core and Entity Framework Core, it provides a robust and efficient system for managing books, authors, publishers, and user ratings.
+
+The website is deployed and published in a Kubernetes cluster. Use this link to evaluate the app without having to setup your Postgres instance and clone this repo: https://bookhub.dyn.cloud.e-infra.cz/
 ## Features
 
 - Book Management: Enables users to browse, purchase, and view books. Each book has properties like name, price, stock in storage, overall rating, genres, publisher, and authors.
@@ -37,14 +39,10 @@ When a user interacts with the application, the request is first logged by the R
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
 3. Install the required dependencies using the command dotnet restore.
-4. Build the project using the command dotnet build.
-5. Run the project using the command dotnet run.
-```
-cd project_directory
-git remote add origin https://gitlab.fi.muni.cz/xmarianc/pv179-bookhub.git
-git branch -M main
-git push -uf origin main
-```
+4. Rename `appsettings_template.json` to `appsettings.json`. The template is striped of any secrets, you need to provide your own or ask me for credentials to our DB.
+5. Build the project using the command dotnet build.
+6. Setup an instance of Postgres database
+7. Run the project using the command dotnet run.
 
 ## Usage
 The application exposes several endpoints for interacting with the books, authors, publishers, and ratings. Here are some examples:
@@ -55,6 +53,14 @@ The application exposes several endpoints for interacting with the books, author
 
 Similar endpoints are available for authors, publishers, and ratings.
 
+At this point the main website only supports registering users without admin privileges. Therefore for testing with https://bookhub.dyn.cloud.e-infra.cz/swagger or your local deployment use one of the seeded admin users. For example username: "vidlacka", password: "Aa123!"
+
 ## Deployment
-The code for the application will be made available for retrieval after the completion of the "Milestone 2" phase, enabling deployment on the test server. The code should be obtained exclusively from the master branch, ensuring its reliability and stability.
+The application is deployed using CERIT-SC's Kubernetes cluster: https://bookhub.dyn.cloud.e-infra.cz/ for your convenience.
+
+If you would like to deploy the app locally, you can either build your own Docker image or deploy it to a bare metal server.
+
+In either case you need to run `dotnet publish -c Release` to build the app in release mode. Then:
+- for bare metal deployment run `dotnet BookHub.dll`.
+- for Docker run `docker build -t bookhub-image .` and then `docker run -p 80:80 --name bookhub bookhub-image`
 ***

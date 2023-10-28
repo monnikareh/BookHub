@@ -86,26 +86,19 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IAuthorService, AuthorService>();
+builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
 builder.Services.AddTransient<IPublisherService, PublisherService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
 
 // WE WANT SWAGGER IN PRODUCTION AS WELL
 app.UseMigrationsEndPoint();
 app.UseSwagger();
 app.UseSwaggerUI();
-// }
-// else
-// {
-//     app.UseExceptionHandler("/Error");
-//     app.UseHsts();
-// }
 
 app.UseMiddleware<RequestLoggerMiddleware>();
 

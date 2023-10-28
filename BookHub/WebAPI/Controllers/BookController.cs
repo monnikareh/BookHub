@@ -104,7 +104,7 @@ namespace WebAPI.Controllers
             return e is PublisherNotFoundException or GenreNotFoundException or AuthorNotFoundException
                 or BookNotFoundException
                 ? NotFound(e.Message)
-                : Problem(e is AuthorsEmptyException or EntityUpdateException
+                : Problem(e is AuthorsEmptyException
                     ? e.Message
                     : "Unknown problem occured");
         }

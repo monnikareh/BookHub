@@ -1,7 +1,9 @@
 using BookHub.Models;
+using BusinessLayer.Exceptions;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using BusinessLayer.Mapper;
+using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,70 +15,37 @@ namespace WebAPI.Controllers
     [ApiController]
     public class GenreController : ControllerBase
     {
-        private readonly BookHubDbContext _context;
+        private readonly IGenreService _genreService;
 
-        public GenreController(BookHubDbContext context)
+        public GenreController(IGenreService genreService)
         {
-            _context = context;
+            _genreService = genreService;
         }
 
         [HttpGet("GetGenres")]
-        public async Task<ActionResult<IEnumerable<GenreDetail>>> GetGenres()
+        public async Task<ActionResult<IEnumerable<GenreDetail>>> GetGenres(string? name)
         {
-            if (_context.Genres == null)
+            try
             {
-                return NotFound();
+                return Ok(await _genreService.GetGenresAsync(name));
             }
-
-            return (await _context.Genres
-                    .Include(g => g.Books)
-                    .ToListAsync())
-                .Select(ControllerHelpers.MapGenreToGenreDetail)
-                .ToList();
+            catch (Exception e)
+            {
+                return HandleGenresException(e);
+            }
         }
 
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<GenreDetail>> GetGenreById(int id)
         {
-            if (_context.Genres == null)
+            try
             {
-                return NotFound();
+                return Ok(await _genreService.GetGenreByIdAsync(id));
             }
-
-            var genre = await _context
-                .Genres
-                .Include(g => g.Books)
-                .FirstOrDefaultAsync(g => g.Id == id);
-
-            if (genre == null)
+            catch (Exception e)
             {
-                return NotFound($"Genre with ID:'{id}' not found");
+                return HandleGenresException(e);
             }
-
-            return ControllerHelpers.MapGenreToGenreDetail(genre);
-        }
-
-        // GET: api/Book/name
-        [HttpGet("GetByName/{name}")]
-        public async Task<ActionResult<GenreDetail>> GetGenreByName(string name)
-        {
-            if (_context.Genres == null)
-            {
-                return NotFound();
-            }
-
-            var genre = await _context
-                .Genres
-                .Include(g => g.Books)
-                .FirstOrDefaultAsync(g => g.Name == name);
-
-
-            if (genre == null)
-            {
-                return NotFound($"Genre '{name}' not found");
-            }
-
-            return ControllerHelpers.MapGenreToGenreDetail(genre);
         }
 
         [HttpPost("CreateGenre")]
@@ -86,90 +55,55 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
-
-            if (_context.Genres == null)
+            
+            try
             {
-                return Problem("Entity set 'BookHubDbContext.Genres'  is null.");
+                return Ok(await _genreService.PostGenreAsync(genreCreate));
             }
-
-
-            var genre = new Genre
+            catch (Exception e)
             {
-                Name = genreCreate.Name,
-            };
-
-            _context.Genres.Add(genre);
-            await _context.SaveChangesAsync();
-            return ControllerHelpers.MapGenreToGenreDetail(genre);
+                return HandleGenresException(e);
+            }
+            
         }
         
         [HttpPut("UpdateGenre/{id}")]
-        public async Task<IActionResult> UpdateGenre(int id, GenreDetail genreDetail)
+        public async Task<IActionResult> UpdateGenre(int id, GenreUpdate genreDetail)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model is not valid!");
             }
 
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre == null)
-            {
-                return NotFound($"Genre with ID {id} not found");
-            }
-
-            genre.Name = genreDetail.Name;
-
-            if (genreDetail.Books != null && genreDetail.Books.Count != 0)
-            {
-                genre.Books.Clear();
-                foreach (var bookRelatedModel in genreDetail.Books)
-                {
-                    var book = await _context.Books.FirstOrDefaultAsync(b =>
-                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                    if (book == null)
-                    {
-                        return NotFound(
-                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                    }
-
-                    genre.Books.Add(book);
-                }
-            }
-
             try
             {
-                await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok(await _genreService.UpdateGenreAsync(id, genreDetail));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem($"Error updating genre: {ex.Message}");
+                return HandleGenresException(e);
             }
         }
         
         [HttpDelete("DeleteGenre/{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
-            if (_context.Genres == null)
+            try
             {
-                return NotFound();
+                await _genreService.DeleteGenreAsync(id);
+                return Ok();
             }
-
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return HandleGenresException(e);
             }
-
-            _context.Genres.Remove(genre);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool GenreExists(int id)
+        private ActionResult HandleGenresException(Exception e)
         {
-            return (_context.Genres?.Any(e => e.Id == id)).GetValueOrDefault();
+            return e is GenreNotFoundException or BookNotFoundException
+                ? NotFound(e.Message)
+                : Problem("Unknown problem occured");
         }
     }
 }

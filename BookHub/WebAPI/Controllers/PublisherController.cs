@@ -29,7 +29,6 @@ namespace WebAPI.Controllers
             {
                 return HandlePublisherException(e);
             }
-            
         }
 
         [HttpGet("GetById/{id}")]
@@ -119,7 +118,5 @@ namespace WebAPI.Controllers
                     ? e.Message
                     : "Unknown problem occured");
         }
-
     }
-    
 }
