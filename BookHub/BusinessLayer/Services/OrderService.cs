@@ -3,9 +3,9 @@ using DataAccessLayer;
 using BusinessLayer.Mapper;
 using BusinessLayer.Exceptions;
 using DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 
 namespace BusinessLayer.Services
 {
@@ -17,8 +17,6 @@ namespace BusinessLayer.Services
         {
             _context = context;
         }
-        
-        //TODO pridat kontroly
 
         public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
             DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName)
@@ -112,7 +110,7 @@ namespace BusinessLayer.Services
             return ControllerHelpers.MapOrderToOrderDetail(order);
         }
 
-        public async Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
+        public async Task<OrderUpdate> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
         {
             var order = await _context.Orders.FindAsync(id);
             if (order == null)
@@ -136,11 +134,10 @@ namespace BusinessLayer.Services
                     order.Books.Add(book);
                 }
             }
-
             try
             {
                 await _context.SaveChangesAsync();
-                return ControllerHelpers.MapOrderToOrderDetail(order);
+                return ControllerHelpers.MapOrderToOrderUpdate(order);
             }
             catch (Exception ex)
             {
