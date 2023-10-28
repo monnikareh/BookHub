@@ -57,9 +57,7 @@ namespace BusinessLayer.Services
             {
                 orders = orders.Where(o => o.Books.Contains(book));
             }
-
-            var orderList = await orders.Select(o => EntityMapper.MapOrderToOrderDetail(o)).ToListAsync();
-            return orderList;
+            return await orders.Select(o => EntityMapper.MapOrderToOrderDetail(o)).ToListAsync();
         }
         
         public async Task<OrderDetail> GetOrderByIdAsync(int id)
@@ -110,7 +108,7 @@ namespace BusinessLayer.Services
             return EntityMapper.MapOrderToOrderDetail(order);
         }
 
-        public async Task<OrderUpdate> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
+        public async Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
         {
             var order = await _context.Orders
                 .Include(o => o.Books)
@@ -137,15 +135,9 @@ namespace BusinessLayer.Services
                 }
             } 
  
-            try
-            {
-                await _context.SaveChangesAsync();
-                return EntityMapper.MapOrderToOrderUpdate(order);
-            }
-            catch (Exception ex)
-            {
-                throw new EntityUpdateException($"Error updating order: {ex.Message}");
-            }
+            await _context.SaveChangesAsync();
+            return EntityMapper.MapOrderToOrderDetail(order);
+         
         }
 
         public async Task DeleteOrderAsync(int id)
@@ -157,15 +149,8 @@ namespace BusinessLayer.Services
             {
                 throw new BookNotFoundException($"Order 'ID={id}' could not be found");
             }
-            try
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new EntityDeleteException($"Error deleting order: {ex.Message}");
-            }
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
         }
     } 
 }

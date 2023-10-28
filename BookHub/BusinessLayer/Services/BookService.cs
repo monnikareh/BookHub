@@ -203,15 +203,8 @@ public class BookService : IBookService
             }
         }
 
-        try
-        {
-            await _context.SaveChangesAsync();
-            return EntityMapper.MapBookToBookDetail(book);
-        }
-        catch (Exception ex)
-        {
-            throw new EntityUpdateException($"Error updating book: {ex.Message}");
-        }
+        await _context.SaveChangesAsync();
+        return EntityMapper.MapBookToBookDetail(book);
     }
 
     public async Task DeleteBookAsync(int id)

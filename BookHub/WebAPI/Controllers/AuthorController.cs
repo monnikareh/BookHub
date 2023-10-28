@@ -1,6 +1,8 @@
 using BookHub.Models;
+using BusinessLayer.Exceptions;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
+using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,75 +15,38 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class AuthorController : ControllerBase
     {
-        private readonly BookHubDbContext _context;
+        private readonly IAuthorService _authorService;
 
-        public AuthorController(BookHubDbContext context)
+        public AuthorController(IAuthorService authorService)
         {
-            _context = context;
+            _authorService = authorService;
         }
 
         
         [HttpGet("GetAuthors")]
-        public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors()
+        public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors(string? name, int? bookId, string? bookName)
         {
-            if (_context.Authors == null)
+            try
             {
-                return NotFound();
+                return Ok(await _authorService.GetAuthorsAsync(name, bookId, bookName));
             }
-            return (await _context.Authors
-                    .Include(a => a.Books)
-                    .ToListAsync())
-                .Select(EntityMapper.MapAuthorToAuthorDetail)
-                .ToList();
+            catch (Exception e)
+            {
+                return HandleAuthorException(e);
+            }
         }
 
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<AuthorDetail>> GetAuthorById(int id)
         {
-            if (_context.Authors == null)
-            {
-                return NotFound();
-            }
-
-            var author = await _context
-                .Authors
-                .Include(a => a.Books)
-                .ThenInclude(b => b.Publisher)
-                .Include(a => a.Books)
-                .ThenInclude(b => b.Genres)
-                .FirstOrDefaultAsync(a => a.Id == id);
-
-            if (author == null)
-            {
-                return NotFound($"Author with ID:'{id}' not found");
-            }
-
-            return EntityMapper.MapAuthorToAuthorDetail(author);
-        }
-
-        // GET: api/Book/name
-        [HttpGet("GetByName/{name}")]
-        public async Task<ActionResult<AuthorDetail>> GetAuthorByName(string name)
-        {
-            if (_context.Authors == null)
-            {
-                return NotFound();
-            }
-
-            var author = await _context
-                .Authors
-                .Include(a => a.Books)
-                .ThenInclude(b => b.Publisher)
-                .Include(a => a.Books)
-                .ThenInclude(b => b.Genres)
-                .FirstOrDefaultAsync(b => b.Name == name);
-
-            if (author == null)
-            {
-                return NotFound($"Author '{name}' not found");
-            }
-
-            return EntityMapper.MapAuthorToAuthorDetail(author);
+           try
+           {
+               return Ok(await _authorService.GetAuthorByIdAsync(id));
+           }
+           catch (Exception e)
+           {
+               return HandleAuthorException(e);
+           }
         }
 
         [HttpPost("CreateAuthor")]
@@ -92,89 +57,52 @@ namespace WebAPI.Controllers
                 return BadRequest("Model is not valid!");
             }
 
-            if (_context.Authors == null)
+            try
             {
-                return Problem("Entity set 'BookHubDbContext.Authors'  is null.");
+                return Ok(await _authorService.PostAuthorAsync(authorCreate));
             }
-
-
-            var author = new Author()
+            catch (Exception e)
             {
-                Name = authorCreate.Name,
-            };
-
-            _context.Authors.Add(author);
-            await _context.SaveChangesAsync();
-            return EntityMapper.MapAuthorToAuthorDetail(author);
+                return HandleAuthorException(e);
+            }
         }
         
         [HttpPut("UpdateAuthor/{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, AuthorDetail authorDetail)
+        public async Task<IActionResult> UpdateAuthor(int id, AuthorCreate authorUpdate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model is not valid!");
             }
-
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
-            {
-                return NotFound($"Author with ID {id} not found");
-            }
-
-            author.Name = authorDetail.Name;
-
-            if (authorDetail.Books != null && authorDetail.Books.Count != 0)
-            {
-                author.Books.Clear();
-                foreach (var bookRelatedModel in authorDetail.Books)
-                {
-                    var book = await _context.Books.FirstOrDefaultAsync(b =>
-                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                    if (book == null)
-                    {
-                        return NotFound(
-                            $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                    }
-
-                    author.Books.Add(book);
-                }
-            }
-            
             try
             {
-                await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok(await _authorService.UpdateAuthorAsync(id, authorUpdate));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return Problem($"Error updating author: {ex.Message}");
+                return HandleAuthorException(e);
             }
         }
-        
+
         [HttpDelete("DeleteAuthor/{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
-            if (_context.Authors == null)
+            try
             {
-                return NotFound();
+                await _authorService.DeleteAuthorAsync(id);
+                return Ok();
             }
-
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return HandleAuthorException(e);
             }
-
-            _context.Authors.Remove(author);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool AuthorExists(int id)
+        private ActionResult HandleAuthorException(Exception e)
         {
-            return (_context.Authors?.Any(e => e.Id == id)).GetValueOrDefault();
+            return e is AuthorNotFoundException or BookNotFoundException
+                ? NotFound(e.Message)
+                : Problem("Unknown problem occured");
         }
     }
 }

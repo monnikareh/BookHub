@@ -24,7 +24,7 @@ public static class EntityMapper
             Books = author.Books.Select(MapModelToRelated).ToList()
         };
     }
-    
+   
     public static GenreDetail MapGenreToGenreDetail(Genre genre)
     {
         return new GenreDetail
