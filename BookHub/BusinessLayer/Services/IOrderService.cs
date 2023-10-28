@@ -8,6 +8,6 @@ public interface IOrderService
         DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName);
     Task<OrderDetail> GetOrderByIdAsync(int id);
     Task<OrderDetail> PostOrderAsync(OrderCreate orderCreate);
-    Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
+    Task<OrderUpdate> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
     Task DeleteOrderAsync(int id);
 }
