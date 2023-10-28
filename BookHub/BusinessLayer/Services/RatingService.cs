@@ -36,7 +36,7 @@ public class RatingService : IRatingService
             ratings = ratings.Where(r => r.Book.Id == book.Id);
         }
 
-        return await ratings.Select(r => ControllerHelpers.MapRatingToRatingDetail(r)).ToListAsync();
+        return await ratings.Select(r => EntityMapper.MapRatingToRatingDetail(r)).ToListAsync();
     }
 
     public async Task<RatingDetail> GetRatingByIdAsync(int id)
@@ -52,7 +52,7 @@ public class RatingService : IRatingService
             throw new RatingNotFoundException($"Rating 'ID={id}' could not be found");
         }
 
-        return ControllerHelpers.MapRatingToRatingDetail(rating);
+        return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
 
@@ -96,7 +96,7 @@ public class RatingService : IRatingService
             / (bookRatings.Count() + 1);
         _context.Ratings.Add(rating);
         await _context.SaveChangesAsync();
-        return ControllerHelpers.MapRatingToRatingDetail(rating);
+        return EntityMapper.MapRatingToRatingDetail(rating);
     }
     
     public async Task UpdateRatingAsync(int id, RatingDetail ratingDetail)
@@ -149,11 +149,6 @@ public class RatingService : IRatingService
         }
         _context.Books.Remove(book);
         await _context.SaveChangesAsync();
-    }
-
-    private bool BookExists(int id)
-    {
-        return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
     }
 
 }

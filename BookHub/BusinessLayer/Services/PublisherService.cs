@@ -22,7 +22,7 @@ public class PublisherService : IPublisherService
         return (await _context.Publishers
                 .Include(p => p.Books)
                 .ToListAsync())
-            .Select(ControllerHelpers.MapPublisherToPublisherDetail)
+            .Select(EntityMapper.MapPublisherToPublisherDetail)
             .ToList();
     }
 
@@ -37,7 +37,7 @@ public class PublisherService : IPublisherService
         {
             throw new PublisherNotFoundException($"Publisher with ID:'{id}' not found");
         }
-        return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+        return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
     
     public async Task<PublisherDetail> GetGenreByNameAsync(string name)
@@ -51,7 +51,7 @@ public class PublisherService : IPublisherService
             throw new PublisherNotFoundException($"Publisher '{name}' not found");
         }
 
-        return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+        return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
 
     public async Task<PublisherDetail> PostGenreAsync(PublisherCreate publisherCreate)
@@ -62,7 +62,7 @@ public class PublisherService : IPublisherService
         };
         _context.Publishers.Add(publisher);
         await _context.SaveChangesAsync();
-        return ControllerHelpers.MapPublisherToPublisherDetail(publisher);
+        return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
     
     public async Task UpdatePublisherAsync(int id, PublisherDetail publisherDetail)

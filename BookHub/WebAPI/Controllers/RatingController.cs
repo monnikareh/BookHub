@@ -104,7 +104,7 @@ namespace WebAPI.Controllers
             return e is OrderNotFoundException or UserNotFoundException
                 or BookNotFoundException or RatingNotFoundException
                 ? NotFound(e.Message)
-                : Problem(e is BooksEmptyException or EntityUpdateException
+                : Problem(e is BooksEmptyException
                     ? e.Message
                     : "Unknown problem occured");
         }

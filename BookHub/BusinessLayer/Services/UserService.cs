@@ -35,79 +35,76 @@ public class UserService : IUserService
 
     }
     
-    
-        public async Task<IEnumerable<UserDetail>> GetUsersAsync()
+
+    public async Task<IEnumerable<UserDetail>> GetUsersAsync()
+    {
+        return (await _context.Users
+                .Include(u => u.Orders)
+                .Include(u => u.Books)
+                .ToListAsync())
+            .Select(EntityMapper.MapUserToUserDetail)
+            .ToList();
+    }
+
+    public async Task<UserDetail> GetUserByIdAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
         {
-            return (await _context.Users
-                    .Include(u => u.Orders)
-                    .Include(u => u.Books)
-                    .ToListAsync())
-                .Select(ControllerHelpers.MapUserToUserDetail)
-                .ToList();
+            throw new UserNotFoundException($"User 'ID={id}' could not be found");
         }
 
-        public async Task<UserDetail> GetUserByIdAsync(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                throw new UserNotFoundException($"User 'ID={id}' could not be found");
-            }
+        return EntityMapper.MapUserToUserDetail(user);
+    }
 
-            return ControllerHelpers.MapUserToUserDetail(user);
-        }
-
-        public async Task<UserDetail> PostUserAsync(UserCreate userCreate)
+    public async Task<UserDetail> PostUserAsync(UserCreate userCreate)
+    {
+        User user;
+        try
         {
-            User user;
-            try
-            {
-                user = Activator.CreateInstance<User>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
-            }
-            user.Name = userCreate.Name;
-            await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
-            await _emailStore.SetEmailAsync(user, userCreate.Email, CancellationToken.None);
-            var result = await _userManager.CreateAsync(user, userCreate.Password);
-            if (!result.Succeeded)
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
-            }
-            if (await _roleManager.RoleExistsAsync(UserRoles.User))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.User);
-            } 
-            return ControllerHelpers.MapUserToUserDetail(user);
+            user = Activator.CreateInstance<User>();
         }
-
-        public async Task UpdateUserAsync(int id, UserCreate userCreate)
+        catch
         {
-            
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                throw new UserNotFoundException($"User with ID {id} not found");
-            }
-            user.Name = userCreate.Name;
-            user.UserName = userCreate.UserName;
-            user.Email = userCreate.Email;
-            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userCreate.Password);
-            await _userManager.UpdateAsync(user);
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
         }
-
-        public async Task DeleteUserAsync(int id)
+        user.Name = userCreate.Name;
+        await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
+        await _emailStore.SetEmailAsync(user, userCreate.Email, CancellationToken.None);
+        var result = await _userManager.CreateAsync(user, userCreate.Password);
+        if (!result.Succeeded)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                throw new UserNotFoundException($"User with ID {id} not found");
-            }
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
         }
-    
+        if (await _roleManager.RoleExistsAsync(UserRoles.User))
+        {
+            await _userManager.AddToRoleAsync(user, UserRoles.User);
+        } 
+        return EntityMapper.MapUserToUserDetail(user);
+    }
+
+    public async Task UpdateUserAsync(int id, UserCreate userCreate)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+        user.Name = userCreate.Name;
+        user.UserName = userCreate.UserName;
+        user.Email = userCreate.Email;
+        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userCreate.Password);
+        await _userManager.UpdateAsync(user);
+    }
+
+    public async Task DeleteUserAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+    }
 }
