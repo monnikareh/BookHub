@@ -53,7 +53,7 @@ The application exposes several endpoints for interacting with the books, author
 
 Similar endpoints are available for authors, publishers, and ratings.
 
-At this point the main website only supports registering users without admin privileges. Therefore for testing with https://bookhub.dyn.cloud.e-infra.cz/swagger or local your deployment use one of the seeded admin users. For example username: "maromcik", password: "Aa123!"
+At this point the main website only supports registering users without admin privileges. Therefore for testing with https://bookhub.dyn.cloud.e-infra.cz/swagger or your local deployment use one of the seeded admin users. For example username: "vidlacka", password: "Aa123!"
 
 ## Deployment
 The application is deployed using CERIT-SC's Kubernetes cluster: https://bookhub.dyn.cloud.e-infra.cz/ for your convenience.
