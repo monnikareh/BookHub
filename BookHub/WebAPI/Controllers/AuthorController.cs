@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("UpdateAuthor/{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, AuthorCreate authorUpdate)
+        public async Task<IActionResult> UpdateAuthor(int id, AuthorUpdate authorUpdate)
         {
             if (!ModelState.IsValid)
             {

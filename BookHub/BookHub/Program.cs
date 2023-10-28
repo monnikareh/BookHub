@@ -89,20 +89,11 @@ builder.Services.AddTransient<IAuthorService, AuthorService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
 
 // WE WANT SWAGGER IN PRODUCTION AS WELL
 app.UseMigrationsEndPoint();
 app.UseSwagger();
 app.UseSwaggerUI();
-// }
-// else
-// {
-//     app.UseExceptionHandler("/Error");
-//     app.UseHsts();
-// }
 
 app.UseMiddleware<RequestLoggerMiddleware>();
 

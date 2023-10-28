@@ -59,26 +59,12 @@ public class AuthorService : IAuthorService
         {
             Name = authorCreate.Name,
         };
-
-        if (!authorCreate.Books.IsNullOrEmpty())
-        {
-            foreach (var bookRelatedModel in authorCreate.Books)
-            {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException($"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
-                author.Books.Add(book);
-            }
-        }
         _context.Authors.Add(author);
         await _context.SaveChangesAsync();
         return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
-    public async Task<AuthorDetail> UpdateAuthorAsync(int id, AuthorCreate authorUpdate)
+    public async Task<AuthorDetail> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate)
     {
         var author = await _context.Authors.Include(o => o.Books)
             .FirstOrDefaultAsync(a => a.Id == id);
