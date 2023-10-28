@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
                 ratings = ratings.Where(r => r.Book.Id == book.Id);
             }
 
-            return await ratings.Select(r => EntityMapper.MapRatingToRatingDetail(r)).ToListAsync();
+            return await ratings.Select(r => ControllerHelpers.MapRatingToRatingDetail(r)).ToListAsync();
         }
 
         [HttpGet("GetById/{id}")]
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
                 return NotFound($"Rating with ID:'{id}' not found");
             }
 
-            return EntityMapper.MapRatingToRatingDetail(rating);
+            return ControllerHelpers.MapRatingToRatingDetail(rating);
         }
 
 
@@ -115,7 +115,7 @@ namespace WebAPI.Controllers
                 / (bookRatings.Count() + 1);
             _context.Ratings.Add(rating);
             await _context.SaveChangesAsync();
-            return EntityMapper.MapRatingToRatingDetail(rating);
+            return ControllerHelpers.MapRatingToRatingDetail(rating);
         }
         
         [HttpPut("UpdateRating/{id}")]

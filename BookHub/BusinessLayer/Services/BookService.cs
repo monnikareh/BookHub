@@ -57,7 +57,7 @@ public class BookService : IBookService
             books = books.Where(b => b.Name == bookName);
         }
 
-        return await books.Select(b => EntityMapper.MapBookToBookDetail(b)).ToListAsync();
+        return await books.Select(b => ControllerHelpers.MapBookToBookDetail(b)).ToListAsync();
     }
 
     public async Task<BookDetail> GetBookByIdAsync(int id)
@@ -73,7 +73,7 @@ public class BookService : IBookService
             throw new BookNotFoundException($"Book 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapBookToBookDetail(book);
+        return ControllerHelpers.MapBookToBookDetail(book);
     }
 
 
@@ -133,7 +133,7 @@ public class BookService : IBookService
         };
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
-        return EntityMapper.MapBookToBookDetail(book);
+        return ControllerHelpers.MapBookToBookDetail(book);
     }
 
     public async Task<BookDetail> UpdateBookAsync(int id, BookDetail bookDetail)
@@ -206,7 +206,7 @@ public class BookService : IBookService
         try
         {
             await _context.SaveChangesAsync();
-            return EntityMapper.MapBookToBookDetail(book);
+            return ControllerHelpers.MapBookToBookDetail(book);
         }
         catch (Exception ex)
         {

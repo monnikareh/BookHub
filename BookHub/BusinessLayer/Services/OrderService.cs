@@ -60,7 +60,7 @@ namespace BusinessLayer.Services
                 orders = orders.Where(o => o.Books.Contains(book));
             }
 
-            var orderList = await orders.Select(o => EntityMapper.MapOrderToOrderDetail(o)).ToListAsync();
+            var orderList = await orders.Select(o => ControllerHelpers.MapOrderToOrderDetail(o)).ToListAsync();
             return orderList;
         }
         
@@ -75,7 +75,7 @@ namespace BusinessLayer.Services
             {
                 throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
             }
-            return EntityMapper.MapOrderToOrderDetail(order);
+            return ControllerHelpers.MapOrderToOrderDetail(order);
         }
 
         public async Task<OrderDetail> PostOrderAsync(OrderCreate orderCreate)
@@ -109,7 +109,7 @@ namespace BusinessLayer.Services
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return EntityMapper.MapOrderToOrderDetail(order);
+            return ControllerHelpers.MapOrderToOrderDetail(order);
         }
 
         public async Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
@@ -140,7 +140,7 @@ namespace BusinessLayer.Services
             try
             {
                 await _context.SaveChangesAsync();
-                return EntityMapper.MapOrderToOrderDetail(order);
+                return ControllerHelpers.MapOrderToOrderDetail(order);
             }
             catch (Exception ex)
             {
