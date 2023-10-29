@@ -72,8 +72,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                await _publisherService.UpdatePublisherAsync(id, publisherUpdate);
-                return Ok();
+                return Ok(await _publisherService.UpdatePublisherAsync(id, publisherUpdate));
             }
             catch (Exception e)
             {

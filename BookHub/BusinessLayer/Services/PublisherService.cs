@@ -54,7 +54,7 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
     
-    public async Task UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
+    public async Task<PublisherDetail> UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
     {
         var publisher = await _context.Publishers.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
@@ -83,6 +83,7 @@ public class PublisherService : IPublisherService
             }
         } 
         await _context.SaveChangesAsync();
+        return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
     
     public async Task DeletePublisherAsync(int id)

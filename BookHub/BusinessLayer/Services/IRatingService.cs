@@ -9,6 +9,6 @@ public interface IRatingService
         int? bookId, string? bookName);
     Task<RatingDetail> GetRatingByIdAsync(int id);
     Task<RatingDetail> CreateRatingAsync(RatingCreate ratingCreate);
-    Task UpdateRatingAsync(int id, RatingDetail ratingDetail);
+    Task<RatingDetail> UpdateRatingAsync(int id, RatingDetail ratingDetail);
     Task DeleteBookAsync(int id);
 }

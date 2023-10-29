@@ -76,8 +76,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                await _ratingService.UpdateRatingAsync(id, ratingDetail);
-                return Ok();
+                return Ok(await _ratingService.UpdateRatingAsync(id, ratingDetail));
             }
             catch (Exception e)
             {

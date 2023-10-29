@@ -100,7 +100,7 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
     
-    public async Task UpdateRatingAsync(int id, RatingDetail ratingDetail)
+    public async Task<RatingDetail> UpdateRatingAsync(int id, RatingDetail ratingDetail)
     {
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)
@@ -139,6 +139,7 @@ public class RatingService : IRatingService
             rating.BookId = book.Id;
         }
         await _context.SaveChangesAsync();
+        return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
     public async Task DeleteBookAsync(int id)
