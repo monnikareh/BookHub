@@ -103,11 +103,9 @@ namespace WebAPI.Controllers
         private ActionResult HandleRatingException(Exception e)
         {
             return e is ContextNotFoundException or UserNotFoundException
-                or BookNotFoundException or RatingNotFoundException
+                or BookNotFoundException or RatingNotFoundException or BooksEmptyException
                 ? NotFound(e.Message)
-                : Problem(e is BooksEmptyException
-                    ? e.Message
-                    : "Unknown problem occured");
+                : Problem("Unknown problem occured");
         }
     }
 }
