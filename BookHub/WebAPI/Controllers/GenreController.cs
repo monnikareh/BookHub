@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("CreateGenre")]
-        public async Task<ActionResult<GenreDetail>> PostGenre(GenreCreate genreCreate)
+        public async Task<ActionResult<GenreDetail>> CreateGenre(GenreCreate genreCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
             
             try
             {
-                return Ok(await _genreService.PostGenreAsync(genreCreate));
+                return Ok(await _genreService.CreateGenreAsync(genreCreate));
             }
             catch (Exception e)
             {

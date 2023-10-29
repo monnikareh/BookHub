@@ -54,7 +54,7 @@ public class AuthorService : IAuthorService
         return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
-    public async Task<AuthorDetail> PostAuthorAsync(AuthorCreate authorCreate)
+    public async Task<AuthorDetail> CreateAuthorAsync(AuthorCreate authorCreate)
     {
         var author = new Author()
         {

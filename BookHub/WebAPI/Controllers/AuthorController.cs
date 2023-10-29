@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("CreateAuthor")]
-        public async Task<ActionResult<AuthorDetail>> PostAuthor(AuthorCreate authorCreate)
+        public async Task<ActionResult<AuthorDetail>> CreateAuthor(AuthorCreate authorCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _authorService.PostAuthorAsync(authorCreate));
+                return Ok(await _authorService.CreateAuthorAsync(authorCreate));
             }
             catch (Exception e)
             {

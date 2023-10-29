@@ -7,7 +7,7 @@ public interface IAuthorService
 {
     Task<IEnumerable<AuthorDetail>> GetAuthorsAsync(string? name, int? bookId, string? bookName);
     Task<AuthorDetail> GetAuthorByIdAsync(int id);
-    Task<AuthorDetail> PostAuthorAsync(AuthorCreate authorCreate);
+    Task<AuthorDetail> CreateAuthorAsync(AuthorCreate authorCreate);
     Task<AuthorDetail> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate);
     Task DeleteAuthorAsync(int id);
 

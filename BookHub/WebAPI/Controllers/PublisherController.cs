@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("CreatePublisher")]
-        public async Task<ActionResult<PublisherDetail>> PostGenre(PublisherCreate publisherCreate)
+        public async Task<ActionResult<PublisherDetail>> CreatePublisher(PublisherCreate publisherCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -54,7 +54,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _publisherService.PostPublisherAsync(publisherCreate));
+                return Ok(await _publisherService.CreatePublisherAsync(publisherCreate));
             }
             catch (Exception e)
             {

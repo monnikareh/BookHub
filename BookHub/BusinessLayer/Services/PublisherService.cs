@@ -43,7 +43,7 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
 
-    public async Task<PublisherDetail> PostPublisherAsync(PublisherCreate publisherCreate)
+    public async Task<PublisherDetail> CreatePublisherAsync(PublisherCreate publisherCreate)
     {
         var publisher = new Publisher
         {

@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPost("CreateOrder")]
-        public async Task<ActionResult<OrderDetail>> PostOrder(OrderCreate orderCreate)
+        public async Task<ActionResult<OrderDetail>> CreateOrder(OrderCreate orderCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -55,7 +55,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _orderService.PostOrderAsync(orderCreate));
+                return Ok(await _orderService.CreateOrderAsync(orderCreate));
             }
             catch (Exception e)
             {

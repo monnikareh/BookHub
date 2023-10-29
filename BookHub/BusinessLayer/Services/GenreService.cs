@@ -44,7 +44,7 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task<GenreDetail> PostGenreAsync(GenreCreate genreCreate)
+    public async Task<GenreDetail> CreateGenreAsync(GenreCreate genreCreate)
     {
         var genre = new Genre
         {

@@ -51,7 +51,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPost("CreateRating")]
-        public async Task<ActionResult<RatingDetail>> PostRating(RatingCreate ratingCreate)
+        public async Task<ActionResult<RatingDetail>> CreateRating(RatingCreate ratingCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _ratingService.PostRatingAsync(ratingCreate));
+                return Ok(await _ratingService.CreateRatingAsync(ratingCreate));
             }
             catch (Exception e)
             {

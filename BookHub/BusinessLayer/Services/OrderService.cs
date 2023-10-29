@@ -75,7 +75,7 @@ namespace BusinessLayer.Services
             return EntityMapper.MapOrderToOrderDetail(order);
         }
 
-        public async Task<OrderDetail> PostOrderAsync(OrderCreate orderCreate)
+        public async Task<OrderDetail> CreateOrderAsync(OrderCreate orderCreate)
         {
             if (orderCreate.Books.IsNullOrEmpty())
             {

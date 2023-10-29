@@ -57,7 +57,7 @@ public class RatingService : IRatingService
     }
 
 
-    public async Task<RatingDetail> PostRatingAsync(RatingCreate ratingCreate)
+    public async Task<RatingDetail> CreateRatingAsync(RatingCreate ratingCreate)
     {
 
 
