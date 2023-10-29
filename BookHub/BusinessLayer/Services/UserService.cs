@@ -17,11 +17,11 @@ public class UserService : IUserService
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IUserEmailStore<User> _emailStore;
-    
-    
+
+
     public UserService(
-        BookHubDbContext context, 
-        IUserStore<User> userStore, 
+        BookHubDbContext context,
+        IUserStore<User> userStore,
         UserManager<User> userManager,
         RoleManager<IdentityRole<int>> roleManager)
     {
@@ -33,10 +33,10 @@ public class UserService : IUserService
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
-        _emailStore = (IUserEmailStore<User>)_userStore;
 
+        _emailStore = (IUserEmailStore<User>)_userStore;
     }
-    
+
 
     public async Task<IEnumerable<UserDetail>> GetUsersAsync()
     {
@@ -70,6 +70,7 @@ public class UserService : IUserService
         {
             throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
         }
+
         user.Name = userCreate.Name;
         await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
         await _emailStore.SetEmailAsync(user, userCreate.Email, CancellationToken.None);
@@ -81,12 +82,15 @@ public class UserService : IUserService
             {
                 errors.Append($"{err.Code} - {err.Description}");
             }
+
             throw new UserAlreadyExistsException($"User could not be created: {errors}");
         }
+
         if (await _roleManager.RoleExistsAsync(UserRoles.User))
         {
             await _userManager.AddToRoleAsync(user, UserRoles.User);
-        } 
+        }
+
         return EntityMapper.MapUserToUserDetail(user);
     }
 
@@ -97,6 +101,7 @@ public class UserService : IUserService
         {
             throw new UserNotFoundException($"User with ID {id} not found");
         }
+
         user.Name = userCreate.Name;
         user.UserName = userCreate.UserName;
         user.Email = userCreate.Email;
@@ -111,6 +116,7 @@ public class UserService : IUserService
         {
             throw new UserNotFoundException($"User with ID {id} not found");
         }
+
         _context.Users.Remove(user);
         await _context.SaveChangesAsync();
     }
