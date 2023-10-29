@@ -1,4 +1,3 @@
-using BookHub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BusinessLayer.Exceptions;
@@ -8,7 +7,7 @@ using BusinessLayer.Services;
 
 namespace WebAPI.Controllers
 {
-    // [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
