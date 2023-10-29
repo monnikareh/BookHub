@@ -11,19 +11,19 @@ namespace WebAPI.Controllers
     [ApiController]
     public class PublisherController : ControllerBase
     {
-        private readonly PublisherService _publisherService;
+        private readonly IPublisherService _publisherService;
 
-        public PublisherController(PublisherService publisherService)
+        public PublisherController(IPublisherService publisherService)
         {
             _publisherService = publisherService;
         }
 
         [HttpGet("GetPublishers")]
-        public async Task<ActionResult<IEnumerable<PublisherDetail>>> GetPublishers()
+        public async Task<ActionResult<IEnumerable<PublisherDetail>>> GetPublishers(string? name)
         {
             try
             {
-                return Ok(await _publisherService.GetPublishersAsync());
+                return Ok(await _publisherService.GetPublishersAsync(name));
             }
             catch (Exception e)
             {
@@ -44,20 +44,6 @@ namespace WebAPI.Controllers
             }        
         }
 
-        // GET: api/Book/name
-        [HttpGet("GetByName/{name}")]
-        public async Task<ActionResult<PublisherDetail>> GetGenreByName(string name)
-        {
-            try
-            {
-                return Ok(await _publisherService.GetGenreByNameAsync(name));
-            }
-            catch (Exception e)
-            {
-                return HandlePublisherException(e);
-            } 
-        }
-
         [HttpPost("CreatePublisher")]
         public async Task<ActionResult<PublisherDetail>> PostGenre(PublisherCreate publisherCreate)
         {
@@ -67,7 +53,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _publisherService.PostGenreAsync(publisherCreate));
+                return Ok(await _publisherService.PostPublisherAsync(publisherCreate));
             }
             catch (Exception e)
             {
@@ -77,7 +63,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("UpdatePublisher/{id}")]
-        public async Task<IActionResult> UpdatePublisher(int id, PublisherDetail publisherDetail)
+        public async Task<IActionResult> UpdatePublisher(int id, PublisherUpdate publisherUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -85,7 +71,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                await _publisherService.UpdatePublisherAsync(id, publisherDetail);
+                await _publisherService.UpdatePublisherAsync(id, publisherUpdate);
                 return Ok();
             }
             catch (Exception e)

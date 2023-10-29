@@ -4,10 +4,9 @@ namespace BusinessLayer.Services;
 
 public interface IPublisherService
 { 
-    Task<IEnumerable<PublisherDetail>> GetPublishersAsync();
+    Task<IEnumerable<PublisherDetail>> GetPublishersAsync(string? name);
     Task<PublisherDetail> GetPublisherByIdAsync(int id);
-    Task<PublisherDetail> GetGenreByNameAsync(string name);
-    Task<PublisherDetail> PostGenreAsync(PublisherCreate publisherCreate);
-    Task UpdatePublisherAsync(int id, PublisherDetail publisherDetail);
+    Task<PublisherDetail> PostPublisherAsync(PublisherCreate publisherCreate);
+    Task UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate);
     Task DeletePublisherAsync(int id);
 }

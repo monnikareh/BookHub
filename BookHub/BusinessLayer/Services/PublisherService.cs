@@ -16,14 +16,16 @@ public class PublisherService : IPublisherService
         _context = context;
     }
 
-    public async Task<IEnumerable<PublisherDetail>> GetPublishersAsync()
+    public async Task<IEnumerable<PublisherDetail>> GetPublishersAsync(string? name)
     {
-
-        return (await _context.Publishers
-                .Include(p => p.Books)
-                .ToListAsync())
-            .Select(EntityMapper.MapPublisherToPublisherDetail)
-            .ToList();
+        var publishers = _context.Publishers
+            .Include(p => p.Books)
+            .AsQueryable();
+        if (!string.IsNullOrEmpty(name))
+        {
+            publishers = publishers.Where(p => p.Name == name);
+        }
+        return await publishers.Select(p => EntityMapper.MapPublisherToPublisherDetail(p)).ToListAsync();
     }
 
     public async Task<PublisherDetail> GetPublisherByIdAsync(int id)
@@ -39,22 +41,8 @@ public class PublisherService : IPublisherService
         }
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
-    
-    public async Task<PublisherDetail> GetGenreByNameAsync(string name)
-    {
-        var publisher = await _context
-            .Publishers
-            .Include(p => p.Books)
-            .FirstOrDefaultAsync(p => p.Name == name);
-        if (publisher == null)
-        {
-            throw new PublisherNotFoundException($"Publisher '{name}' not found");
-        }
 
-        return EntityMapper.MapPublisherToPublisherDetail(publisher);
-    }
-
-    public async Task<PublisherDetail> PostGenreAsync(PublisherCreate publisherCreate)
+    public async Task<PublisherDetail> PostPublisherAsync(PublisherCreate publisherCreate)
     {
         var publisher = new Publisher
         {
@@ -65,21 +53,22 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
     
-    public async Task UpdatePublisherAsync(int id, PublisherDetail publisherDetail)
+    public async Task UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
     {
-
-        var publisher = await _context.Publishers.FindAsync(id);
+        var publisher = await _context.Publishers.Include(g => g.Books)
+            .FirstOrDefaultAsync(g => g.Id == id);
+        
         if (publisher == null)
         {
             throw new PublisherNotFoundException($"Publisher with ID {id} not found");
         }
 
-        publisher.Name = publisherDetail.Name;
+        publisher.Name = publisherUpdate.Name;
 
-        if (publisherDetail.Books != null && publisherDetail.Books.Count != 0)
+        if (publisherUpdate.Books.Count != 0)
         {
             publisher.Books.Clear();
-            foreach (var bookRelatedModel in publisherDetail.Books)
+            foreach (var bookRelatedModel in publisherUpdate.Books)
             {
                 var book = await _context.Books.FirstOrDefaultAsync(b =>
                     b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
