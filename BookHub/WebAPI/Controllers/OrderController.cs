@@ -97,11 +97,9 @@ namespace WebAPI.Controllers
         private ActionResult HandleOrderException(Exception e)
         {
             return e is OrderNotFoundException or UserNotFoundException
-                or BookNotFoundException
+                or BookNotFoundException or BooksEmptyException
                 ? NotFound(e.Message)
-                : Problem(e is BooksEmptyException
-                    ? e.Message
-                    : "Unknown problem occured");
+                : Problem("Unknown problem occured");
         }
     } 
 }
