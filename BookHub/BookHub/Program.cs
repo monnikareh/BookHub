@@ -24,7 +24,12 @@ var connectionString = configuration.GetConnectionString("ConnectionString") ??
 builder.Services.AddLogging();
 builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString));
 
-builder.Services.AddIdentity<User, IdentityRole<int>>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+        options.User.RequireUniqueEmail = true;
+        options.Password.RequireNonAlphanumeric = false;
+    })
     .AddEntityFrameworkStores<BookHubDbContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
