@@ -15,7 +15,7 @@ The website is deployed and published in a Kubernetes cluster. Use this link to 
 - Rating Management: Facilitates users to rate books and leave comments. The rating value and comments can be updated.
 
 ## Use Case Diagram
-![Use Case Diagram](usecase.png)
+![Use Case Diagram](Use Case Diagram.png)
 
 ## Architecture
 The application is built using ASP.NET Core as the framework, which is a cross-platform framework for building modern cloud-based internet connected applications like web apps, IoT apps, and mobile backends. It uses Entity Framework Core as the Object-Relational Mapper (ORM) to handle database operations.
@@ -32,7 +32,7 @@ The application has several components each handling a specific functionality:
 When a user interacts with the application, the request is first logged by the Request Logging component. Then, depending on the request, it's routed to the appropriate component. For instance, if a user wants to update a book's details, the request is handled by the Book Management component. After processing the request, the updated data is stored in the database using Entity Framework Core.
 
 ## Database Schema
-![ERD Diagram](erd.png)
+![ERD Diagram](Entity Relationship Diagram1.png)
 
 ## Setup and Installation
 
