@@ -1,4 +1,5 @@
 using BusinessLayer.Exceptions;
+using BusinessLayer.Models;
 
 namespace BusinessLayer.Services;
 

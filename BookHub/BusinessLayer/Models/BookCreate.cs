@@ -1,4 +1,6 @@
-namespace BookHub.Models;
+using BookHub.Models;
+
+namespace BusinessLayer.Models;
 
 public class BookCreate
 {

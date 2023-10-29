@@ -1,6 +1,7 @@
 using BookHub.Models;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
+using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;

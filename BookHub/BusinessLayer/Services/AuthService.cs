@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using BookHub.Models;
 using BusinessLayer.Exceptions;
+using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
