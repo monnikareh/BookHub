@@ -8,7 +8,7 @@ using BusinessLayer.Services;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("CreateUser")]
-        public async Task<ActionResult<UserDetail>> PostUser(UserCreate userCreate)
+        public async Task<ActionResult<UserDetail>> CreateUser(UserCreate userCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -102,7 +102,7 @@ namespace WebAPI.Controllers
             return e is OrderNotFoundException or UserNotFoundException
                 or BookNotFoundException
                 ? NotFound(e.Message)
-                : Problem(e is BooksEmptyException or UserAlreadyExistsException
+                : Conflict(e is UserAlreadyExistsException
                     ? e.Message
                     : "Unknown problem occured");
         }

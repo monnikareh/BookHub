@@ -103,11 +103,9 @@ namespace WebAPI.Controllers
         private ActionResult HandleBookException(Exception e)
         {
             return e is PublisherNotFoundException or GenreNotFoundException or AuthorNotFoundException
-                or BookNotFoundException
+                or BookNotFoundException or AuthorsEmptyException
                 ? NotFound(e.Message)
-                : Problem(e is AuthorsEmptyException
-                    ? e.Message
-                    : "Unknown problem occured");
+                : Problem("Unknown problem occured");
         }
     }
 }

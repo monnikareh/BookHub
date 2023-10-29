@@ -101,9 +101,7 @@ namespace WebAPI.Controllers
             return e is PublisherNotFoundException or UserNotFoundException
                 or BookNotFoundException
                 ? NotFound(e.Message)
-                : Problem(e is BooksEmptyException
-                    ? e.Message
-                    : "Unknown problem occured");
+                : Problem("Unknown problem occured");
         }
     }
 }
