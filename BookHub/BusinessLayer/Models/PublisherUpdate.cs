@@ -1,3 +1,5 @@
+using BusinessLayer.Models;
+
 namespace BookHub.Models;
 
 public class PublisherUpdate
