@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        
+
 
         public UserController(IUserService userService)
         {
@@ -55,6 +55,7 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
+
             try
             {
                 return Ok(await _userService.CreateUserAsync(userCreate));
@@ -66,21 +67,22 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("UpdateUser/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserCreate userCreate)
+        public async Task<ActionResult<UserDetail>> UpdateUser(int id, UserUpdate userUpdate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model is not valid!");
             }
+
             try
             {
-                await _userService.UpdateUserAsync(id, userCreate);
-                return Ok();
+                return Ok(await _userService.UpdateUserAsync(id, userUpdate));
             }
             catch (Exception e)
             {
                 return HandleUserException(e);
             }
+            
         }
 
         [HttpDelete("DeleteUser/{id}")]
@@ -96,15 +98,15 @@ namespace WebAPI.Controllers
                 return HandleUserException(e);
             }
         }
-        
+
         private ActionResult HandleUserException(Exception e)
         {
             return e is OrderNotFoundException or UserNotFoundException
                 or BookNotFoundException
                 ? NotFound(e.Message)
-                : Conflict(e is UserAlreadyExistsException
-                    ? e.Message
-                    : "Unknown problem occured");
+                : e is UserAlreadyExistsException
+                    ? Conflict(e.Message)
+                    : Problem($"{e}Unknown problem occured");
         }
     }
 }

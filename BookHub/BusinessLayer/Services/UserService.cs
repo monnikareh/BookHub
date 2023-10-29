@@ -80,10 +80,10 @@ public class UserService : IUserService
             var errors = new StringBuilder();
             foreach (var err in result.Errors)
             {
-                errors.Append($"{err.Code} - {err.Description}");
+                errors.Append($"{err.Code} - {err.Description}\n");
             }
 
-            throw new UserAlreadyExistsException($"User could not be created: {errors}");
+            throw new UserAlreadyExistsException($"User could not be created: {errors.ToString()}");
         }
 
         if (await _roleManager.RoleExistsAsync(UserRoles.User))
@@ -94,19 +94,20 @@ public class UserService : IUserService
         return EntityMapper.MapUserToUserDetail(user);
     }
 
-    public async Task UpdateUserAsync(int id, UserCreate userCreate)
+    public async Task<UserDetail> UpdateUserAsync(int id, UserUpdate userUpdate)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             throw new UserNotFoundException($"User with ID {id} not found");
         }
-
-        user.Name = userCreate.Name;
-        user.UserName = userCreate.UserName;
-        user.Email = userCreate.Email;
-        user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userCreate.Password);
+        user.Name = userUpdate.Name;
+        await _userManager.SetUserNameAsync(user, userUpdate.UserName);
+        await _userManager.SetEmailAsync(user, userUpdate.Email);
+        await _userManager.ChangePasswordAsync(user, userUpdate.OldPassword, userUpdate.NewPassword);
         await _userManager.UpdateAsync(user);
+        await _context.SaveChangesAsync();
+        return EntityMapper.MapUserToUserDetail(user);
     }
 
     public async Task DeleteUserAsync(int id)
@@ -117,7 +118,6 @@ public class UserService : IUserService
             throw new UserNotFoundException($"User with ID {id} not found");
         }
 
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
+        await _userManager.DeleteAsync(user);
     }
 }
