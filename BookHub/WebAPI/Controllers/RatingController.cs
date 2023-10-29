@@ -101,7 +101,7 @@ namespace WebAPI.Controllers
         
         private ActionResult HandleRatingException(Exception e)
         {
-            return e is OrderNotFoundException or UserNotFoundException
+            return e is ContextNotFoundException or UserNotFoundException
                 or BookNotFoundException or RatingNotFoundException
                 ? NotFound(e.Message)
                 : Problem(e is BooksEmptyException
