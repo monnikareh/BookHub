@@ -1,4 +1,5 @@
 using BookHub.Models;
+using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 
 namespace BusinessLayer.Mapper;

@@ -2,6 +2,7 @@ using BookHub.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using BusinessLayer.Exceptions;
+using BusinessLayer.Models;
 using BusinessLayer.Services;
 
 
@@ -56,7 +57,7 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _userService.PostUserAsync(userCreate));
+                return Ok(await _userService.CreateUserAsync(userCreate));
             }
             catch (Exception e)
             {
@@ -101,7 +102,7 @@ namespace WebAPI.Controllers
             return e is OrderNotFoundException or UserNotFoundException
                 or BookNotFoundException
                 ? NotFound(e.Message)
-                : Problem(e is BooksEmptyException
+                : Problem(e is BooksEmptyException or UserAlreadyExistsException
                     ? e.Message
                     : "Unknown problem occured");
         }

@@ -3,6 +3,7 @@ using BusinessLayer.Exceptions;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using BusinessLayer.Mapper;
+using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

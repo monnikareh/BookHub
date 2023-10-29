@@ -1,5 +1,6 @@
-namespace BookHub.Models;
+using BookHub.Models;
 
+namespace BusinessLayer.Models;
 public class GenreDetail
 {
     public int Id { get; set; }

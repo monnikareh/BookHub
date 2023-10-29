@@ -1,3 +1,4 @@
+using System.Text;
 using BookHub.Models;
 using BusinessLayer.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -5,6 +6,7 @@ using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.Mapper;
+using BusinessLayer.Models;
 
 namespace BusinessLayer.Services;
 
@@ -57,7 +59,7 @@ public class UserService : IUserService
         return EntityMapper.MapUserToUserDetail(user);
     }
 
-    public async Task<UserDetail> PostUserAsync(UserCreate userCreate)
+    public async Task<UserDetail> CreateUserAsync(UserCreate userCreate)
     {
         User user;
         try
@@ -74,7 +76,12 @@ public class UserService : IUserService
         var result = await _userManager.CreateAsync(user, userCreate.Password);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
+            var errors = new StringBuilder();
+            foreach (var err in result.Errors)
+            {
+                errors.Append($"{err.Code} - {err.Description}");
+            }
+            throw new UserAlreadyExistsException($"User could not be created: {errors}");
         }
         if (await _roleManager.RoleExistsAsync(UserRoles.User))
         {
