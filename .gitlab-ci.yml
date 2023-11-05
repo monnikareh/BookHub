@@ -94,9 +94,9 @@ default:
     - shared-fi
 
 before_script:
-  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
   - cd BookHub
-
+  - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+  
 build:
   stage: build
   # ### Build all projects discovered from solution file.
