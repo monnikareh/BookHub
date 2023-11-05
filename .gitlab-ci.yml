@@ -84,6 +84,15 @@ cache:
 # in the root of project repository, so its content can be cached.
 #
 # Learn more about GitLab cache: https://docs.gitlab.com/ee/ci/caching/index.html
+stages:
+  - build
+  - test
+  - deploy
+
+default:
+  tags:
+    - shared-fi
+
 before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
 
