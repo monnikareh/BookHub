@@ -81,14 +81,6 @@ public static class EntityMapper
             Books = order.Books.Select(MapModelToRelated).ToList()
         };
     }
-    public static OrderUpdate MapOrderToOrderUpdate(Order order)
-        {
-            return new OrderUpdate
-            {
-                TotalPrice = order.TotalPrice,
-                Books = order.Books.Select(MapModelToRelated).ToList()
-            };
-        }
     
     public static UserDetail MapUserToUserDetail(User user)
     {
