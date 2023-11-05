@@ -95,6 +95,7 @@ default:
 
 before_script:
   - 'dotnet restore --packages $NUGET_PACKAGES_DIRECTORY'
+  - cd BookHub
 
 build:
   stage: build
