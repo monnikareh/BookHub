@@ -8,4 +8,5 @@ public class UserDetail
     public string Email { get; set; }
     public virtual ICollection<ModelRelated> Orders { get; set; } = new List<ModelRelated>();
     public virtual ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
+    public virtual ICollection<ModelRelated> Ratings { get; set; } = new List<ModelRelated>();
 }

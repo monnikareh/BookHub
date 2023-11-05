@@ -10,5 +10,6 @@ public class User : IdentityUser<int>, IModelRelated
     
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
     public virtual ICollection<Book> Books { get; } = new List<Book>();
+    public virtual ICollection<Rating> Ratings { get; } = new List<Rating>();
     
 }
