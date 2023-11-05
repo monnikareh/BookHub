@@ -53,7 +53,19 @@ The application exposes several endpoints for interacting with the books, author
 
 Similar endpoints are available for authors, publishers, and ratings.
 
-At this point the main website only supports registering users without admin privileges. Therefore for testing with https://bookhub.dyn.cloud.e-infra.cz/swagger or your local deployment use one of the seeded admin users. For example username: "vidlacka", password: "Aa123!"
+At this point the main website only supports registering users without admin privileges. 
+Therefore for testing with https://bookhub.dyn.cloud.e-infra.cz/swagger or your local deployment use one of the seeded admin users. 
+For example username: "betatesting", password: "Aa123!".
+
+Here are the steps to authorize:
+
+1. Open `/api/Auth/login` endpoint and enter the following credentials:
+    - userName: "betatesting"
+    - password: "Aa123!".
+2. Copy the generated token.
+3. Click on the authorize button
+4. Enter `Bearer {TOKEN}` and confirm.
+5. Now you've been successfully authorized. You can use any endpoint.  
 
 ## Deployment
 The application is deployed using CERIT-SC's Kubernetes cluster: https://bookhub.dyn.cloud.e-infra.cz/ for your convenience.
