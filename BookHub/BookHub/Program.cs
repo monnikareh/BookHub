@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text;
-using BookHub.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -18,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var connectionString = configuration.GetConnectionString("ConnectionString") ??
+var connectionString = configuration.GetConnectionString("PostgresConnectionString") ??
                        throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
 
 builder.Services.AddLogging();
