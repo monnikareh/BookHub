@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +18,24 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var connectionString = configuration.GetConnectionString("PostgresConnectionString") ??
-                       throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
+var postgresConnectionString = configuration.GetConnectionString("PostgresConnectionString") ??
+                               throw new InvalidOperationException(
+                                   "Connection string 'PostgresConnectionString' not found.");
+
+var mariadbConnectionString = configuration.GetConnectionString("MariaDBConnectionString") ??
+                              throw new InvalidOperationException(
+                                  "Connection string 'MariaDBConnectionString' not found.");
+
+builder.Services.AddDbContext<BookHubDbContext>(options =>
+    options.UseNpgsql(postgresConnectionString, 
+        x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
+
+// builder.Services.AddDbContext<BookHubDbContext>(
+//     options => options
+//         .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
+//             x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
 
 builder.Services.AddLogging();
-builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString,  
-    x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     {
@@ -61,30 +74,32 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "BookHub API", 
-        Version = "v1" 
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "BookHub API",
+        Version = "v1"
     });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-        In = ParameterLocation.Header, 
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
         Description = "Please insert JWT with Bearer into field",
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
-
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        { 
-            new OpenApiSecurityScheme 
-            { 
-                Reference = new OpenApiReference 
-                { 
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
                     Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer" 
-                } 
+                    Id = "Bearer"
+                }
             },
             Array.Empty<string>()
-        } 
+        }
     });
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
