@@ -31,6 +31,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
+      <ProjectReference Include="..\DAL.MariaDB.Migrations\DAL.MariaDB.Migrations.csproj" />
       <ProjectReference Include="..\DAL.Postgres.Migrations\DAL.Postgres.Migrations.csproj" />
       <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
     </ItemGroup>
