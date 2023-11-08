@@ -21,7 +21,8 @@ var connectionString = configuration.GetConnectionString("PostgresConnectionStri
                        throw new InvalidOperationException("Connection string 'ConnectionString' not found.");
 
 builder.Services.AddLogging();
-builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<BookHubDbContext>(options => options.UseNpgsql(connectionString,  
+    x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
 
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     {
