@@ -110,7 +110,7 @@ public class RatingService : IRatingService
 
         rating.Value = ratingDetail.Value;
 
-        if (rating.Comment != "string")
+        if (ratingDetail.Comment != "string")
         {
             rating.Comment = ratingDetail.Comment;
         }

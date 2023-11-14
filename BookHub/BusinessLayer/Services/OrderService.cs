@@ -6,6 +6,7 @@ using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Packaging;
 
 
 namespace BusinessLayer.Services
@@ -123,18 +124,21 @@ namespace BusinessLayer.Services
 
             if (orderUpdate.Books.Count != 0)
             {
-                order.Books.Clear();
-                foreach (var bookRelatedModel in orderUpdate.Books)
+                var bookNames = orderUpdate.Books.Select(b => b.Name).ToHashSet();
+                var bookIds = orderUpdate.Books.Select(b => b.Id).ToHashSet();
+
+                var books = await _context.Books
+                    .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                    .ToListAsync();
+
+                if (books.Count != orderUpdate.Books.Count)
                 {
-                    var book = await _context.Books.FirstOrDefaultAsync(b =>
-                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                    if (book == null)
-                    {
-                        throw new BookNotFoundException($"Book 'ID={id}' could not be found");
-                    }
-                    order.Books.Add(book);
+                    throw new BookNotFoundException("One or more books could not be found");
                 }
-            } 
+
+                order.Books.Clear();
+                order.Books.AddRange(books);
+            }
  
             await _context.SaveChangesAsync();
             return EntityMapper.MapOrderToOrderDetail(order);

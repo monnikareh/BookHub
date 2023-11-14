@@ -1,5 +1,6 @@
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
+using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
 
@@ -154,19 +155,19 @@ public class BookService : IBookService
 
         if (bookDetail.Genres.Count > 0)
         {
-            book.Genres.Clear();
-            foreach (var genreRelatedModel in bookDetail.Genres)
-            {
-                var genre = await _context.Genres.FirstOrDefaultAsync(g =>
-                    g.Name == genreRelatedModel.Name || g.Id == genreRelatedModel.Id);
-                if (genre == null)
-                {
-                    throw new GenreNotFoundException(
-                        $"Genre 'Name={genreRelatedModel.Name}' <OR> 'ID={genreRelatedModel.Id}' could not be found");
-                }
+            var genreNames = bookDetail.Genres.Select(g => g.Name).ToHashSet();
+            var genreIds = bookDetail.Genres.Select(g => g.Id).ToHashSet();
 
-                book.Genres.Add(genre);
+            var genres = await _context.Genres
+                .Where(g => genreNames.Contains(g.Name) || genreIds.Contains(g.Id))
+                .ToListAsync();
+
+            if (genres.Count != bookDetail.Genres.Count)
+            {
+                throw new GenreNotFoundException("One or more genres could not be found");
             }
+            book.Genres.Clear();
+            book.Genres.AddRange(genres);
         }
 
         if (bookDetail.Publisher.Name != "string")
@@ -189,19 +190,19 @@ public class BookService : IBookService
 
         if (bookDetail.Authors is { Count: > 0 })
         {
-            book.Authors.Clear();
-            foreach (var authorRelatedModel in bookDetail.Authors)
-            {
-                var author = await _context.Authors.FirstOrDefaultAsync(a =>
-                    a.Name == authorRelatedModel.Name || a.Id == authorRelatedModel.Id);
-                if (author == null)
-                {
-                    throw new AuthorNotFoundException(
-                        $"Author 'Name={authorRelatedModel.Name}' <OR> 'ID={authorRelatedModel.Id}' could not be found");
-                }
+            var authorNames = bookDetail.Authors.Select(a => a.Name).ToHashSet();
+            var authorIds = bookDetail.Authors.Select(a => a.Id).ToHashSet();
 
-                book.Authors.Add(author);
+            var authors = await _context.Authors
+                .Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id))
+                .ToListAsync();
+
+            if (authors.Count != bookDetail.Authors.Count)
+            {
+                throw new AuthorNotFoundException("One or more authors could not be found");
             }
+            book.Authors.Clear();
+            book.Authors.AddRange(authors);
         }
 
         await _context.SaveChangesAsync();

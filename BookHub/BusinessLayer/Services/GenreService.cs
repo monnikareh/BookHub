@@ -5,6 +5,7 @@ using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
 
@@ -68,18 +69,20 @@ public class GenreService : IGenreService
 
         if (genreUpdate.Books.Count != 0)
         {
-            genre.Books.Clear();
-            foreach (var bookRelatedModel in genreUpdate.Books)
-            {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException($"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
+            var bookNames = genreUpdate.Books.Select(b => b.Name).ToHashSet();
+            var bookIds = genreUpdate.Books.Select(b => b.Id).ToHashSet();
 
-                genre.Books.Add(book);
+            var books = await _context.Books
+                .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                .ToListAsync();
+
+            if (books.Count != genreUpdate.Books.Count)
+            {
+                throw new BookNotFoundException("One or more books could not be found");
             }
+
+            genre.Books.Clear();
+            genre.Books.AddRange(books);
         }
         await _context.SaveChangesAsync();   
         return EntityMapper.MapGenreToGenreDetail(genre);
