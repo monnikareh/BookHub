@@ -20,7 +20,7 @@ namespace BusinessLayer.Services
         }
 
         public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName)
         {
             var orders = _context.Orders
                 .Include(o => o.User)
@@ -50,7 +50,7 @@ namespace BusinessLayer.Services
 
             if (totalPrice.HasValue)
             {
-                orders = orders.Where(o => Math.Abs(o.TotalPrice - totalPrice.Value) < 0.0001);
+                orders = orders.Where(o => o.TotalPrice == totalPrice.Value);
             }
 
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == bookName || b.Id == bookId);
