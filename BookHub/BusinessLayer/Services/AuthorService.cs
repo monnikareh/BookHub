@@ -34,7 +34,8 @@ public class AuthorService : IAuthorService
         {
             authors = authors.Where(o => o.Books.Contains(book));
         }
-        return await authors.Select(o => EntityMapper.MapAuthorToAuthorDetail(o)).ToListAsync();
+        var authorsList = await authors.ToListAsync();
+        return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
 
     public async Task<AuthorDetail> GetAuthorByIdAsync(int id)
