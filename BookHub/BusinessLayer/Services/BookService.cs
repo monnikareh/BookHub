@@ -94,34 +94,24 @@ public class BookService : IBookService
                 $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
         }
 
-        var genres = new List<Genre>();
-        foreach (var genreRelatedModel in bookCreate.Genres)
+        var genreNames = bookCreate.Genres.Select(g => g.Name).ToHashSet();
+        var genreIds = bookCreate.Genres.Select(g => g.Id).ToHashSet();
+        var genres = await _context.Genres.Where(g => genreNames.Contains(g.Name) || genreIds.Contains(g.Id)).ToListAsync();
+        
+        if (genres.Count != bookCreate.Genres.Count)
         {
-            var genre = await _context.Genres.FirstOrDefaultAsync(g =>
-                g.Name == genreRelatedModel.Name || g.Id == genreRelatedModel.Id);
-            if (genre == null)
-            {
-                throw new GenreNotFoundException(
-                    $"Genre 'Name={genreRelatedModel.Name}' <OR> 'ID={genreRelatedModel.Id}' could not be found");
-            }
-
-            genres.Add(genre);
+            throw new GenreNotFoundException("One or more genres could not be found");
         }
-
-        var authors = new List<Author>();
-        foreach (var authorRelatedModel in bookCreate.Authors)
+        
+        var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
+        var authorIds = bookCreate.Authors.Select(a => a.Id).ToHashSet();
+        var authors = await _context.Authors.Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id)).ToListAsync();
+        
+        if (authors.Count != bookCreate.Authors.Count)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(a =>
-                a.Name == authorRelatedModel.Name || a.Id == authorRelatedModel.Id);
-            if (author == null)
-            {
-                throw new AuthorNotFoundException(
-                    $"Author 'Name={authorRelatedModel.Name}' <OR> 'ID={authorRelatedModel.Id}' could not be found");
-            }
-
-            authors.Add(author);
+            throw new AuthorNotFoundException("One or more authors could not be found");
         }
-
+        
         var book = new Book
         {
             Name = bookCreate.Name,
