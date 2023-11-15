@@ -66,24 +66,7 @@ public class GenreService : IGenreService
             throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
         }
         genre.Name = genreUpdate.Name;
-
-        if (genreUpdate.Books.Count != 0)
-        {
-            var bookNames = genreUpdate.Books.Select(b => b.Name).ToHashSet();
-            var bookIds = genreUpdate.Books.Select(b => b.Id).ToHashSet();
-
-            var books = await _context.Books
-                .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
-                .ToListAsync();
-
-            if (books.Count != genreUpdate.Books.Count)
-            {
-                throw new BookNotFoundException("One or more books could not be found");
-            }
-
-            genre.Books.Clear();
-            genre.Books.AddRange(books);
-        }
+        
         await _context.SaveChangesAsync();   
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
