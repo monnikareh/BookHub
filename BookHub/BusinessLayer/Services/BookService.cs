@@ -4,7 +4,6 @@ using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
 
-using BookHub.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Mapper;
@@ -59,7 +58,8 @@ public class BookService : IBookService
             books = books.Where(b => b.Name == bookName);
         }
 
-        return await books.Select(b => EntityMapper.MapBookToBookDetail(b)).ToListAsync();
+        var filteredBooks = await books.ToListAsync();
+        return filteredBooks.Select(EntityMapper.MapBookToBookDetail).ToList();
     }
 
     public async Task<BookDetail> GetBookByIdAsync(int id)
