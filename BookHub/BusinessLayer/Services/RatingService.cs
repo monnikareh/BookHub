@@ -118,8 +118,8 @@ public class RatingService : IRatingService
                 u.Name == ratingDetail.User.Name || u.Id == ratingDetail.User.Id);
             if (user == null)
             {
-                throw new UserNotFoundException($"User with name '{ratingDetail.User.Name}' not found");
-            }
+                throw new UserNotFoundException(
+                    $"User Name={ratingDetail.User.Name}' <OR> 'ID={ratingDetail.User.Id}' could not be found");            }
 
             rating.User = user;
             rating.UserId = user.Id;
@@ -131,8 +131,8 @@ public class RatingService : IRatingService
                 b.Name == ratingDetail.Book.Name || b.Id == ratingDetail.Book.Id);
             if (book == null)
             {
-                throw new BookNotFoundException($"Book with name '{ratingDetail.Book.Name}' not found");
-            }
+                throw new BookNotFoundException(
+                    $"Book 'Name={ratingDetail.Book.Name}' <OR> 'ID={ratingDetail.Book.Id}' could not be found");            }
 
             rating.Book = book;
             rating.BookId = book.Id;
