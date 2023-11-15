@@ -94,16 +94,18 @@ namespace BusinessLayer.Services
                 TotalPrice = orderCreate.TotalPrice
             };
             
-            foreach (var bookRelatedModel in orderCreate.Books)
+            var bookNames = orderCreate.Books.Select(a => a.Name).ToHashSet();
+            var bookIds = orderCreate.Books.Select(a => a.Id).ToHashSet();
+
+            var books = await _context.Books
+                .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                .ToListAsync();
+
+            if (books.Count != orderCreate.Books.Count)
             {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException($"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
-                order.Books.Add(book);
+                throw new BookNotFoundException("One or more books could not be found");
             }
+            order.Books.AddRange(books);
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
