@@ -42,7 +42,6 @@ public class RatingService : IRatingService
 
     public async Task<RatingDetail> GetRatingByIdAsync(int id)
     {
-
         var rating = await _context
             .Ratings
             .Include(r => r.User)
@@ -59,8 +58,6 @@ public class RatingService : IRatingService
 
     public async Task<RatingDetail> CreateRatingAsync(RatingCreate ratingCreate)
     {
-
-
         if (_context.Books == null)
         {
             throw new ContextNotFoundException("Entity set 'BookHubDbContext.Books'  is null.");
@@ -93,13 +90,13 @@ public class RatingService : IRatingService
         };
         var bookRatings = _context.Ratings
             .Where(r => r.Book.Id == book.Id);
-        book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value) 
-            / (bookRatings.Count() + 1);
+        book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value)
+                             / (bookRatings.Count() + 1);
         _context.Ratings.Add(rating);
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
-    
+
     public async Task<RatingDetail> UpdateRatingAsync(int id, RatingDetail ratingDetail)
     {
         var rating = await _context.Ratings.FindAsync(id);
@@ -117,7 +114,8 @@ public class RatingService : IRatingService
 
         if (ratingDetail.User.Name != "string")
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == ratingDetail.User.Name);
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
+                u.Name == ratingDetail.User.Name || u.Id == ratingDetail.User.Id);
             if (user == null)
             {
                 throw new UserNotFoundException($"User with name '{ratingDetail.User.Name}' not found");
@@ -129,7 +127,8 @@ public class RatingService : IRatingService
 
         if (ratingDetail.Book.Name != "string")
         {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == ratingDetail.Book.Name);
+            var book = await _context.Books.FirstOrDefaultAsync(b =>
+                b.Name == ratingDetail.Book.Name || b.Id == ratingDetail.Book.Id);
             if (book == null)
             {
                 throw new BookNotFoundException($"Book with name '{ratingDetail.Book.Name}' not found");
@@ -138,6 +137,7 @@ public class RatingService : IRatingService
             rating.Book = book;
             rating.BookId = book.Id;
         }
+
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
@@ -149,8 +149,8 @@ public class RatingService : IRatingService
         {
             throw new BookNotFoundException($"Book with ID {id} not found");
         }
+
         _context.Books.Remove(book);
         await _context.SaveChangesAsync();
     }
-
 }
