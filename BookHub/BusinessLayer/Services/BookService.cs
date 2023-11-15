@@ -59,7 +59,7 @@ public class BookService : IBookService
         }
 
         var filteredBooks = await books.ToListAsync();
-        return filteredBooks.Select(EntityMapper.MapBookToBookDetail).ToList();
+        return filteredBooks.Select(EntityMapper.MapBookToBookDetail);
     }
 
     public async Task<BookDetail> GetBookByIdAsync(int id)
