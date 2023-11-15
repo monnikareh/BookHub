@@ -17,7 +17,7 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<Rating> Ratings { get; set; }
     public DbSet<User> Users { get; set; }
 
-    public BookHubDbContext(DbContextOptions options) : base(options) 
+    public BookHubDbContext(DbContextOptions options) : base(options)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
@@ -41,8 +41,7 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;
         }
-        base.OnModelCreating(modelBuilder);
-        
+
         modelBuilder.Seed();
         base.OnModelCreating(modelBuilder);
     }
