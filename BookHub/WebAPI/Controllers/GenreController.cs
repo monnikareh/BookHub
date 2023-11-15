@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("UpdateGenre/{id}")]
-        public async Task<IActionResult> UpdateGenre(int id, GenreUpdate genreDetail)
+        public async Task<IActionResult> UpdateGenre(int id, GenreCreate genreDetail)
         {
             if (!ModelState.IsValid)
             {
