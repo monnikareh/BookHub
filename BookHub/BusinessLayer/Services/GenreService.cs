@@ -27,7 +27,9 @@ public class GenreService : IGenreService
         {
             genres = genres.Where(g => g.Name == name);
         }
-        return await genres.Select(g => EntityMapper.MapGenreToGenreDetail(g)).ToListAsync();
+
+        var filteredGenres = await genres.ToListAsync();
+        return filteredGenres.Select(EntityMapper.MapGenreToGenreDetail);
     }
 
     public async Task<GenreDetail> GetGenreByIdAsync(int id)

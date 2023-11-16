@@ -37,7 +37,8 @@ public class RatingService : IRatingService
             ratings = ratings.Where(r => r.Book.Id == book.Id);
         }
 
-        return await ratings.Select(r => EntityMapper.MapRatingToRatingDetail(r)).ToListAsync();
+        var filteredRatings = await ratings.ToListAsync();
+        return filteredRatings.Select(EntityMapper.MapRatingToRatingDetail);
     }
 
     public async Task<RatingDetail> GetRatingByIdAsync(int id)

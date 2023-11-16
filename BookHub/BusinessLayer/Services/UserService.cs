@@ -40,12 +40,11 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserDetail>> GetUsersAsync()
     {
-        return (await _context.Users
-                .Include(u => u.Orders)
-                .Include(u => u.Books)
-                .ToListAsync())
-            .Select(EntityMapper.MapUserToUserDetail)
-            .ToList();
+        var users = await _context.Users
+            .Include(u => u.Orders)
+            .Include(u => u.Books)
+            .ToListAsync();
+        return users.Select(EntityMapper.MapUserToUserDetail);
     }
 
     public async Task<UserDetail> GetUserByIdAsync(int id)
@@ -101,6 +100,7 @@ public class UserService : IUserService
         {
             throw new UserNotFoundException($"User with ID {id} not found");
         }
+
         user.Name = userUpdate.Name;
         await _userManager.SetUserNameAsync(user, userUpdate.UserName);
         await _userManager.SetEmailAsync(user, userUpdate.Email);

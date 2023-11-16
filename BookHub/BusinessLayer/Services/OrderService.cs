@@ -59,7 +59,9 @@ namespace BusinessLayer.Services
             {
                 orders = orders.Where(o => o.Books.Contains(book));
             }
-            return await orders.Select(o => EntityMapper.MapOrderToOrderDetail(o)).ToListAsync();
+
+            var filteredOrders = await orders.ToListAsync();
+            return filteredOrders.Select(EntityMapper.MapOrderToOrderDetail);
         }
         
         public async Task<OrderDetail> GetOrderByIdAsync(int id)

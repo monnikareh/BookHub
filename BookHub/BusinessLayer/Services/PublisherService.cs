@@ -27,7 +27,9 @@ public class PublisherService : IPublisherService
         {
             publishers = publishers.Where(p => p.Name == name);
         }
-        return await publishers.Select(p => EntityMapper.MapPublisherToPublisherDetail(p)).ToListAsync();
+
+        var filteredPublishers = await publishers.ToListAsync();
+        return filteredPublishers.Select(EntityMapper.MapPublisherToPublisherDetail);
     }
 
     public async Task<PublisherDetail> GetPublisherByIdAsync(int id)
