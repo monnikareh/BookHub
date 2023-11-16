@@ -5,6 +5,7 @@ using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
 
@@ -26,7 +27,9 @@ public class PublisherService : IPublisherService
         {
             publishers = publishers.Where(p => p.Name == name);
         }
-        return await publishers.Select(p => EntityMapper.MapPublisherToPublisherDetail(p)).ToListAsync();
+
+        var filteredPublishers = await publishers.ToListAsync();
+        return filteredPublishers.Select(EntityMapper.MapPublisherToPublisherDetail);
     }
 
     public async Task<PublisherDetail> GetPublisherByIdAsync(int id)
@@ -68,19 +71,20 @@ public class PublisherService : IPublisherService
 
         if (publisherUpdate.Books.Count != 0)
         {
-            publisher.Books.Clear();
-            foreach (var bookRelatedModel in publisherUpdate.Books)
-            {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException(
-                        $"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
+            var bookNames = publisherUpdate.Books.Select(b => b.Name).ToHashSet();
+            var bookIds = publisherUpdate.Books.Select(b => b.Id).ToHashSet();
 
-                publisher.Books.Add(book);
+            var books = await _context.Books
+                .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                .ToListAsync();
+
+            if (books.Count != publisherUpdate.Books.Count)
+            {
+                throw new BookNotFoundException("One or more books could not be found");
             }
+
+            publisher.Books.Clear();
+            publisher.Books.AddRange(books);
         } 
         await _context.SaveChangesAsync();
         return EntityMapper.MapPublisherToPublisherDetail(publisher);

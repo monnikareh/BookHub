@@ -1,11 +1,10 @@
-using BookHub.Models;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
 
@@ -33,7 +32,8 @@ public class AuthorService : IAuthorService
         {
             authors = authors.Where(o => o.Books.Contains(book));
         }
-        return await authors.Select(o => EntityMapper.MapAuthorToAuthorDetail(o)).ToListAsync();
+        var authorsList = await authors.ToListAsync();
+        return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
 
     public async Task<AuthorDetail> GetAuthorByIdAsync(int id)
@@ -79,17 +79,20 @@ public class AuthorService : IAuthorService
 
         if (authorUpdate.Books.Count != 0)
         {
-            author.Books.Clear();
-            foreach (var bookRelatedModel in authorUpdate.Books)
+            var bookNames = authorUpdate.Books.Select(a => a.Name).ToHashSet();
+            var bookIds = authorUpdate.Books.Select(a => a.Id).ToHashSet();
+
+            var books = await _context.Books
+                .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                .ToListAsync();
+
+            if (books.Count != authorUpdate.Books.Count)
             {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException($"Book 'ID={id}' could not be found");
-                }
-                author.Books.Add(book);
+                throw new BookNotFoundException("One or more books could not be found");
             }
+
+            author.Books.Clear();
+            author.Books.AddRange(books);
         }
         await _context.SaveChangesAsync();
         return EntityMapper.MapAuthorToAuthorDetail(author); 

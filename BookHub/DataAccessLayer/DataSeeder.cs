@@ -230,13 +230,13 @@ public static class DataSeeder
             {
                 Id = 1,
                 UserId = 1,
-                TotalPrice = 28.03,
+                TotalPrice = 28.03m,
             },
             new Order
             {
                 Id = 2,
                 UserId = 2,
-                TotalPrice = 9.99,
+                TotalPrice = 9.99m,
             },
         };
     }

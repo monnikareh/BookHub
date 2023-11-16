@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
         
         [HttpGet("GetOrders")]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName)
         {
             try
             {

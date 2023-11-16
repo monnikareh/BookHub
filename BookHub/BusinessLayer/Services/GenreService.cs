@@ -1,4 +1,3 @@
-using BookHub.Models;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
@@ -26,7 +25,9 @@ public class GenreService : IGenreService
         {
             genres = genres.Where(g => g.Name == name);
         }
-        return await genres.Select(g => EntityMapper.MapGenreToGenreDetail(g)).ToListAsync();
+
+        var filteredGenres = await genres.ToListAsync();
+        return filteredGenres.Select(EntityMapper.MapGenreToGenreDetail);
     }
 
     public async Task<GenreDetail> GetGenreByIdAsync(int id)
@@ -56,7 +57,7 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task<GenreDetail> UpdateGenreAsync(int id, GenreUpdate genreUpdate)
+    public async Task<GenreDetail> UpdateGenreAsync(int id, GenreCreate genreUpdate)
     {
         var genre = await _context.Genres.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
@@ -65,22 +66,7 @@ public class GenreService : IGenreService
             throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
         }
         genre.Name = genreUpdate.Name;
-
-        if (genreUpdate.Books.Count != 0)
-        {
-            genre.Books.Clear();
-            foreach (var bookRelatedModel in genreUpdate.Books)
-            {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException($"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
-
-                genre.Books.Add(book);
-            }
-        }
+        
         await _context.SaveChangesAsync();   
         return EntityMapper.MapGenreToGenreDetail(genre);
     }

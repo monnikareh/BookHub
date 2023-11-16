@@ -1,5 +1,3 @@
-using BookHub.Models;
-
 namespace BusinessLayer.Models;
 public class GenreDetail
 {

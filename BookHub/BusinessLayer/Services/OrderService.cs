@@ -1,4 +1,3 @@
-using BookHub.Models;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
 using BusinessLayer.Exceptions;
@@ -6,6 +5,7 @@ using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Packaging;
 
 
 namespace BusinessLayer.Services
@@ -20,7 +20,7 @@ namespace BusinessLayer.Services
         }
 
         public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, double? totalPrice, int? bookId, string? bookName)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName)
         {
             var orders = _context.Orders
                 .Include(o => o.User)
@@ -50,7 +50,7 @@ namespace BusinessLayer.Services
 
             if (totalPrice.HasValue)
             {
-                orders = orders.Where(o => Math.Abs(o.TotalPrice - totalPrice.Value) < 0.0001);
+                orders = orders.Where(o => o.TotalPrice == totalPrice.Value);
             }
 
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == bookName || b.Id == bookId);
@@ -58,7 +58,9 @@ namespace BusinessLayer.Services
             {
                 orders = orders.Where(o => o.Books.Contains(book));
             }
-            return await orders.Select(o => EntityMapper.MapOrderToOrderDetail(o)).ToListAsync();
+
+            var filteredOrders = await orders.ToListAsync();
+            return filteredOrders.Select(EntityMapper.MapOrderToOrderDetail);
         }
         
         public async Task<OrderDetail> GetOrderByIdAsync(int id)
@@ -93,16 +95,18 @@ namespace BusinessLayer.Services
                 TotalPrice = orderCreate.TotalPrice
             };
             
-            foreach (var bookRelatedModel in orderCreate.Books)
+            var bookNames = orderCreate.Books.Select(a => a.Name).ToHashSet();
+            var bookIds = orderCreate.Books.Select(a => a.Id).ToHashSet();
+
+            var books = await _context.Books
+                .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                .ToListAsync();
+
+            if (books.Count != orderCreate.Books.Count)
             {
-                var book = await _context.Books.FirstOrDefaultAsync(b =>
-                    b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                if (book == null)
-                {
-                    throw new BookNotFoundException($"Book 'Name={bookRelatedModel.Name}' <OR> 'ID={bookRelatedModel.Id}' could not be found");
-                }
-                order.Books.Add(book);
+                throw new BookNotFoundException("One or more books could not be found");
             }
+            order.Books.AddRange(books);
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
@@ -123,18 +127,21 @@ namespace BusinessLayer.Services
 
             if (orderUpdate.Books.Count != 0)
             {
-                order.Books.Clear();
-                foreach (var bookRelatedModel in orderUpdate.Books)
+                var bookNames = orderUpdate.Books.Select(b => b.Name).ToHashSet();
+                var bookIds = orderUpdate.Books.Select(b => b.Id).ToHashSet();
+
+                var books = await _context.Books
+                    .Where(b => bookNames.Contains(b.Name) || bookIds.Contains(b.Id))
+                    .ToListAsync();
+
+                if (books.Count != orderUpdate.Books.Count)
                 {
-                    var book = await _context.Books.FirstOrDefaultAsync(b =>
-                        b.Name == bookRelatedModel.Name || b.Id == bookRelatedModel.Id);
-                    if (book == null)
-                    {
-                        throw new BookNotFoundException($"Book 'ID={id}' could not be found");
-                    }
-                    order.Books.Add(book);
+                    throw new BookNotFoundException("One or more books could not be found");
                 }
-            } 
+
+                order.Books.Clear();
+                order.Books.AddRange(books);
+            }
  
             await _context.SaveChangesAsync();
             return EntityMapper.MapOrderToOrderDetail(order);
