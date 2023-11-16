@@ -32,21 +32,22 @@ public class AuthService : IAuthService
     
     public async Task<AuthToken> Login(UserSignIn userSignIn)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userSignIn.UserName);
+        var user = await _userManager.FindByEmailAsync(userSignIn.UsernameOrEmail) ??
+                   await _userManager.FindByNameAsync(userSignIn.UsernameOrEmail);
         if (user == null)
         {
-            throw new UserNotFoundException($"User {userSignIn.UserName} not found");
+            throw new UserNotFoundException($"User {userSignIn.UsernameOrEmail} not found");
         }
 
         var userRoles = await _userManager.GetRolesAsync(user);
         var authClaims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Name, user.UserName ?? user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
         var token = GetToken(authClaims);
-        var signIn = await _signInManager.PasswordSignInAsync(userSignIn.UserName, userSignIn.Password, false, false);
+        var signIn = await _signInManager.PasswordSignInAsync(userSignIn.UsernameOrEmail, userSignIn.Password, false, false);
         if (signIn.Succeeded)
         {
             return new AuthToken()
