@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace WebApp.Areas.Identity.Pages.Account
+namespace BookHub.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
@@ -75,7 +75,11 @@ namespace WebApp.Areas.Identity.Pages.Account
             [Required]
             [Display(Name = "Name")]
             public string Name { get; set; }
-
+            
+            
+            [Required]
+            [Display(Name = "UserName")]
+            public string Username { get; set; }
 
             [Required]
             [EmailAddress]
@@ -118,7 +122,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.Name = Input.Name;
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 
