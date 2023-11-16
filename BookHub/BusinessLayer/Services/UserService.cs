@@ -6,6 +6,8 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
+using Microsoft.IdentityModel.Tokens;
+using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
 
@@ -68,8 +70,22 @@ public class UserService : IUserService
         {
             throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
         }
+        if (userCreate.Books.IsNullOrEmpty())
+        {
+            throw new BooksEmptyException("Collection Books is empty");
+        }
+        var bookNames = userCreate.Books.Select(a => a.Name).ToHashSet();
+        var bookIds = userCreate.Books.Select(a => a.Id).ToHashSet();
+        var books = await _context.Books.Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id)).ToListAsync();
+        
+        if (books.Count != userCreate.Books.Count)
+        {
+            throw new BooksEmptyException("One or more books could not be found");
+        }
+
 
         user.Name = userCreate.Name;
+        user.Books = books;
         await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
         await _emailStore.SetEmailAsync(user, userCreate.Email, CancellationToken.None);
         var result = await _userManager.CreateAsync(user, userCreate.Password);
@@ -94,13 +110,32 @@ public class UserService : IUserService
 
     public async Task<UserDetail> UpdateUserAsync(int id, UserUpdate userUpdate)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(b => b.Id == id);
+        
         if (user == null)
         {
             throw new UserNotFoundException($"User with ID {id} not found");
         }
 
         user.Name = userUpdate.Name;
+        if (userUpdate.Books is { Count: > 0 })
+        {
+            var bookNames = userUpdate.Books.Select(a => a.Name).ToHashSet();
+            var bookIds = userUpdate.Books.Select(a => a.Id).ToHashSet();
+
+            var books = await _context.Books
+                .Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id))
+                .ToListAsync();
+
+            if (books.Count != userUpdate.Books.Count)
+            {
+                throw new BooksEmptyException("One or more books could not be found");
+            }
+            user.Books.Clear();
+            user.Books.AddRange(books);
+        }
         await _userManager.SetUserNameAsync(user, userUpdate.UserName);
         await _userManager.SetEmailAsync(user, userUpdate.Email);
         await _userManager.ChangePasswordAsync(user, userUpdate.OldPassword, userUpdate.NewPassword);

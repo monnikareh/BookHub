@@ -5,10 +5,10 @@ namespace DataAccessLayer.Entities;
 
 public class User : IdentityUser<int>, IModelRelated
 {
-    public string? Name { get; set; }
+    public string Name { get; set; }
     
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
-    public virtual ICollection<Book> Books { get; } = new List<Book>();
-    public virtual ICollection<Rating> Ratings { get; } = new List<Rating>();
+    public ICollection<Order> Orders { get; } = new List<Order>();
+    public ICollection<Book> Books { get; set; } = new List<Book>();
+    public ICollection<Rating> Ratings { get; } = new List<Rating>();
     
 }
