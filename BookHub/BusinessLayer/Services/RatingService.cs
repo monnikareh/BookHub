@@ -1,4 +1,3 @@
-using BookHub.Models;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
@@ -105,7 +104,6 @@ public class RatingService : IRatingService
         {
             throw new RatingNotFoundException($"Rating with ID {id} not found");
         }
-
         rating.Value = ratingDetail.Value;
 
         if (ratingDetail.Comment != "string")

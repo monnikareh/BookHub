@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using BookHub.Models;
 using Microsoft.AspNetCore.Identity;
 

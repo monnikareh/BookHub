@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using BookHub.Models;
 
 namespace DataAccessLayer.Entities;
 

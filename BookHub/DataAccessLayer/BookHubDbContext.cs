@@ -1,5 +1,4 @@
 using DataAccessLayer.Entities;
-using System.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
