@@ -6,7 +6,7 @@ namespace DataAccessLayer;
 
 public static class DataSeeder
 {
-    private static PasswordHasher<User> _hasher = new PasswordHasher<User>();
+    private static readonly PasswordHasher<User> Hasher = new PasswordHasher<User>();
 
     public static void Seed(this ModelBuilder modelBuilder)
     {
@@ -60,7 +60,67 @@ public static class DataSeeder
             new Author
             {
                 Id = 2,
-                Name = "George Orwell"
+                Name = "George R. R. Martin"
+            },
+            new Author
+            {
+                Id = 3,
+                Name = "Stephen King"
+            },
+            new Author
+            {
+                Id = 4,
+                Name = "Agatha Christie"
+            },
+            new Author
+            {
+                Id = 5,
+                Name = "J.R.R. Tolkien"
+            },
+            new Author
+            {
+                Id = 6,
+                Name = "Jane Austen"
+            },
+            new Author
+            {
+                Id = 7,
+                Name = "Mark Twain"
+            },
+            new Author
+            {
+                Id = 8,
+                Name = "Charles Dickens"
+            },
+            new Author
+            {
+                Id = 9,
+                Name = "Harper Lee"
+            },
+            new Author
+            {
+                Id = 10,
+                Name = "Leo Tolstoy"
+            },
+            new Author
+            {
+                Id = 11,
+                Name = "Agnes Christie"
+            },
+            new Author
+            {
+                Id = 12,
+                Name = "Ernest Hemingway"
+            },
+            new Author
+            {
+                Id = 13,
+                Name = "Virginia Woolf"
+            },
+            new Author
+            {
+                Id = 14,
+                Name = "Arthur Conan Doyle"
             },
             new Author
             {
@@ -88,6 +148,66 @@ public static class DataSeeder
             {
                 Id = 3,
                 Name = "Reynal & Hitchcock"
+            },
+            new Publisher
+            {
+                Id = 4,
+                Name = "Penguin Books"
+            },
+            new Publisher
+            {
+                Id = 5,
+                Name = "Random House"
+            },
+            new Publisher
+            {
+                Id = 6,
+                Name = "HarperCollins"
+            },
+            new Publisher
+            {
+                Id = 7,
+                Name = "Simon & Schuster"
+            },
+            new Publisher
+            {
+                Id = 8,
+                Name = "Macmillan Publishers"
+            },
+            new Publisher
+            {
+                Id = 9,
+                Name = "Hachette Book Group"
+            },
+            new Publisher
+            {
+                Id = 10,
+                Name = "Scholastic Corporation"
+            },
+            new Publisher
+            {
+                Id = 11,
+                Name = "Oxford University Press"
+            },
+            new Publisher
+            {
+                Id = 12,
+                Name = "Cambridge University Press"
+            },
+            new Publisher
+            {
+                Id = 13,
+                Name = "Wiley"
+            },
+            new Publisher
+            {
+                Id = 14,
+                Name = "Elsevier"
+            },
+            new Publisher
+            {
+                Id = 15,
+                Name = "Springer"
             }
         };
     }
@@ -99,72 +219,162 @@ public static class DataSeeder
             new Genre
             {
                 Id = 1,
-                Name = "Dystopian",
+                Name = "Dystopian"
             },
             new Genre
             {
                 Id = 2,
-                Name = "Political fiction",
+                Name = "Mystery"
             },
             new Genre
             {
                 Id = 3,
-                Name = "Social science fiction",
+                Name = "Science Fiction"
             },
             new Genre
             {
                 Id = 4,
-                Name = "Horor",
+                Name = "Romance"
             },
             new Genre
             {
                 Id = 5,
-                Name = "Fantasy",
+                Name = "Fantasy"
             },
+            new Genre
+            {
+                Id = 6,
+                Name = "Thriller"
+            },
+            new Genre
+            {
+                Id = 7,
+                Name = "Historical Fiction"
+            },
+            new Genre
+            {
+                Id = 8,
+                Name = "Horror"
+            },
+            new Genre
+            {
+                Id = 9,
+                Name = "Adventure"
+            },
+            new Genre
+            {
+                Id = 10,
+                Name = "Biography"
+            },
+            new Genre
+            {
+                Id = 11,
+                Name = "Non-fiction"
+            },
+            new Genre
+            {
+                Id = 12,
+                Name = "Children's"
+            },
+            new Genre
+            {
+                Id = 13,
+                Name = "Young Adult"
+            },
+            new Genre
+            {
+                Id = 14,
+                Name = "Humor"
+            },
+            new Genre
+            {
+                Id = 15,
+                Name = "Crime"
+            },
+            new Genre
+            {
+                Id = 16,
+                Name = "Historical Romance"
+            },
+            new Genre
+            {
+                Id = 17,
+                Name = "Western"
+            },
+            new Genre
+            {
+                Id = 18,
+                Name = "Science Fantasy"
+            },
+            new Genre
+            {
+                Id = 19,
+                Name = "Self-help"
+            },
+            new Genre
+            {
+                Id = 20,
+                Name = "Cookbook"
+            }
         };
     }
 
     private static IEnumerable<Book> PrepareBooks()
     {
-        return new List<Book>
+        var books = new List<Book>();
+        var random = new Random();
+        var names = new List<string> {
+            "To Kill a Mockingbird",
+            "1984",
+            "The Great Gatsby",
+            "One Hundred Years of Solitude",
+            "The Catcher in the Rye",
+            "Brave New World",
+            "The Hobbit",
+            "Pride and Prejudice",
+            "The Lord of the Rings: The Fellowship of the Ring",
+            "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+            "Harry Potter and the Philosopher's Stone",
+            "The Hunger Games",
+            "The Da Vinci Code",
+            "A Game of Thrones",
+            "The Shining",
+            "The Hitchhiker's Guide to the Galaxy",
+            "The Alchemist",
+            "War and Peace",
+            "Crime and Punishment",
+            "The Catch-22",
+            "The Grapes of Wrath",
+            "Fahrenheit 451",
+            "Lord of the Flies",
+            "Moby-Dick",
+            "Frankenstein",
+            "Alice's Adventures in Wonderland",
+            "Dracula",
+            "The Odyssey",
+            "Romeo and Juliet",
+            "Hamlet",
+            "Macbeth",
+            "Othello",
+            "The Divine Comedy",
+            "Don Quixote"};
+
+        for (var i = 1; i <= names.Count; i++)
         {
-            new Book
+            var randomPrice = Math.Round(random.NextDouble() * (25 - 5) + 5, 2);
+
+            books.Add(new Book
             {
-                Id = 1,
-                Name = "Harry Potter and the Philosopher's Stone",
+                Id = i,
+                Name = names[i],
                 PublisherId = 1,
-                StockInStorage = 42,
-                Price = 15.3,
-                OverallRating = 97,
-            },
-            new Book
-            {
-                Id = 2,
-                Name = "Harry Potter and the Chamber of Secrets",
-                PublisherId = 1,
-                StockInStorage = 6,
-                Price = 12.73,
-                OverallRating = 92,
-            },
-            new Book
-            {
-                Id = 3,
-                Name = "1984",
-                PublisherId = 2,
-                StockInStorage = 15,
-                Price = 19.1,
-                OverallRating = 87,
-            },
-            new Book
-            {
-                Id = 4,
-                Name = "The Little Prince",
-                PublisherId = 3,
-                StockInStorage = 23,
-                Price = 9.99,
-                OverallRating = 99,
-            }
-        };
+                StockInStorage = random.Next(1, 50),
+                Price = randomPrice,
+                OverallRating = random.Next(30, 100)
+            });
+        }
+
+        return books;
     }
 
     private static IEnumerable<User> PrepareUsers()
@@ -181,7 +391,7 @@ public static class DataSeeder
                 NormalizedEmail = "M@M.COM",
                 EmailConfirmed = true,
                 SecurityStamp =  Guid.NewGuid().ToString(),
-                PasswordHash = _hasher.HashPassword(null, "Aa123!")
+                PasswordHash = Hasher.HashPassword(null, "Aa123!")
             },
             new User
             {
@@ -193,7 +403,7 @@ public static class DataSeeder
                 NormalizedEmail = "B@B.COM",
                 EmailConfirmed = true,
                 SecurityStamp =  Guid.NewGuid().ToString(),
-                PasswordHash = _hasher.HashPassword(null, "Aa123!")
+                PasswordHash = Hasher.HashPassword(null, "Aa123!")
             },
             new User
             {
@@ -205,7 +415,7 @@ public static class DataSeeder
                 NormalizedEmail = "R@R.COM",
                 EmailConfirmed = true,
                 SecurityStamp =  Guid.NewGuid().ToString(),
-                PasswordHash = _hasher.HashPassword(null, "Aa123!")
+                PasswordHash = Hasher.HashPassword(null, "Aa123!")
             },
             new User
             {
@@ -217,7 +427,7 @@ public static class DataSeeder
                 NormalizedEmail = "J@J.COM",
                 EmailConfirmed = true,
                 SecurityStamp =  Guid.NewGuid().ToString(),
-                PasswordHash = _hasher.HashPassword(null, "Aa123!")
+                PasswordHash = Hasher.HashPassword(null, "Aa123!")
             },
         };
     }
