@@ -59,7 +59,7 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task<GenreDetail> UpdateGenreAsync(int id, GenreUpdate genreUpdate)
+    public async Task<GenreDetail> UpdateGenreAsync(int id, GenreCreate genreUpdate)
     {
         var genre = await _context.Genres.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
