@@ -5,14 +5,10 @@ using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-
 var configuration = builder.Configuration;
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -25,7 +21,7 @@ var mariadbConnectionString = configuration.GetConnectionString("MariaDBConnecti
                                   "Connection string 'MariaDBConnectionString' not found.");
 
 builder.Services.AddDbContext<BookHubDbContext>(options =>
-    options.UseNpgsql(postgresConnectionString, 
+    options.UseNpgsql(postgresConnectionString,
         x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
 
 // builder.Services.AddDbContext<BookHubDbContext>(
@@ -45,25 +41,23 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     .AddDefaultTokenProviders()
     .AddDefaultUI();
 builder.Services.AddControllersWithViews();
-// builder.Services.AddAuthentication(options =>
-//     {
-//         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-//     })
-//     .AddJwtBearer(options =>
-//     {
-//         options.SaveToken = true;
-//         options.RequireHttpsMetadata = false;
-//         options.TokenValidationParameters = new TokenValidationParameters()
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidAudience = configuration["JWT:ValidAudience"],
-//             ValidIssuer = configuration["JWT:ValidIssuer"],
-//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-//         };
-//     });
+builder.Services
+    .AddAuthentication()
+    .AddCookie()
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["JWT:ValidIssuer"],
+            ValidAudience = configuration["JWT:ValidAudience"],
+            IssuerSigningKey =
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? string.Empty))
+        };
+    });
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>

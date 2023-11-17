@@ -16,5 +16,12 @@
     <ItemGroup>
       <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
     </ItemGroup>
+    
+
+    <ItemGroup>
+      <Reference Include="Microsoft.AspNetCore.Authentication.JwtBearer">
+        <HintPath>..\..\..\..\..\..\..\.nuget\packages\microsoft.aspnetcore.authentication.jwtbearer\7.0.13\lib\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 
 </Project>
