@@ -6,4 +6,6 @@ public class UserCreate
     public string UserName { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
+    public ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
+
 }
