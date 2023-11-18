@@ -3,7 +3,6 @@ using System.Text;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -107,6 +106,8 @@ builder.Services.AddTransient<IRatingService, RatingService>();
 builder.Services.AddTransient<IPublisherService, PublisherService>();
 
 var app = builder.Build();
+app.UsePathBase(new PathString("/api"));
+app.UseRouting();
 
 if (app.Environment.IsDevelopment())
 {
@@ -121,8 +122,6 @@ else
 
 
 // WE WANT SWAGGER IN PRODUCTION AS WELL
-app.UsePathBase(new PathString("/api"));
-app.UseRouting();
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -130,9 +129,12 @@ app.UseMiddleware<RequestLoggerMiddleware>();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
+app.UseAuthorization();
 app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 app.UseCors();
 app.Run();
