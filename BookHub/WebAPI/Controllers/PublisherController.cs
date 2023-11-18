@@ -2,13 +2,14 @@ using BookHub.Models;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Route("/[controller]")]
     [ApiController]
     public class PublisherController : ControllerBase
     {

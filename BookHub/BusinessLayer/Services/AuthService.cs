@@ -6,7 +6,6 @@ using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,34 +28,36 @@ public class AuthService : IAuthService
         _roleManager = roleManager;
         _configuration = configuration;
     }
-    
+
     public async Task<AuthToken> Login(UserSignIn userSignIn)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userSignIn.UserName);
+        var user = await _userManager.FindByEmailAsync(userSignIn.UsernameOrEmail) ??
+                   await _userManager.FindByNameAsync(userSignIn.UsernameOrEmail);
         if (user == null)
         {
-            throw new UserNotFoundException($"User {userSignIn.UserName} not found");
+            throw new UserNotFoundException($"User {userSignIn.UsernameOrEmail} not found");
+        }
+
+        var signIn = await _signInManager.PasswordSignInAsync(user, userSignIn.Password, false, false);
+        if (!signIn.Succeeded)
+        {
+            throw new UnauthorizedApiAccess();
         }
 
         var userRoles = await _userManager.GetRolesAsync(user);
         var authClaims = new List<Claim>
         {
-            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Name, user.UserName ?? user.Email ?? string.Empty),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
         authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
         var token = GetToken(authClaims);
-        var signIn = await _signInManager.PasswordSignInAsync(userSignIn.UserName, userSignIn.Password, false, false);
-        if (signIn.Succeeded)
+        
+        return new AuthToken()
         {
-            return new AuthToken()
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = token.ValidTo
-            };
-        }
-
-        throw new UnauthorizedApiAccess();
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            Expiration = token.ValidTo
+        };
     }
 
     private JwtSecurityToken GetToken(List<Claim> authClaims)

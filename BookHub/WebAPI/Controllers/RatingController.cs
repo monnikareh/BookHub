@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Route("[controller]")]
     [ApiController]
     public class RatingController : ControllerBase
     {

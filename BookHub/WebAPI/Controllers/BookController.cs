@@ -3,11 +3,12 @@ using BusinessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Route("[controller]")]
     [ApiController]
     public class BookController : ControllerBase
     {
