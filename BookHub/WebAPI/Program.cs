@@ -62,7 +62,7 @@ builder.Services
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-    ).AddApplicationPart(Assembly.Load("WebAPI"));
+    );
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -126,11 +126,10 @@ app.UseSwaggerUI();
 app.UseMiddleware<RequestLoggerMiddleware>();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
-app.UseRouting();
 
 app.UseAuthorization();
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
