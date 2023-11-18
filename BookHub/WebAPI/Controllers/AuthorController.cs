@@ -9,7 +9,7 @@ namespace WebAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
