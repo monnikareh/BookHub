@@ -13,28 +13,22 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:7201",
+      "launchUrl": "api/swagger",
+      "applicationUrl": "http://localhost:7200",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_HTTP_PORTS": "7200",
+        "ASPNETCORE_ENVIRONMENT": "Release"
       }
     },
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "launchUrl": "swagger",
+      "launchUrl": "api/swagger",
       "applicationUrl": "https://localhost:7201",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_HTTPS_PORTS": "7201",
+        "ASPNETCORE_ENVIRONMENT": "Release"
       }
     }
   }
