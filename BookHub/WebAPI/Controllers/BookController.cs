@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace WebAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class BookController : ControllerBase
     {

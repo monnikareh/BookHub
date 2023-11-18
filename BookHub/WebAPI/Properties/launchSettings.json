@@ -13,9 +13,10 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:5200",
+      "launchUrl": "api/swagger",
+      "applicationUrl": "http://localhost:7200",
       "environmentVariables": {
-        "ASPNETCORE_HTTP_PORTS": "5200",
+        "ASPNETCORE_HTTP_PORTS": "7200",
         "ASPNETCORE_ENVIRONMENT": "Release"
       }
     },
@@ -23,9 +24,10 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:5201",
+      "launchUrl": "api/swagger",
+      "applicationUrl": "https://localhost:7201",
       "environmentVariables": {
-        "ASPNETCORE_HTTP_PORTS": "5200",
+        "ASPNETCORE_HTTPS_PORTS": "7201",
         "ASPNETCORE_ENVIRONMENT": "Release"
       }
     }
