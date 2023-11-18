@@ -41,10 +41,9 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     .AddEntityFrameworkStores<BookHubDbContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
-builder.Services.AddControllersWithViews();
+
 builder.Services
     .AddAuthentication()
-    .AddCookie()
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -60,8 +59,42 @@ builder.Services
         };
     });
 
-builder.Services.AddRazorPages();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    ).AddApplicationPart(Assembly.Load("WebAPI"));
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "BookHub API",
+        Version = "v1"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
@@ -87,6 +120,9 @@ else
 
 
 // WE WANT SWAGGER IN PRODUCTION AS WELL
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseMiddleware<RequestLoggerMiddleware>();
 
 app.UseHttpsRedirection();
