@@ -7,4 +7,7 @@ public class UserUpdate
     public string Email { get; set; }
     public string OldPassword { get; set; }
     public string NewPassword { get; set; }
+    
+    public ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
+
 }
