@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
-    [Route("/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PublisherController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
             _publisherService = publisherService;
         }
 
-        [HttpGet("GetPublishers")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<PublisherDetail>>> GetPublishers(string? name)
         {
             try
@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<PublisherDetail>> GetPublisherById(int id)
         {
             try
@@ -46,7 +46,7 @@ namespace WebAPI.Controllers
             }        
         }
 
-        [HttpPost("CreatePublisher")]
+        [HttpPost]
         public async Task<ActionResult<PublisherDetail>> CreatePublisher(PublisherCreate publisherCreate)
         {
             if (!ModelState.IsValid)
@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
            
         }
         
-        [HttpPut("UpdatePublisher/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePublisher(int id, PublisherUpdate publisherUpdate)
         {
             if (!ModelState.IsValid)
@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpDelete("DeletePublisher/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePublisher(int id)
         {
             try
