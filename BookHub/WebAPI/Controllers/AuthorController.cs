@@ -18,7 +18,6 @@ namespace WebAPI.Controllers
         {
             _authorService = authorService;
         }
-
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors(string? name, int? bookId, string? bookName)

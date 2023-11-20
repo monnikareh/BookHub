@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
             _genreService = genreService;
         }
 
-        [HttpGet("GetGenres")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<GenreDetail>>> GetGenres(string? name)
         {
             try
@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<GenreDetail>> GetGenreById(int id)
         {
             try
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost("CreateGenre")]
+        [HttpPost]
         public async Task<ActionResult<GenreDetail>> CreateGenre(GenreCreate genreCreate)
         {
             if (!ModelState.IsValid)
@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
             
         }
         
-        [HttpPut("UpdateGenre/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGenre(int id, GenreCreate genreDetail)
         {
             if (!ModelState.IsValid)
@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpDelete("DeleteGenre/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
             try
