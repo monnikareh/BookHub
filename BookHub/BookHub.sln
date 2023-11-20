@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.Postgres.Migrations", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL.MariaDB.Migrations", "DAL.MariaDB.Migrations\DAL.MariaDB.Migrations.csproj", "{8118B8D4-C660-442C-97D7-21B8CB478C62}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer.Tests", "BusinessLayer.Tests\BusinessLayer.Tests.csproj", "{FE7C1D29-7D2F-4C52-8342-80E8A857BEF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,5 +48,9 @@ Global
 		{8118B8D4-C660-442C-97D7-21B8CB478C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8118B8D4-C660-442C-97D7-21B8CB478C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8118B8D4-C660-442C-97D7-21B8CB478C62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7C1D29-7D2F-4C52-8342-80E8A857BEF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7C1D29-7D2F-4C52-8342-80E8A857BEF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7C1D29-7D2F-4C52-8342-80E8A857BEF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7C1D29-7D2F-4C52-8342-80E8A857BEF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
