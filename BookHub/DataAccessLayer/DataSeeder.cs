@@ -536,7 +536,7 @@ public static class DataSeeder
 
         for (var i = 0; i < names.Count; i++)
         {
-            var randomPrice = Math.Round(random.NextDouble() * (25 - 5) + 5, 2);
+            var randomPrice = (decimal)Math.Round(random.NextDouble() * (25 - 5) + 5, 2);
             books.Add(new Book
             {
                 Id = i + 1,
