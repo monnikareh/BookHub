@@ -7,6 +7,7 @@ namespace BusinessLayer.Tests.Data;
 public class TestData
 {
     private static readonly PasswordHasher<User> Hasher = new PasswordHasher<User>();
+    
     public static List<Publisher> GetMockedPublishers()
     {
         return new List<Publisher>
@@ -48,18 +49,55 @@ public class TestData
     public static List<Order> GetMockedOrders()
     {
         var random = new Random();
-        var orders = new List<Order>();
-        for (var i = 1; i <= 5; i++)
+
+        return new List<Order>
         {
-            var randomPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2);
-            orders.Add(new Order
+            new Order
             {
-                Id = i,
-                UserId = random.Next(1, 15),
-                TotalPrice = randomPrice
-            });
+                Id = 1,
+                UserId = 1,
+                TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                User = GetMockedUsers().First(x => x.Id == 1),
+                Date = DateTime.Now,
+                Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
+            },
+            new Order
+            {
+                Id = 2,
+                UserId = 2,
+                TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                User = GetMockedUsers().First(x => x.Id == 2),
+                Date = DateTime.Now,
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
+            },
+            new Order
+            {
+                Id = 3,
+                UserId = 3,
+                TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                User = GetMockedUsers().First(x => x.Id == 3),
+                Date = DateTime.Now,
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
+            },
+            new Order
+            {
+                Id = 4,
+                UserId = 4,
+                TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                User = GetMockedUsers().First(x => x.Id == 4),
+                Date = DateTime.Now,
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
+            },
+            new Order
+            {
+                Id = 5,
+                UserId = 5,
+                TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                User = GetMockedUsers().First(x => x.Id == 5),
+                Date = DateTime.Now,
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
+            }
         };
-        return orders;
     }
     
     private static IEnumerable<Author> GetMockedAuthors()
@@ -69,27 +107,32 @@ public class TestData
             new Author
             {
                 Id = 1,
-                Name = "J. K. Rowling"
+                Name = "J. K. Rowling",
+                Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
             },
             new Author
             {
                 Id = 2,
-                Name = "George R. R. Martin"
+                Name = "George R. R. Martin",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
             },
             new Author
             {
                 Id = 3,
-                Name = "Stephen King"
+                Name = "Stephen King",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
             },
             new Author
             {
                 Id = 4,
-                Name = "Agatha Christie"
+                Name = "Agatha Christie",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
             },
             new Author
             {
                 Id = 5,
-                Name = "J.R.R. Tolkien"
+                Name = "J.R.R. Tolkien",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
             }
         };
     }
@@ -101,33 +144,39 @@ public class TestData
             new Genre
             {
                 Id = 1,
-                Name = "Dystopian"
+                Name = "Dystopian",
+                Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
             },
             new Genre
             {
                 Id = 2,
-                Name = "Mystery"
+                Name = "Mystery",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
             },
             new Genre
             {
                 Id = 3,
-                Name = "Science Fiction"
+                Name = "Science Fiction",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
             },
             new Genre
             {
                 Id = 4,
-                Name = "Romance"
+                Name = "Romance",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
             },
             new Genre
             {
                 Id = 5,
-                Name = "Fantasy"
+                Name = "Fantasy",
+                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
             }
         };
     }
 
     private static IEnumerable<Book> GetMockedBooks()
     {
+        var random = new Random();
         return new List<Book>
         {
             new Book
@@ -135,16 +184,76 @@ public class TestData
                 Id = 1,
                 Name = "To Kill a Mockingbird",
                 PublisherId = 1,
-                StockInStorage = 20,
-                Price = 12.5,
-                OverallRating = 40,
+                StockInStorage = random.Next(1, 50),
+                Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                OverallRating = random.Next(30, 100),
                 Publisher = GetMockedPublishers().First(x => x.Id == 1),
                 Authors = GetMockedAuthors().Where(x => x.Id == 1).ToList(),
                 Ratings = GetMockedRatings().Where(x => x.Id == 1).ToList(),
                 Orders = GetMockedOrders().Where(x => x.Id == 1).ToList(),
                 Genres = GetMockedGenres().Where(x => x.Id == 1).ToList(),
                 Users = GetMockedUsers().Where(x => x.Id == 1).ToList()
-            }
+            },
+            new Book
+            {
+                Id = 2,
+                Name = "Harry Potter",
+                PublisherId = 2,
+                StockInStorage = random.Next(1, 50),
+                Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                OverallRating = random.Next(30, 100),
+                Publisher = GetMockedPublishers().First(x => x.Id == 2),
+                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
+            },
+            new Book
+            {
+                Id = 3,
+                Name = "Narnia",
+                PublisherId = 3,
+                StockInStorage = random.Next(1, 50),
+                Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                OverallRating = random.Next(30, 100),
+                Publisher = GetMockedPublishers().First(x => x.Id == 3),
+                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
+            },
+            new Book
+            {
+                Id = 4,
+                Name = "Pride and Prejudice",
+                PublisherId = 4,
+                StockInStorage = random.Next(1, 50),
+                Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                OverallRating = random.Next(30, 100),
+                Publisher = GetMockedPublishers().First(x => x.Id == 4),
+                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
+            },
+            new Book
+            {
+                Id = 5,
+                Name = "Eragon",
+                PublisherId = 5,
+                StockInStorage = random.Next(1, 50),
+                Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
+                OverallRating = random.Next(30, 100),
+                Publisher = GetMockedPublishers().First(x => x.Id == 5),
+                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
+            },
         };
     }
 
@@ -183,30 +292,13 @@ public class TestData
                 NormalizedEmail = email.ToUpper(),
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                PasswordHash = Hasher.HashPassword(null, "Aa123!")
+                PasswordHash = Hasher.HashPassword(null, "Aa123!"),
+                Books = GetMockedBooks().Where(x => x.Id >= i).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id == i).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id == i).ToList()
             });
         }
-
         return users;
-    }
-    
-    private static IEnumerable<IdentityRole<int>> GetMockedRoles()
-    {
-        return new List<IdentityRole<int>>
-        {
-            new IdentityRole<int>
-            {
-                Id = 1,
-                Name = UserRoles.Admin,
-                NormalizedName = UserRoles.Admin.ToUpper(),
-            },
-            new IdentityRole<int>
-            {
-                Id = 2,
-                Name = UserRoles.User,
-                NormalizedName = UserRoles.User.ToUpper(),
-            }
-        };
     }
 
     public static List<Rating> GetMockedRatings()
@@ -219,33 +311,9 @@ public class TestData
             "Couldn't put it down, finished it in one sitting!",
             "The plot twists in this book are mind-blowing",
             "A classic that everyone should read",
-            "The characters are so well-developed, felt like they were real people",
-            "This book made me laugh and cry, a roller coaster of emotions",
-            "The writing style is beautiful, every sentence is a work of art",
-            "I couldn't guess the ending, kept me guessing until the last page",
-            "I wish there was a sequel, I'm not ready to say goodbye to these characters",
-            "The themes explored in this book are thought-provoking",
-            "The pacing is perfect, kept me engaged from start to finish",
-            "This book challenged my perspective on life",
-            "The world-building is exceptional, I felt like I was there",
-            "A must-read for book lovers",
-            "The author's storytelling is captivating",
-            "This book is a page-turner, couldn't stop reading",
-            "The dialogue between characters is witty and realistic",
-            "I've recommended this book to all my friends",
-            "It left me with a book hangover, couldn't stop thinking about it",
-            "",
-            "Couldn't get into the story, found it boring from the start",
-            "The characters felt one-dimensional and uninteresting",
-            "The plot was predictable, I expected more twists",
-            "I didn't connect with the protagonist, lacked depth",
-            "The writing style was confusing and hard to follow",
-            "This book didn't live up to the hype, very disappointing",
-            "The ending felt rushed and unresolved",
-            "Too much exposition, not enough action",
-            "I found the dialogue unrealistic and forced",
+            "The characters are so well-developed, felt like they were real people"
         };
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 5; i++)
         {
             ratings.Add(new Rating
             {
@@ -253,7 +321,8 @@ public class TestData
                 UserId = random.Next(1, 15),
                 BookId = random.Next(1, 35),
                 Value = random.Next(10, 100),
-                Comment = comments[i % comments.Count]
+                Comment = comments[i],
+                Book = GetMockedBooks().First(x => x.Id == i + 1)
             });
         }
         return ratings;

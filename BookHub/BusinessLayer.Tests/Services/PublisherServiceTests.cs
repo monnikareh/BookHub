@@ -53,7 +53,6 @@ namespace BusinessLayer.Tests
 
             // Assert
             Assert.NotNull(result);
-            _testOutputHelper.WriteLine($"{result.Id}");
             Assert.Equal(publisherId, result.Id);
         }
 
@@ -159,8 +158,8 @@ namespace BusinessLayer.Tests
         {
             return new List<Publisher>
             {
-                new Publisher { Id = 1, Name = "Publisher1" },
-                new Publisher { Id = 2, Name = "Publisher2" }
+                new Publisher { Id = 1, Name = "Bloomsbury" },
+                new Publisher { Id = 2, Name = "Ikar" }
             };
         }
     }
