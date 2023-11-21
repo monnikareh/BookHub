@@ -1,3 +1,4 @@
+using BusinessLayer.Tests.Data;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using EntityFrameworkCore.Testing.NSubstitute.Helpers;
@@ -13,6 +14,7 @@ namespace TestUtilities.MockedObjects
         {
             var dbContextOptions = new DbContextOptionsBuilder<BookHubDbContext>()
                 .UseInMemoryDatabase(RandomDBName)
+                .UseLazyLoadingProxies(false)
                 .Options;
 
             return dbContextOptions;
@@ -34,11 +36,16 @@ namespace TestUtilities.MockedObjects
 
         public static void PrepareData(BookHubDbContext dbContext)
         {
+            dbContext.Orders.AddRange(TestData.GetMockedOrders());
+            dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
+
             dbContext.SaveChanges();
         }
 
         public static async Task PrepareDataAsync(BookHubDbContext dbContext)
         {
+            dbContext.Orders.AddRange(TestData.GetMockedOrders());
+            dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
             await dbContext.SaveChangesAsync();
         }
     }
