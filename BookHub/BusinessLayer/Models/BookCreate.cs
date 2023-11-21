@@ -7,6 +7,6 @@ public class BookCreate
     public ModelRelated Publisher { get; set; }
     public int StockInStorage { get; set; }
     public int OverallRating { get; set; }
-    public double Price { get; set; }
+    public decimal Price { get; set; }
     public ICollection<ModelRelated> Authors { get; set; } = new List<ModelRelated>();
 }
