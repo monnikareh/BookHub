@@ -8,6 +8,7 @@ public static class BusinessLayerServiceExtensions
     public static void RegisterServices(this IServiceCollection services)
     {
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IPublisherService, PublisherService>();
     }
     
 
