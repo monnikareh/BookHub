@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Middleware", "Middleware\Mi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer.Tests", "BusinessLayer.Tests\BusinessLayer.Tests.csproj", "{EEF68B63-671C-458E-904F-BBBC2A602520}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestUtilities", "TestUtilities\TestUtilities.csproj", "{CAF781AD-72F2-49E2-AE4A-8DF16641BA75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,9 @@ Global
 		{EEF68B63-671C-458E-904F-BBBC2A602520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEF68B63-671C-458E-904F-BBBC2A602520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEF68B63-671C-458E-904F-BBBC2A602520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAF781AD-72F2-49E2-AE4A-8DF16641BA75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAF781AD-72F2-49E2-AE4A-8DF16641BA75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAF781AD-72F2-49E2-AE4A-8DF16641BA75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAF781AD-72F2-49E2-AE4A-8DF16641BA75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

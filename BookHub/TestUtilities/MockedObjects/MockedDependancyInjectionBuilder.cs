@@ -8,7 +8,7 @@ namespace BusinessLayer.Tests.MockedObjects
 {
     public class MockedDependencyInjectionBuilder
     {
-        protected IServiceCollection _serviceCollection = new ServiceCollection();
+        private IServiceCollection _serviceCollection = new ServiceCollection();
 
         public MockedDependencyInjectionBuilder() 
         {
