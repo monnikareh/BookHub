@@ -58,7 +58,7 @@ public class TestData
                 UserId = 1,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 User = GetMockedUsers().First(x => x.Id == 1),
-                Date = DateTime.Now,
+                Date = new DateTime(2023, 3, 10),
                 Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
             },
             new Order
@@ -67,7 +67,7 @@ public class TestData
                 UserId = 2,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 User = GetMockedUsers().First(x => x.Id == 2),
-                Date = DateTime.Now,
+                Date = new DateTime(2023, 1, 24),
                 Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
             },
             new Order
@@ -76,7 +76,7 @@ public class TestData
                 UserId = 3,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 User = GetMockedUsers().First(x => x.Id == 3),
-                Date = DateTime.Now,
+                Date = new DateTime(2023, 7, 5),
                 Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
             },
             new Order
@@ -85,7 +85,7 @@ public class TestData
                 UserId = 4,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 User = GetMockedUsers().First(x => x.Id == 4),
-                Date = DateTime.Now,
+                Date = new DateTime(2023, 12, 1),
                 Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
             },
             new Order
@@ -94,7 +94,7 @@ public class TestData
                 UserId = 5,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 User = GetMockedUsers().First(x => x.Id == 5),
-                Date = DateTime.Now,
+                Date = new DateTime(2023, 4, 11),
                 Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
             }
         };
