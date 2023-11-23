@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
+using BookHub.Models;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Models;
 
 namespace WebApp.Controllers;
 
