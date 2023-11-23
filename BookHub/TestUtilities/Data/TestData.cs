@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLayer.Tests.Data;
 
-public class TestData
+public static class TestData
 {
     private static readonly PasswordHasher<User> Hasher = new PasswordHasher<User>();
     
-    public static List<Publisher> GetMockedPublishers()
+    public static IEnumerable<Publisher> GetMockedPublishers()
     {
         return new List<Publisher>
         {
@@ -46,7 +46,7 @@ public class TestData
         };
     }
 
-    public static List<Order> GetMockedOrders()
+    public static IEnumerable<Order> GetMockedOrders()
     {
         var random = new Random();
 
@@ -100,7 +100,7 @@ public class TestData
         };
     }
     
-    private static IEnumerable<Author> GetMockedAuthors()
+    public static IEnumerable<Author> GetMockedAuthors()
     {
         return new List<Author>
         {
@@ -137,7 +137,7 @@ public class TestData
         };
     }
 
-    private static IEnumerable<Genre> GetMockedGenres()
+    public static IEnumerable<Genre> GetMockedGenres()
     {
         return new List<Genre>
         {
@@ -174,7 +174,7 @@ public class TestData
         };
     }
 
-    private static IEnumerable<Book> GetMockedBooks()
+    public static IEnumerable<Book> GetMockedBooks()
     {
         var random = new Random();
         return new List<Book>
@@ -257,7 +257,7 @@ public class TestData
         };
     }
 
-    private static IEnumerable<User> GetMockedUsers()
+    public static IEnumerable<User> GetMockedUsers()
     {
         var users = new List<User>();
         var names = new List<string>
@@ -280,7 +280,7 @@ public class TestData
         };
         for (var i = 0; i < names.Count; i++)
         {
-            var name = names[i].Substring(0, names[i].IndexOf(' '));
+            var name = names[i][..names[i].IndexOf(' ')];
             var email = $"{name}@gmail.com";
             users.Add(new User
             {
@@ -301,7 +301,7 @@ public class TestData
         return users;
     }
 
-    public static List<Rating> GetMockedRatings()
+    public static IEnumerable<Rating> GetMockedRatings()
     {
         var random = new Random();
         var ratings = new List<Rating>();
