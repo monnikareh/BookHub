@@ -103,13 +103,11 @@ public class PublisherService : IPublisherService
     
     public async Task<bool> DoesPublishersExistAsync(IEnumerable<int> ids)
     {
-        // Check if all IDs exist in the database
         var existingIds = await _context.Publishers
             .Where(p => ids.Contains(p.Id))
             .Select(p => p.Id)
             .ToListAsync();
 
-        // Compare the input IDs with the existing IDs
         return ids.All(existingIds.Contains);
     }
 

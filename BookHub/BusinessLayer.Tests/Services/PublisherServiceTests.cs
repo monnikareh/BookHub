@@ -17,39 +17,26 @@ namespace BusinessLayer.Tests.Services
             .AddMockedDbContext();
 
         [Fact]
-        public async Task DoesPublisherExistAsync()
-        {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
-
-                // Act
-                var result = await publisherService.GetPublisherByIdAsync(1);
-                
-                // Assert
-                Assert.True(result != null);
-            }
-            
-        }
-        
-        [Fact]
-        public async Task GetPublisherByIdAsync_ReturnsCorrectPublisher()
+        public async Task GetPublisherByIdAsync_WhenPublisherExists_ReturnsPublisher()
         {
             // Arrange
             var options = MockedDBContext.GenerateNewInMemoryDBContextOptions();
-            var context = MockedDBContext.CreateFromOptions(options);
+            using var context = MockedDBContext.CreateFromOptions(options);
+            MockedDBContext.PrepareData(context);
+        
+            // If you have specific publishers you want to add for testing, you can do so here
+            // For example, to add a publisher with ID 1:
+            // MockedDBContext.AddPublisherWithId(context, 1);
+
             var service = new PublisherService(context);
-    
-            var expectedPublisher = TestData.GetMockedPublishers().First(p => p.Id == 1);
 
             // Act
-            var result = await service.GetPublisherByIdAsync(1);
+            var publisher = await service.GetPublisherByIdAsync(1);
 
             // Assert
-            Assert.Equal(expectedPublisher.Id, result.Id);
+            Assert.NotNull(publisher);
+            Assert.Equal(1, publisher.Id);
         }
+        
     }
 }
