@@ -2,7 +2,7 @@ namespace BusinessLayer.Models;
 
 public class OrderDetail
 {
-    public int Id { get; set; }
+    public required int Id { get; set; }
     public required ModelRelated User { get; init; }
     public decimal TotalPrice { get; set; }
     public DateTime Date { get; set; } 

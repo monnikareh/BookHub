@@ -2,7 +2,7 @@ namespace BusinessLayer.Models;
 
 public class BookDetail
 {
-    public int Id { get; set; }
+    public required int Id { get; set; }
     public required string Name { get; init; }
     public ICollection<ModelRelated> Genres { get; init; } = new List<ModelRelated>();
     public required ModelRelated Publisher { get; init; }
