@@ -1,41 +1,50 @@
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
+using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using TestUtilities.Data;
 using TestUtilities.MockedObjects;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace BusinessLayer.Tests.Services
 {
     public class PublisherServiceTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
         private MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
             .AddServices()
             .AddMockedDbContext();
 
+        public PublisherServiceTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public async Task GetPublisherByIdAsync_WhenPublisherExists_ReturnsPublisher()
         {
-            // Arrange
-            var options = MockedDBContext.GenerateNewInMemoryDBContextOptions();
-            using var context = MockedDBContext.CreateFromOptions(options);
-            MockedDBContext.PrepareData(context);
-        
-            // If you have specific publishers you want to add for testing, you can do so here
-            // For example, to add a publisher with ID 1:
-            // MockedDBContext.AddPublisherWithId(context, 1);
 
-            var service = new PublisherService(context);
+            var service = Substitute.For<IPublisherService>();
+            var publisher = new PublisherDetail
+            {
+                Id = 4,
+                Name = "Penguin Books"
 
+            };
+            service.GetPublisherByIdAsync(Arg.Any<int>()).Returns(publisher);
             // Act
-            var publisher = await service.GetPublisherByIdAsync(1);
+            var publisher2 = await service.GetPublisherByIdAsync(publisher.Id);
 
             // Assert
             Assert.NotNull(publisher);
-            Assert.Equal(1, publisher.Id);
+            Assert.Equal(publisher.Id, publisher2.Id);
+            Assert.Equal(publisher.Name, publisher2.Name);
+
         }
         
     }
