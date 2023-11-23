@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using BookHub.Models;
 
 namespace DataAccessLayer.Entities;
 
 public class Book : BaseEntity, IModelRelated
 {
-    public string Name { get; set; }
+    public required string Name { get; set; }
     
     public int PublisherId{ get; set; }
     [ForeignKey("PublisherId")] 
