@@ -1,10 +1,8 @@
 using BusinessLayer.Services;
 using DataAccessLayer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TestUtilities.MockedObjects;
 
-namespace BusinessLayer.Tests.MockedObjects
+namespace TestUtilities.MockedObjects
 {
     public class MockedDependencyInjectionBuilder
     {

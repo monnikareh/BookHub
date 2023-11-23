@@ -1,8 +1,8 @@
-using BusinessLayer.Tests.Data;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using EntityFrameworkCore.Testing.NSubstitute.Helpers;
 using Microsoft.EntityFrameworkCore;
+using TestUtilities.Data;
 
 namespace TestUtilities.MockedObjects
 {
@@ -51,6 +51,12 @@ namespace TestUtilities.MockedObjects
         {
             dbContext.Orders.AddRange(TestData.GetMockedOrders());
             dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
+            dbContext.Authors.AddRange(TestData.GetMockedAuthors());
+            dbContext.Genres.AddRange(TestData.GetMockedGenres());
+            dbContext.Books.AddRange(TestData.GetMockedBooks());
+            dbContext.Users.AddRange(TestData.GetMockedUsers());
+            dbContext.Ratings.AddRange(TestData.GetMockedRatings());
+            
             await dbContext.SaveChangesAsync();
         }
     }

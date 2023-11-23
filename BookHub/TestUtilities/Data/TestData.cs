@@ -1,12 +1,11 @@
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
-namespace BusinessLayer.Tests.Data;
+namespace TestUtilities.Data;
 
 public static class TestData
 {
-    private static readonly PasswordHasher<User> Hasher = new PasswordHasher<User>();
+    private static readonly PasswordHasher<User> Hasher = new();
     
     public static IEnumerable<Publisher> GetMockedPublishers()
     {
@@ -22,26 +21,26 @@ public static class TestData
             {
                 Id = 2,
                 Name = "Secker & Warburg",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 && x.Id <= 2).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Publisher
             {
                 Id = 3,
                 Name = "Reynal & Hitchcock",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 && x.Id <= 3).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Publisher
             {
                 Id = 4,
                 Name = "Penguin Books",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 && x.Id <= 4).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
 
             },
             new Publisher
             {
                 Id = 5,
                 Name = "Random House",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 && x.Id <= 5).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
             }
         };
     }
@@ -114,25 +113,25 @@ public static class TestData
             {
                 Id = 2,
                 Name = "George R. R. Martin",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Author
             {
                 Id = 3,
                 Name = "Stephen King",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Author
             {
                 Id = 4,
                 Name = "Agatha Christie",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Author
             {
                 Id = 5,
                 Name = "J.R.R. Tolkien",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
             }
         };
     }
@@ -151,25 +150,25 @@ public static class TestData
             {
                 Id = 2,
                 Name = "Mystery",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Genre
             {
                 Id = 3,
                 Name = "Science Fiction",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Genre
             {
                 Id = 4,
                 Name = "Romance",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Genre
             {
                 Id = 5,
                 Name = "Fantasy",
-                Books = GetMockedBooks().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
+                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
             }
         };
     }
@@ -203,11 +202,11 @@ public static class TestData
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
                 Publisher = GetMockedPublishers().First(x => x.Id == 2),
-                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 2).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 2).ToList()
+                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 2).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 2).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 2).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 2).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Book
             {
@@ -218,11 +217,11 @@ public static class TestData
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
                 Publisher = GetMockedPublishers().First(x => x.Id == 3),
-                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 3).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 3).ToList()
+                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 3).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 3).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 3).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 3).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Book
             {
@@ -233,11 +232,11 @@ public static class TestData
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
                 Publisher = GetMockedPublishers().First(x => x.Id == 4),
-                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 4).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 4).ToList()
+                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 4).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 4).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 4).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 4).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Book
             {
@@ -248,11 +247,11 @@ public static class TestData
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
                 Publisher = GetMockedPublishers().First(x => x.Id == 5),
-                Authors = GetMockedAuthors().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id >= 1 & x.Id <= 5).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id >= 1 & x.Id <= 5).ToList()
+                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 5).ToList(),
+                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 5).ToList(),
+                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 5).ToList(),
+                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 5).ToList(),
+                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 5).ToList()
             },
         };
     }

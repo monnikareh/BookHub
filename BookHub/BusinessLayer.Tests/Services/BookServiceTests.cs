@@ -1,8 +1,8 @@
 using BusinessLayer.Services;
-using BusinessLayer.Tests.MockedObjects;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using TestUtilities;
+using TestUtilities.MockedObjects;
 
 namespace BusinessLayer.Tests.services
 {
