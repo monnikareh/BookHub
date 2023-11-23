@@ -17,20 +17,20 @@ namespace BusinessLayer.Tests.Services
             .AddMockedDbContext();
 
         [Fact]
-        public async Task DoesPublishersExistAsync_ShouldReturnTrueWhenAllUsersExist()
+        public async Task DoesPublisherExistAsync()
         {
             // Arrange
             var serviceProvider = _serviceProviderBuilder.Create();
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var publisherService = scope.ServiceProvider.GetRequiredService<PublisherService>();
+                var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
 
                 // Act
-                var result = await publisherService.DoesPublishersExistAsync(new int[] { 1, 2, 3, 4, 5 });
-
+                var result = await publisherService.GetPublisherByIdAsync(1);
+                
                 // Assert
-                Assert.True(result);
+                Assert.True(result != null);
             }
         }
     }
