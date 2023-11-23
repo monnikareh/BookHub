@@ -11,7 +11,7 @@ public static class EntityMapper
         return new ModelRelated
         {
             Id = model.Id,
-            Name = model.Name,
+            Name = model.Name
         };
     }
     
@@ -86,7 +86,7 @@ public static class EntityMapper
         return new UserDetail
         {
             Id = user.Id,
-            Name = user.Name ?? "", 
+            Name = user.Name, 
             UserName = user.UserName ?? "",
             Email = user.Email ?? "",
             Books = user.Books.Select(MapModelToRelated).ToList(),

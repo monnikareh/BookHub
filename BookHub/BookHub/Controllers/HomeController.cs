@@ -2,7 +2,7 @@
 using BookHub.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApp.Controllers;
+namespace BookHub.Controllers;
 
 public class HomeController : Controller
 {

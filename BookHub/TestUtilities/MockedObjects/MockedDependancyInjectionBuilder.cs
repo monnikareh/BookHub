@@ -8,10 +8,6 @@ namespace TestUtilities.MockedObjects
     {
         private IServiceCollection _serviceCollection = new ServiceCollection();
 
-        public MockedDependencyInjectionBuilder() 
-        {
-        }
-
         public MockedDependencyInjectionBuilder AddMockedDbContext()
         {
             _serviceCollection = _serviceCollection
