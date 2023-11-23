@@ -10,7 +10,7 @@ namespace TestUtilities.MockedObjects
     {
         public static string RandomDBName => Guid.NewGuid().ToString();
 
-        public static DbContextOptions<BookHubDbContext> GenerateNewInMemoryDBContextOptons()
+        public static DbContextOptions<BookHubDbContext> GenerateNewInMemoryDBContextOptions()
         {
             var dbContextOptions = new DbContextOptionsBuilder<BookHubDbContext>()
                 .UseInMemoryDatabase(RandomDBName)

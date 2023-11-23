@@ -4,6 +4,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using TestUtilities.Data;
 using TestUtilities.MockedObjects;
 using Xunit;
 
@@ -31,6 +32,24 @@ namespace BusinessLayer.Tests.Services
                 // Assert
                 Assert.True(result != null);
             }
+            
+        }
+        
+        [Fact]
+        public async Task GetPublisherByIdAsync_ReturnsCorrectPublisher()
+        {
+            // Arrange
+            var options = MockedDBContext.GenerateNewInMemoryDBContextOptions();
+            var context = MockedDBContext.CreateFromOptions(options);
+            var service = new PublisherService(context);
+    
+            var expectedPublisher = TestData.GetMockedPublishers().First(p => p.Id == 1);
+
+            // Act
+            var result = await service.GetPublisherByIdAsync(1);
+
+            // Assert
+            Assert.Equal(expectedPublisher.Id, result.Id);
         }
     }
 }
