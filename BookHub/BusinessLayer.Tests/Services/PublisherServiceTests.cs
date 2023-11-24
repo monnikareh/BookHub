@@ -1,14 +1,11 @@
-using BookHub.Models;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
-using DataAccessLayer.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using TestUtilities.Data;
 using TestUtilities.MockedObjects;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace BusinessLayer.Tests.Services
@@ -17,7 +14,7 @@ namespace BusinessLayer.Tests.Services
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        private MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
+        private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
             .AddServices()
             .AddMockedDbContext();
 
@@ -32,21 +29,19 @@ namespace BusinessLayer.Tests.Services
         {
             // Arrange
             var serviceProvider = _serviceProviderBuilder.Create();
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-                await MockedDBContext.PrepareDataAsync(dbContext);
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+            await MockedDBContext.PrepareDataAsync(dbContext);
 
-                var customerService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
+            var customerService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
 
-                // Act
-                var result = await customerService.GetPublishersAsync(null);
-                var publisherDetails = result.ToList();
+            // Act
+            var result = await customerService.GetPublishersAsync(null);
+            var publisherDetails = result.ToList();
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(TestData.GetMockedPublishers().Count(), publisherDetails.Count);
-            }
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(TestData.GetMockedPublishers().Count(), publisherDetails.Count);
         }
 
         [Fact]
@@ -161,6 +156,33 @@ namespace BusinessLayer.Tests.Services
 
             // Assert
             await service.Received(1).DeletePublisherAsync(publisherIdToDelete);
+        }
+        
+        [Fact]
+        public async Task DeletePublisherAsync_WhenNonExistingPublisherId_ReturnsFalse()
+        {
+            // Arrange
+            var service = Substitute.For<IPublisherService>();
+            const int nonExistentPublisherId = 999;
+
+            service.DeletePublisherAsync(nonExistentPublisherId)
+                .Returns(Task.FromException<PublisherNotFoundException>(
+                    new PublisherNotFoundException($"Publisher with ID:'{nonExistentPublisherId}' not found")));
+
+            // Act
+            bool result;
+            try
+            {
+                await service.DeletePublisherAsync(nonExistentPublisherId);
+                result = true;
+            }
+            catch (PublisherNotFoundException)
+            {
+                result = false;
+            }
+
+            // Assert
+            Assert.False(result);
         }
     }
 }
