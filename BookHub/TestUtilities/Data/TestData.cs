@@ -15,37 +15,31 @@ public static class TestData
             {
                 Id = 1,
                 Name = "Bloomsbury",
-                Books = new List<Book>()
             },
             new Publisher
             {
                 Id = 2,
                 Name = "Secker & Warburg",
-                Books = new List<Book>()
             },
             new Publisher
             {
                 Id = 3,
                 Name = "Reynal & Hitchcock",
-                Books = new List<Book>()
             },
             new Publisher
             {
                 Id = 4,
                 Name = "Penguin Books",
-                Books = new List<Book>()
 
             },
             new Publisher
             {
                 Id = 5,
                 Name = "Random House",
-                Books = new List<Book>()
             }
         };
     }
 
-    /*
     public static IEnumerable<Order> GetMockedOrders()
     {
         var random = new Random();
@@ -57,45 +51,35 @@ public static class TestData
                 Id = 1,
                 UserId = 1,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
-                User = GetMockedUsers().First(x => x.Id == 1),
                 Date = new DateTime(2023, 3, 10),
-                Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
             },
             new Order
             {
                 Id = 2,
                 UserId = 2,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
-                User = GetMockedUsers().First(x => x.Id == 2),
                 Date = new DateTime(2023, 1, 24),
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Order
             {
                 Id = 3,
                 UserId = 3,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
-                User = GetMockedUsers().First(x => x.Id == 3),
                 Date = new DateTime(2023, 7, 5),
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Order
             {
                 Id = 4,
                 UserId = 4,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
-                User = GetMockedUsers().First(x => x.Id == 4),
                 Date = new DateTime(2023, 12, 1),
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Order
             {
                 Id = 5,
                 UserId = 5,
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
-                User = GetMockedUsers().First(x => x.Id == 5),
                 Date = new DateTime(2023, 4, 11),
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
             }
         };
     }
@@ -108,31 +92,26 @@ public static class TestData
             {
                 Id = 1,
                 Name = "J. K. Rowling",
-                Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
             },
             new Author
             {
                 Id = 2,
                 Name = "George R. R. Martin",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Author
             {
                 Id = 3,
                 Name = "Stephen King",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Author
             {
                 Id = 4,
                 Name = "Agatha Christie",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Author
             {
                 Id = 5,
                 Name = "J.R.R. Tolkien",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
             }
         };
     }
@@ -145,31 +124,26 @@ public static class TestData
             {
                 Id = 1,
                 Name = "Dystopian",
-                Books = GetMockedBooks().Where(x => x.Id >= 1).ToList()
             },
             new Genre
             {
                 Id = 2,
                 Name = "Mystery",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Genre
             {
                 Id = 3,
                 Name = "Science Fiction",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Genre
             {
                 Id = 4,
                 Name = "Romance",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Genre
             {
                 Id = 5,
                 Name = "Fantasy",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
             }
         };
     }
@@ -187,12 +161,6 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
-                Publisher = GetMockedPublishers().First(x => x.Id == 1),
-                Authors = GetMockedAuthors().Where(x => x.Id == 1).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id == 1).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id == 1).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id == 1).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id == 1).ToList()
             },
             new Book
             {
@@ -202,12 +170,6 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
-                Publisher = GetMockedPublishers().First(x => x.Id == 2),
-                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 2).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 2).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 2).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 2).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 2).ToList()
             },
             new Book
             {
@@ -217,12 +179,6 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
-                Publisher = GetMockedPublishers().First(x => x.Id == 3),
-                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 3).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 3).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 3).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 3).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 3).ToList()
             },
             new Book
             {
@@ -232,12 +188,6 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
-                Publisher = GetMockedPublishers().First(x => x.Id == 4),
-                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 4).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 4).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 4).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 4).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 4).ToList()
             },
             new Book
             {
@@ -247,12 +197,6 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
-                Publisher = GetMockedPublishers().First(x => x.Id == 5),
-                Authors = GetMockedAuthors().Where(x => x.Id is >= 1 and <= 5).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id is >= 1 and <= 5).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id is >= 1 and <= 5).ToList(),
-                Genres = GetMockedGenres().Where(x => x.Id is >= 1 and <= 5).ToList(),
-                Users = GetMockedUsers().Where(x => x.Id is >= 1 and <= 5).ToList()
             },
         };
     }
@@ -293,9 +237,6 @@ public static class TestData
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 PasswordHash = Hasher.HashPassword(null, "Aa123!"),
-                Books = GetMockedBooks().Where(x => x.Id >= i).ToList(),
-                Ratings = GetMockedRatings().Where(x => x.Id == i).ToList(),
-                Orders = GetMockedOrders().Where(x => x.Id == i).ToList()
             });
         }
         return users;
@@ -322,9 +263,8 @@ public static class TestData
                 BookId = random.Next(1, 35),
                 Value = random.Next(10, 100),
                 Comment = comments[i],
-                Book = GetMockedBooks().First(x => x.Id == i + 1)
             });
         }
         return ratings;
-    }*/
+    }
 }

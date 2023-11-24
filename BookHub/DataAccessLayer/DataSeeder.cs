@@ -604,7 +604,7 @@ public static class DataSeeder
                 UserId = random.Next(1, 15),
                 TotalPrice = randomPrice
             });
-        };
+        }
         return orders;
     }
 
@@ -679,9 +679,12 @@ public static class DataSeeder
             ratings.Add( new Rating
             {
                 Id = i + 1,
-                UserId = random.Next(1, 15),
-                BookId = random.Next(1, 35),
-                Value = random.Next(10, 100),
+                UserId = random.Next(1,
+                    15),
+                BookId = random.Next(1,
+                    35),
+                Value = random.Next(10,
+                    100),
                 Comment = comments[i % comments.Count]
             });
         }
