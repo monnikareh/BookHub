@@ -15,36 +15,37 @@ public static class TestData
             {
                 Id = 1,
                 Name = "Bloomsbury",
-                Books = GetMockedBooks().Where(x => x.Id == 1).ToList()
+                Books = new List<Book>()
             },
             new Publisher
             {
                 Id = 2,
                 Name = "Secker & Warburg",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 2).ToList()
+                Books = new List<Book>()
             },
             new Publisher
             {
                 Id = 3,
                 Name = "Reynal & Hitchcock",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 3).ToList()
+                Books = new List<Book>()
             },
             new Publisher
             {
                 Id = 4,
                 Name = "Penguin Books",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 4).ToList()
+                Books = new List<Book>()
 
             },
             new Publisher
             {
                 Id = 5,
                 Name = "Random House",
-                Books = GetMockedBooks().Where(x => x.Id is >= 1 and <= 5).ToList()
+                Books = new List<Book>()
             }
         };
     }
 
+    /*
     public static IEnumerable<Order> GetMockedOrders()
     {
         var random = new Random();
@@ -325,5 +326,5 @@ public static class TestData
             });
         }
         return ratings;
-    }
+    }*/
 }

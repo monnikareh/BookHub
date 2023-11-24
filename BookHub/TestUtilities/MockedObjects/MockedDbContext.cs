@@ -36,27 +36,20 @@ namespace TestUtilities.MockedObjects
 
         public static void PrepareData(BookHubDbContext dbContext)
         {
-            dbContext.Orders.AddRange(TestData.GetMockedOrders());
+           // dbContext.Orders.AddRange(TestData.GetMockedOrders());
             dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
-            dbContext.Authors.AddRange(TestData.GetMockedAuthors());
-            dbContext.Genres.AddRange(TestData.GetMockedGenres());
-            dbContext.Books.AddRange(TestData.GetMockedBooks());
-            dbContext.Users.AddRange(TestData.GetMockedUsers());
-            dbContext.Ratings.AddRange(TestData.GetMockedRatings());
+           // dbContext.Authors.AddRange(TestData.GetMockedAuthors());
+           // dbContext.Genres.AddRange(TestData.GetMockedGenres());
+           // dbContext.Books.AddRange(TestData.GetMockedBooks());
+           // dbContext.Users.AddRange(TestData.GetMockedUsers());
+           // dbContext.Ratings.AddRange(TestData.GetMockedRatings());
 
             dbContext.SaveChanges();
         }
 
         public static async Task PrepareDataAsync(BookHubDbContext dbContext)
         {
-            dbContext.Orders.AddRange(TestData.GetMockedOrders());
             dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
-            dbContext.Authors.AddRange(TestData.GetMockedAuthors());
-            dbContext.Genres.AddRange(TestData.GetMockedGenres());
-            dbContext.Books.AddRange(TestData.GetMockedBooks());
-            dbContext.Users.AddRange(TestData.GetMockedUsers());
-            dbContext.Ratings.AddRange(TestData.GetMockedRatings());
-            
             await dbContext.SaveChangesAsync();
         }
     }
