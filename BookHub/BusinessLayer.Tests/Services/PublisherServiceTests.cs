@@ -49,21 +49,19 @@ namespace BusinessLayer.Tests.Services
         {
             // Arrange
             var serviceProvider = _serviceProviderBuilder.Create();
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-                await MockedDBContext.PrepareDataAsync(dbContext);
-                var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+            await MockedDBContext.PrepareDataAsync(dbContext);
+            var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
 
-                var publisherToGet = TestData.GetMockedPublishers().First();
+            var publisherToGet = TestData.GetMockedPublishers().First();
 
-                // Act
-                var result = await publisherService.GetPublisherByIdAsync(publisherToGet.Id);
+            // Act
+            var result = await publisherService.GetPublisherByIdAsync(publisherToGet.Id);
 
-                // Assert
-                Assert.NotNull(result);
-                Assert.Equal(publisherToGet.Name, result.Name);
-            }
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(publisherToGet.Name, result.Name);
         }
         
         // Tests using second option => NSubstitute
@@ -96,7 +94,7 @@ namespace BusinessLayer.Tests.Services
             var service = Substitute.For<IPublisherService>();
             var publisherCreate = new PublisherCreate
             {
-                Name = "New Publisher"
+                Name = "Ikar"
             };
 
             var createdPublisher = new PublisherDetail
@@ -149,7 +147,7 @@ namespace BusinessLayer.Tests.Services
         {
             // Arrange
             var service = Substitute.For<IPublisherService>();
-            var publisherIdToDelete = 3;
+            const int publisherIdToDelete = 3;
 
             // Act
             await service.DeletePublisherAsync(publisherIdToDelete);
