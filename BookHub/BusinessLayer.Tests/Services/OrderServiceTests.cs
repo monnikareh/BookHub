@@ -1,59 +1,111 @@
+using BusinessLayer.Models;
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using NSubstitute;
-using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using Xunit.Abstractions;
 
 namespace BusinessLayer.Tests.Services;
 
 public class OrderServiceTests
 {
-    private readonly ITestOutputHelper _testOutputHelper;
-    private readonly ServiceProvider _serviceProvider;
-    private readonly IOrderService _orderService;
-    private readonly IOrderService _orderServiceMock;
     
-    public OrderServiceTests(ITestOutputHelper testOutputHelper)
+    [Fact]
+    public async Task GetOrderByIdAsync_WhenOrderExists_ReturnsOrder()
     {
-        _testOutputHelper = testOutputHelper;
-        var services = new ServiceCollection();
 
-        // Register actual services
-        services.RegisterServices();
+        var service = Substitute.For<IOrderService>();
+        var order = new OrderDetail
+        {
+            Id = 1,
+            User = new ModelRelated
+            {
+                Id = 1,
+                Name = "John Smith"
+            },
+            TotalPrice = 12m,
+            Date = DateTime.Today
 
-        // Mock and register facades
-        _orderServiceMock = Substitute.For<IOrderService>();
-        services.AddSingleton(_orderServiceMock);
+        };
+        service.GetOrderByIdAsync(Arg.Any<int>()).Returns(order);
+        // Act
+        var result = await service.GetOrderByIdAsync(order.Id);
 
-        // ... You can add other mocks or real implementations similarly
-        _serviceProvider = services.BuildServiceProvider(); // see Seminar06 for a bit more robust usage ;)
-
-        // you can do this in tests as well
-        _orderService = _serviceProvider.GetRequiredService<IOrderService>();
+        // Assert
+        RunAsserts(order, result);
     }
     
     [Fact]
-    public async Task GetOrder_ReturnsCorrectOrder()
+    public async Task CreateOrderAsync_ReturnsNewOrder()
     {
-        var testOrderId = 1;
-        
-        // (testOrderId).Returns(testOrder);  // Mock the facade behavior
-
-        var order = await _orderServiceMock.GetOrderByIdAsync(testOrderId);
-        if (order == null)
+        // Arrange
+        var service = Substitute.For<IOrderService>();
+        var orderCreate = new OrderCreate
         {
-            _testOutputHelper.WriteLine("picka");
-            return;
-        }
-        Assert.Equal("John Smith", order.User.Name);
-        // ^ the above (expected) value should be some type of constant ... you can create it the same way as testOrderId is created and check it down here that it matches.
+            User = new ModelRelated
+            {
+                Id = 1,
+                Name = "John Smith"
+            },
+            TotalPrice = 12m
+        };
+        var createdOrder = new OrderDetail
+        {
+            Id = 1,
+            User = new ModelRelated
+            {
+                Id = 1,
+                Name = "John Smith"
+            },
+            TotalPrice = 12m
+        };
 
-        // Verify the mocked method was called, if applicable in this test scenario
-        await _orderServiceMock.Received().GetOrderByIdAsync(testOrderId);
+        service.CreateOrderAsync(Arg.Any<OrderCreate>()).Returns(createdOrder);
+
+        // Act
+        var result = await service.CreateOrderAsync(orderCreate);
+
+        // Assert
+        RunAsserts(createdOrder, result);
+    }
+    
+    [Fact]
+    public async Task UpdateOrderAsync_ReturnsUpdatedOrder()
+    {
+        // Arrange
+        var service = Substitute.For<IOrderService>();
+        const int orderId = 4; // Assuming order with Id 4 exists
+        var orderUpdate = new OrderUpdate
+        {
+            TotalPrice = 9m
+        };
+
+        var updatedOrder = new OrderDetail
+        {
+            Id = orderId,
+            User = new ModelRelated
+            {
+                Id = 1,
+                Name = "John Smith"
+            },
+            TotalPrice = 9m
+        };
+
+        service.UpdateOrderAsync(orderId, Arg.Any<OrderUpdate>()).Returns(updatedOrder);
+
+        // Act
+        var result = await service.UpdateOrderAsync(orderId, orderUpdate);
+
+        // Assert
+        RunAsserts(updatedOrder, result);
     }
 
-
+    private static void RunAsserts(OrderDetail expected, OrderDetail actual)
+    {
+        Assert.NotNull(actual);
+        Assert.Equal(expected.Id, actual.Id);
+        Assert.Equal(expected.TotalPrice, actual.TotalPrice);
+        Assert.NotNull(actual.User);
+        Assert.Equal(expected.User.Id, actual.User.Id);
+        Assert.Equal(expected.User.Name, actual.User.Name);
+    }
 
     
 }
