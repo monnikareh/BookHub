@@ -137,6 +137,7 @@ app.UseMiddleware<RequestLoggerMiddleware>();
 app.UseHttpsRedirection();
 
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<JsonToXmlMiddleware>();
 app.MapControllers();
