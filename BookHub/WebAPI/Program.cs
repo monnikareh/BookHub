@@ -131,6 +131,7 @@ app.UseHttpsRedirection();
 
 
 app.UseAuthorization();
+app.UseMiddleware<JsonToXmlMiddleware>();
 app.MapControllers();
 app.MapControllerRoute(
     name: "default",
