@@ -1,7 +1,9 @@
+using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestUtilities.Data;
 using TestUtilities.MockedObjects;
@@ -19,7 +21,6 @@ public class RatingServiceTests
 
     public RatingServiceTests(ITestOutputHelper testOutputHelper)
     {
-        
         _testOutputHelper = testOutputHelper;
     }
 
@@ -29,7 +30,7 @@ public class RatingServiceTests
         // Arrange
         var serviceProvider = _serviceProviderBuilder.Create();
         using var scope = serviceProvider.CreateScope();
-        
+
         var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
         await MockedDbContext.PrepareDataAsync(dbContext);
 
@@ -43,7 +44,7 @@ public class RatingServiceTests
         Assert.NotNull(result);
         Assert.Equal(
             TestData.GetMockedRatings()
-                .Count(r => r is { User.Id: 1, Book.Id: 2 }), 
+                .Count(r => r is { User.Id: 1, Book.Id: 2 }),
             ratingDetails.Count);
     }
 
@@ -57,7 +58,7 @@ public class RatingServiceTests
         await MockedDbContext.PrepareDataAsync(dbContext);
         var ratingService = scope.ServiceProvider.GetRequiredService<IRatingService>();
 
-        var ratingToGet = TestData.GetMockedRatings().First();
+        var ratingToGet = dbContext.Ratings.Include(rating => rating.Book).Include(rating => rating.User).First();
 
         // Act
         var result = await ratingService.GetRatingByIdAsync(ratingToGet.Id);
@@ -108,11 +109,11 @@ public class RatingServiceTests
         var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
         await MockedDbContext.PrepareDataAsync(dbContext);
         var ratingService = scope.ServiceProvider.GetRequiredService<IRatingService>();
-    
-        var ratingToUpdate = TestData.GetMockedRatings().First();
-    
+
+        var ratingToUpdate = dbContext.Ratings.Include(rating => rating.User).Include(rating => rating.Book).First();
+
         ratingToUpdate.Comment = "Updated rating";
-    
+
         // Actk
         var result = await ratingService.UpdateRatingAsync(ratingToUpdate.Id, new RatingDetail
         {
@@ -129,23 +130,23 @@ public class RatingServiceTests
         Assert.Equal(ret.Comment, result.Comment);
         Assert.Equal(ret.Id, result.Id);
     }
-    //
-    // [Fact]
-    // public async Task DeleteRatingAsyncGetByIdDeleteAgain_ReturnsRating()
-    // {
-    //     // Arrange
-    //     var serviceProvider = _serviceProviderBuilder.Create();
-    //     using var scope = serviceProvider.CreateScope();
-    //     var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-    //     await MockedDbContext.PrepareDataAsync(dbContext);
-    //     var ratingService = scope.ServiceProvider.GetRequiredService<IRatingService>();
-    //
-    //     var ratingToDelete = TestData.GetMockedRatings().First();
-    //
-    //     await ratingService.DeleteRatingAsync(ratingToDelete.Id);
-    //     await Assert.ThrowsAsync<RatingNotFoundException>(async () =>
-    //         await ratingService.GetRatingByIdAsync(ratingToDelete.Id));
-    //     await Assert.ThrowsAsync<RatingNotFoundException>(async () =>
-    //         await ratingService.DeleteRatingAsync(ratingToDelete.Id));
-    // }
+
+    [Fact]
+    public async Task DeleteRatingAsyncGetByIdDeleteAgain_ReturnsRating()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var ratingService = scope.ServiceProvider.GetRequiredService<IRatingService>();
+
+        var ratingToDelete = dbContext.Ratings.Include(rating => rating.User).Include(rating => rating.Book).First();
+
+        await ratingService.DeleteRatingAsync(ratingToDelete.Id);
+        await Assert.ThrowsAsync<RatingNotFoundException>(async () =>
+            await ratingService.GetRatingByIdAsync(ratingToDelete.Id));
+        await Assert.ThrowsAsync<RatingNotFoundException>(async () =>
+            await ratingService.DeleteRatingAsync(ratingToDelete.Id));
+    }
 }

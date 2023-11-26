@@ -146,7 +146,7 @@ public class RatingService : IRatingService
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)
         {
-            throw new BookNotFoundException($"Rating with ID {id} not found");
+            throw new RatingNotFoundException($"Rating with ID {id} not found");
         }
 
         _context.Ratings.Remove(rating);
