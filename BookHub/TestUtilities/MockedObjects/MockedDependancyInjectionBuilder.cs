@@ -1,5 +1,8 @@
 using BusinessLayer.Services;
 using DataAccessLayer;
+using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace TestUtilities.MockedObjects
@@ -11,8 +14,18 @@ namespace TestUtilities.MockedObjects
         public MockedDependencyInjectionBuilder AddMockedDbContext()
         {
             _serviceCollection = _serviceCollection
+                .AddLogging()
                 .AddDbContext<BookHubDbContext>(options => options
-                    .UseInMemoryDatabase(MockedDbContext.RandomDbName));
+                    .UseInMemoryDatabase(MockedDbContext.RandomDbName))
+                .AddIdentity<User, IdentityRole<int>>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.User.RequireUniqueEmail = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
+                .AddEntityFrameworkStores<BookHubDbContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI().Services;
 
             return this;
         }
@@ -25,7 +38,7 @@ namespace TestUtilities.MockedObjects
 
             return this;
         }
-        
+
         public MockedDependencyInjectionBuilder AddServices()
         {
             _serviceCollection = _serviceCollection
@@ -39,7 +52,7 @@ namespace TestUtilities.MockedObjects
                 .AddScoped<IRatingService, RatingService>();
             return this;
         }
-        
+
         public ServiceProvider Create()
         {
             return _serviceCollection.BuildServiceProvider();
