@@ -1,11 +1,10 @@
-using System.Text;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Middleware;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -19,14 +18,14 @@ var mariadbConnectionString = configuration.GetConnectionString("MariaDBConnecti
                               throw new InvalidOperationException(
                                   "Connection string 'MariaDBConnectionString' not found.");
 
-builder.Services.AddDbContext<BookHubDbContext>(options =>
-    options.UseNpgsql(postgresConnectionString,
-        x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
+// builder.Services.AddDbContext<BookHubDbContext>(options =>
+//     options.UseNpgsql(postgresConnectionString,
+//         x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
 
-// builder.Services.AddDbContext<BookHubDbContext>(
-//     options => options
-//         .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
-//             x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
+builder.Services.AddDbContext<BookHubDbContext>(
+    options => options
+        .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
+            x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
 
 builder.Services.AddLogging();
 
@@ -42,21 +41,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services
     .AddAuthentication()
-    .AddCookie()
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = configuration["JWT:ValidIssuer"],
-            ValidAudience = configuration["JWT:ValidAudience"],
-            IssuerSigningKey =
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? string.Empty))
-        };
-    });
+    .AddCookie();
 
 builder.Services.AddRazorPages();
 
