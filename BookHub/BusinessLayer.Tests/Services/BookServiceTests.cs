@@ -116,7 +116,7 @@ public class BookServiceTests
             Id = bookToUpdate.Id,
             Name = "Update book name",
             Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).Where(g => g.Id % 2 == 0).ToList(),
-            Publisher = EntityMapper.MapModelToRelated(dbContext.Publishers.First()),
+            Publisher = EntityMapper.MapModelToRelated(dbContext.Publishers.Last()),
             StockInStorage = 10,
             Price = 32,
             Authors = dbContext.Authors.Select(EntityMapper.MapModelToRelated).Where(a => a.Id % 2 == 0).ToList(),
@@ -132,12 +132,12 @@ public class BookServiceTests
         Assert.Equal(bookUpdate.Authors.Count, result.Authors.Count);
         Assert.Equal(bookUpdate.Genres.Count, result.Genres.Count);
         Assert.Equal(bookUpdate.Name, result.Name);
-        Assert.Equal(bookUpdate.Publisher, result.Publisher);
+        Assert.Equivalent(bookUpdate.Publisher, result.Publisher);
         Assert.Equal(ret.Id, result.Id);
         Assert.Equal(ret.Authors.Count, result.Authors.Count);
         Assert.Equal(ret.Genres.Count, result.Genres.Count);
         Assert.Equal(ret.Name, result.Name);
-        // Assert.Equal(ret.Publisher, result.Publisher);
+        Assert.Equivalent(ret.Publisher, result.Publisher);
     }
 
     [Fact]
