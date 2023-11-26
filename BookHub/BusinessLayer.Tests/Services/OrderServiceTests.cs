@@ -1,11 +1,43 @@
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using NSubstitute;
+using BusinessLayer.Exceptions;
+using BusinessLayer.Models;
+using BusinessLayer.Services;
+using DataAccessLayer;
+using Microsoft.Extensions.DependencyInjection;
+using TestUtilities.MockedObjects;
+using Xunit.Abstractions;
 
 namespace BusinessLayer.Tests.Services;
 
 public class OrderServiceTests
 {
+    
+    private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
+        .AddServices()
+        .AddMockedDbContext();
+    
+    [Fact]
+    public async Task GetOrdersAsync_ReturnsCorrectNumber()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+
+        var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+
+        // Act
+        var result = await orderService.GetOrdersAsync(null, null, null, null, null, null, null);
+        var orderDetails = result.ToList();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(dbContext.Orders.Count(), orderDetails.Count);
+    }
+    
     
     [Fact]
     public async Task GetOrderByIdAsync_WhenOrderExists_ReturnsOrder()
