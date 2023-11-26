@@ -43,8 +43,8 @@ public class RatingServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(
-            TestData.GetMockedRatings()
-                .Count(r => r is { User.Id: 1, Book.Id: 2 }),
+            dbContext.Ratings
+                .Count(r => r.User != null && r.Book != null && r.User.Id == 1 && r.Book.Id == 2),
             ratingDetails.Count);
     }
 

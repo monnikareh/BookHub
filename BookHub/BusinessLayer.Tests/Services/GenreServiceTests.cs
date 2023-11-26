@@ -39,7 +39,7 @@ public class GenreServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(TestData.GetMockedGenres().Count(), genreDetails.Count);
+        Assert.Equal(dbContext.Genres.Count(), genreDetails.Count);
     }
         
     [Fact]
@@ -52,7 +52,7 @@ public class GenreServiceTests
         await MockedDbContext.PrepareDataAsync(dbContext);
         var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
 
-        var genreToGet = TestData.GetMockedGenres().First();
+        var genreToGet = dbContext.Genres.First();
 
         // Act
         var result = await genreService.GetGenreByIdAsync(genreToGet.Id);
@@ -96,7 +96,7 @@ public class GenreServiceTests
         await MockedDbContext.PrepareDataAsync(dbContext);
         var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
         
-        var genreToUpdate = TestData.GetMockedGenres().First();
+        var genreToUpdate = dbContext.Genres.First();
 
         genreToUpdate.Name = "Updated genre";
         
@@ -123,7 +123,7 @@ public class GenreServiceTests
         await MockedDbContext.PrepareDataAsync(dbContext);
         var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
             
-        var genreToDelete = TestData.GetMockedGenres().First();
+        var genreToDelete = dbContext.Genres.First();
             
         await genreService.DeleteGenreAsync(genreToDelete.Id);
         await Assert.ThrowsAsync<GenreNotFoundException>(async () => await genreService.GetGenreByIdAsync(genreToDelete.Id));
