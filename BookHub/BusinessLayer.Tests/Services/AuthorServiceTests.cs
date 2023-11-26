@@ -102,5 +102,23 @@ public class AuthorServiceTests
         Assert.Equal(ret.Id, result.Id);
     }
     
+    [Fact]
+    public async Task DeleteAuthorAsyncGetByIdDeleteAgain_ReturnsAuthor()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var authorService = scope.ServiceProvider.GetRequiredService<IAuthorService>();
+            
+        var authorToDelete = dbContext.Authors.First();
+            
+        await authorService.DeleteAuthorAsync(authorToDelete.Id);
+        await Assert.ThrowsAsync<AuthorNotFoundException>
+            (async () => await authorService.GetAuthorByIdAsync(authorToDelete.Id));
+        await Assert.ThrowsAsync<AuthorNotFoundException>
+            (async () => await authorService.DeleteAuthorAsync(authorToDelete.Id));
+    }
 
 }
