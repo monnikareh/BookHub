@@ -51,8 +51,6 @@ namespace TestUtilities.MockedObjects
         {
             dbContext.Orders.AddRange(TestData.GetMockedOrders());
             dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
-            dbContext.Orders.AddRange(TestData.GetMockedOrders());
-            dbContext.Authors.AddRange(TestData.GetMockedAuthors());
             dbContext.Authors.AddRange(TestData.GetMockedAuthors());
             dbContext.Genres.AddRange(TestData.GetMockedGenres());
             dbContext.Books.AddRange(TestData.GetMockedBooks());
