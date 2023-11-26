@@ -40,7 +40,7 @@ public class JsonToXmlMiddleware
                         context.Response.Headers.Remove("Content-Length");
                         context.Response.Headers.Add("Content-Length", xmlBytes.Length.ToString());
 
-                        await originalBodyStream.WriteAsync(xmlBytes);
+                        await originalBodyStream.WriteAsync(xmlBytes, 0, xmlBytes.Length);
                         return;
                     }
                 }
@@ -49,7 +49,7 @@ public class JsonToXmlMiddleware
                 var jsonBytes = Encoding.UTF8.GetBytes(jsonResponse);
                 context.Response.Headers.Add("Content-Length", jsonBytes.Length.ToString());
 
-                await originalBodyStream.WriteAsync(jsonBytes);
+                await originalBodyStream.WriteAsync(jsonBytes, 0, jsonBytes.Length);
             }
             finally
             {
@@ -64,7 +64,7 @@ public class JsonToXmlMiddleware
 
     private static string ConvertJsonToXml(string jsonResponse)
     {
-        var doc = JsonConvert.DeserializeXmlNode(jsonResponse, "response");
+        var doc = JsonConvert.DeserializeXmlNode("{\"user\":" + jsonResponse + "}", "response");
         return doc?.OuterXml ?? jsonResponse;
     }
 }
