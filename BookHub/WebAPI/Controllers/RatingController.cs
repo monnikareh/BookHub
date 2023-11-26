@@ -85,11 +85,11 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteRating(int id)
         {
             try
             {
-                await _ratingService.DeleteBookAsync(id);
+                await _ratingService.DeleteRatingAsync(id);
                 return Ok();
                 
             }

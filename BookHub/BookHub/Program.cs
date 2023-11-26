@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text;
 using BusinessLayer.Services;
 using DataAccessLayer;
@@ -6,7 +5,6 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Middleware;
 
 var builder = WebApplication.CreateBuilder(args);

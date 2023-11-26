@@ -1,4 +1,4 @@
-namespace BookHub.Models;
+namespace DataAccessLayer.Entities;
 
 public interface IModelRelated
 {
