@@ -41,7 +41,7 @@ namespace BusinessLayer.Tests.Services
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(TestData.GetMockedPublishers().Count(), publisherDetails.Count);
+            Assert.Equal(dbContext.Publishers.Count(), publisherDetails.Count);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace BusinessLayer.Tests.Services
             await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
 
-            var publisherToGet = TestData.GetMockedPublishers().First();
+            var publisherToGet = dbContext.Publishers.First();
 
             // Act
             var result = await publisherService.GetPublisherByIdAsync(publisherToGet.Id);
