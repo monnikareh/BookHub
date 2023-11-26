@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
-using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -13,19 +12,14 @@ namespace BusinessLayer.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly BookHubDbContext _context;
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IConfiguration _configuration;
 
-    public AuthService(BookHubDbContext context, SignInManager<User> signInManager, UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager, IConfiguration configuration)
+    public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, IConfiguration configuration)
     {
-        _context = context;
         _signInManager = signInManager;
         _userManager = userManager;
-        _roleManager = roleManager;
         _configuration = configuration;
     }
 
@@ -60,7 +54,7 @@ public class AuthService : IAuthService
         };
     }
 
-    private JwtSecurityToken GetToken(List<Claim> authClaims)
+    private JwtSecurityToken GetToken(IEnumerable<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 

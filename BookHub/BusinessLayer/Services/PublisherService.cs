@@ -1,4 +1,3 @@
-using BookHub.Models;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
 using BusinessLayer.Exceptions;
@@ -99,6 +98,16 @@ public class PublisherService : IPublisherService
         }
         _context.Publishers.Remove(publisher);
         await _context.SaveChangesAsync();
+    }
+    
+    public async Task<bool> DoesPublishersExistAsync(IEnumerable<int> ids)
+    {
+        var existingIds = await _context.Publishers
+            .Where(p => ids.Contains(p.Id))
+            .Select(p => p.Id)
+            .ToListAsync();
+
+        return ids.All(existingIds.Contains);
     }
 
 }

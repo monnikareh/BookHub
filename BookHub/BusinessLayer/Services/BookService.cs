@@ -102,6 +102,10 @@ public class BookService : IBookService
         {
             throw new GenreNotFoundException("One or more genres could not be found");
         }
+        if (bookCreate.Authors == null)
+        {
+            throw new AuthorsEmptyException("One or more author could not be found");
+        }
         
         var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
         var authorIds = bookCreate.Authors.Select(a => a.Id).ToHashSet();

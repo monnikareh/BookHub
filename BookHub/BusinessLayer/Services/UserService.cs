@@ -70,20 +70,19 @@ public class UserService : IUserService
         {
             throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
         }
-        if (userCreate.Books.IsNullOrEmpty())
+
+        ICollection<Book> books = new List<Book>();
+        if (!userCreate.Books.IsNullOrEmpty())
         {
-            throw new BooksEmptyException("Collection Books is empty");
+            var bookIds = userCreate.Books.Select(a => a.Id).ToHashSet();
+            var bookNames = userCreate.Books.Select(a => a.Name).ToHashSet();
+            books = await _context.Books.Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id)).ToListAsync();
+            if (books.Count != userCreate.Books.Count)
+            {
+                throw new BooksEmptyException("One or more books could not be found");
+            }
         }
-        var bookNames = userCreate.Books.Select(a => a.Name).ToHashSet();
-        var bookIds = userCreate.Books.Select(a => a.Id).ToHashSet();
-        var books = await _context.Books.Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id)).ToListAsync();
         
-        if (books.Count != userCreate.Books.Count)
-        {
-            throw new BooksEmptyException("One or more books could not be found");
-        }
-
-
         user.Name = userCreate.Name;
         user.Books = books;
         await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);

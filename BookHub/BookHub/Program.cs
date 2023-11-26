@@ -1,8 +1,10 @@
+using System.Text;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Middleware;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
