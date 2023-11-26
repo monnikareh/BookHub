@@ -5,6 +5,7 @@ using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestUtilities.MockedObjects;
 using Xunit.Abstractions;
@@ -40,28 +41,27 @@ public class OrderServiceTests
     
     
     [Fact]
-    public async Task GetOrderByIdAsync_WhenOrderExists_ReturnsOrder()
+    public async Task GetOrderByIdAsync_ExistingId_ReturnsOrder()
     {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();        
+        
+        var orderToGet = dbContext.Orders.Include(order => order.User).First();
 
-        var service = Substitute.For<IOrderService>();
-        var order = new OrderDetail
-        {
-            Id = 1,
-            User = new ModelRelated
-            {
-                Id = 1,
-                Name = "John Smith"
-            },
-            TotalPrice = 12m,
-            Date = DateTime.Today
-
-        };
-        service.GetOrderByIdAsync(Arg.Any<int>()).Returns(order);
         // Act
-        var result = await service.GetOrderByIdAsync(order.Id);
+        var result = await orderService.GetOrderByIdAsync(orderToGet.Id);
 
         // Assert
-        RunAsserts(order, result);
+        Assert.NotNull(result);
+
+        Assert.Equal(orderToGet.TotalPrice, result.TotalPrice);
+        Assert.Equal(orderToGet.Date, result.Date);
+        Assert.NotNull(result.User);
+        Assert.Equal(orderToGet.User.Name, result.User.Name);
     }
     
     [Fact]

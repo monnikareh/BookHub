@@ -1,3 +1,4 @@
+using Azure.Core;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -50,6 +51,7 @@ public static class TestData
             {
                 Id = 1,
                 UserId = 1,
+                User = new User{Name = "John"},
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 Date = new DateTime(2023, 3, 10),
             },
@@ -57,6 +59,7 @@ public static class TestData
             {
                 Id = 2,
                 UserId = 2,
+                User = new User{Name = "Tom"},
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 Date = new DateTime(2023, 1, 24),
             },
@@ -64,6 +67,7 @@ public static class TestData
             {
                 Id = 3,
                 UserId = 3,
+                User = new User{Name = "Jerry"},
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 Date = new DateTime(2023, 7, 5),
             },
@@ -71,6 +75,7 @@ public static class TestData
             {
                 Id = 4,
                 UserId = 4,
+                User = new User{Name = "Levi"},
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 Date = new DateTime(2023, 12, 1),
             },
@@ -78,6 +83,7 @@ public static class TestData
             {
                 Id = 5,
                 UserId = 5,
+                User = new User{Name = "Tim"},
                 TotalPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 Date = new DateTime(2023, 4, 11),
             }
