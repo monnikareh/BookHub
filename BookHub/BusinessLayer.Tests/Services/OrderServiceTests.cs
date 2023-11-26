@@ -1,3 +1,4 @@
+using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
@@ -110,6 +111,25 @@ public class OrderServiceTests
         var ret = await orderService.GetOrderByIdAsync(result.Id);
         // Assert
         RunAsserts(ret, result);
+    }
+    
+    [Fact]
+    public async Task DeleteOrderAsyncGetByIdDeleteAgain_ReturnsOrder()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+            
+        var orderToDelete = dbContext.Orders.First();
+            
+        await orderService.DeleteOrderAsync(orderToDelete.Id);
+        await Assert.ThrowsAsync<OrderNotFoundException>
+            (async () => await orderService.DeleteOrderAsync(orderToDelete.Id));
+        await Assert.ThrowsAsync<OrderNotFoundException>
+            (async () => await orderService.DeleteOrderAsync(orderToDelete.Id));
     }
 
     private static void RunAsserts(OrderDetail? expected, OrderDetail? actual)
