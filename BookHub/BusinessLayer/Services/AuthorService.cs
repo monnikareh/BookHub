@@ -77,7 +77,7 @@ public class AuthorService : IAuthorService
 
         author.Name = authorUpdate.Name;
 
-        if (authorUpdate.Books.Count != 0)
+        if (authorUpdate.Books != null && authorUpdate.Books.Count != 0)
         {
             var bookNames = authorUpdate.Books.Select(a => a.Name).ToHashSet();
             var bookIds = authorUpdate.Books.Select(a => a.Id).ToHashSet();

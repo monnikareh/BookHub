@@ -101,12 +101,13 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleUserException(Exception e)
         {
-            return e is OrderNotFoundException or UserNotFoundException
-                or BookNotFoundException
-                ? NotFound(e.Message)
-                : e is UserAlreadyExistsException
-                    ? Conflict(e.Message)
-                    : Problem($"{e}Unknown problem occured");
+            return e switch
+            {
+                OrderNotFoundException or UserNotFoundException
+                    or BookNotFoundException => NotFound(e.Message),
+                UserAlreadyExistsException => Conflict(e.Message),
+                _ => Problem($"{e}Unknown problem occured")
+            };
         }
     }
 }
