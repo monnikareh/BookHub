@@ -52,6 +52,28 @@ public class AuthorServiceTests
         Assert.NotNull(result);
         Assert.Equal(authorToGet.Name, result.Name);
     }
-        
+        [Fact]
+    public async Task CreateAuthorAsyncGetById_ReturnsAuthor()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var authorService = scope.ServiceProvider.GetRequiredService<IAuthorService>();
+            
+        var newAuthor = new AuthorCreate
+        {
+            Name = "Talented Author"
+        }; 
+        // Act
+        var result = await authorService.CreateAuthorAsync(newAuthor);
+        var ret = await authorService.GetAuthorByIdAsync(result.Id);
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotNull(ret);
+        Assert.Equal(ret.Name, result.Name);
+        Assert.Equal(ret.Id, result.Id);
+    }
     
 }
