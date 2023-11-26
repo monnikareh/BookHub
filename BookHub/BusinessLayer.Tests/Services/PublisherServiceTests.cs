@@ -70,7 +70,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
             
             var publisherCreate = new PublisherCreate
@@ -93,7 +93,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
             
             var publisherId = 4; // Assuming publisher with Id 4 exists
@@ -117,7 +117,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
             
             const int publisherIdToDelete = 3;
@@ -136,7 +136,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
             
             const int nonExistentPublisherId = 33;
