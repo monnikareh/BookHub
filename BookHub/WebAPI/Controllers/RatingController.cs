@@ -89,7 +89,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _ratingService.DeleteBookAsync(id);
+                await _ratingService.DeleteRatingAsync(id);
                 return Ok();
                 
             }

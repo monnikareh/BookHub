@@ -12,7 +12,7 @@ namespace TestUtilities.MockedObjects
         {
             _serviceCollection = _serviceCollection
                 .AddDbContext<BookHubDbContext>(options => options
-                    .UseInMemoryDatabase(MockedDBContext.RandomDBName));
+                    .UseInMemoryDatabase(MockedDbContext.RandomDbName));
 
             return this;
         }

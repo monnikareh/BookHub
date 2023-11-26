@@ -6,15 +6,15 @@ using TestUtilities.Data;
 
 namespace TestUtilities.MockedObjects
 {
-    public static class MockedDBContext
+    public static class MockedDbContext
     {
-        public static string RandomDBName => Guid.NewGuid().ToString();
+        public static string RandomDbName => Guid.NewGuid().ToString();
 
-        public static DbContextOptions<BookHubDbContext> GenerateNewInMemoryDBContextOptions()
+        public static DbContextOptions<BookHubDbContext> GenerateNewInMemoryDbContextOptions()
         {
             var dbContextOptions = new DbContextOptionsBuilder<BookHubDbContext>()
-                .UseInMemoryDatabase(RandomDBName)
-                .UseLazyLoadingProxies(false)
+                .UseInMemoryDatabase(RandomDbName)
+                .UseLazyLoadingProxies()
                 .Options;
 
             return dbContextOptions;

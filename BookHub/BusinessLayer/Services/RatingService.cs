@@ -27,13 +27,13 @@ public class RatingService : IRatingService
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == userName || u.Id == userId);
         if (user != null)
         {
-            ratings = ratings.Where(r => r.User.Id == user.Id);
+            ratings = ratings.Where(r => r.User != null && r.User.Id == user.Id);
         }
 
         var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == bookName || b.Id == bookId);
         if (book != null)
         {
-            ratings = ratings.Where(r => r.Book.Id == book.Id);
+            ratings = ratings.Where(r => r.Book != null && r.Book.Id == book.Id);
         }
 
         var filteredRatings = await ratings.ToListAsync();
@@ -141,15 +141,15 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task DeleteBookAsync(int id)
+    public async Task DeleteRatingAsync(int id)
     {
-        var book = await _context.Books.FindAsync(id);
-        if (book == null)
+        var rating = await _context.Ratings.FindAsync(id);
+        if (rating == null)
         {
-            throw new BookNotFoundException($"Book with ID {id} not found");
+            throw new BookNotFoundException($"Rating with ID {id} not found");
         }
 
-        _context.Books.Remove(book);
+        _context.Ratings.Remove(rating);
         await _context.SaveChangesAsync();
     }
 }
