@@ -62,47 +62,36 @@ namespace BusinessLayer.Tests.Services
         }
 
         [Fact]
-        public async Task CreateBookAsync_WithValidData_ReturnsNewBook()
+        public async Task CreateBookAsync_ReturnsNewBook()
         {
-            
             // Arrange
-            var service = Substitute.For<IBookService>();
+            var serviceProvider = _serviceProviderBuilder.Create();
+            using var scope = serviceProvider.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+            await MockedDBContext.PrepareDataAsync(dbContext);
+            var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
+            
             var bookCreate = new BookCreate
             {
                 Name = "Eragon",
                 Publisher = new ModelRelated
                 {
-                    Id = 6,
-                    Name = "Ikar"
+                    Id = 1,
+                    Name = "Bloomsbury"
                 },
                 Price = 10.99m,
                 StockInStorage = 100,
-                OverallRating = 50
+                OverallRating = 50,
+                //Genres = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "Mystery" } },
+                Authors = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "George R. R. Martin" } },
             };
-            
-            var createdBook = new BookDetail
-            {
-                Id = 7,
-                Name = bookCreate.Name,
-                Price = 10.99m,
-                StockInStorage = 100,
-                OverallRating = 50, 
-                Publisher = new ModelRelated
-                {
-                    Id = 6,
-                    Name = "Ikar"
-                }
-            };
-
-            service.CreateBookAsync(Arg.Any<BookCreate>()).Returns(createdBook);
 
             // Act
-            var result = await service.CreateBookAsync(bookCreate);
+            var result = await bookService.CreateBookAsync(bookCreate);
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(createdBook.Id, result.Id);
-            Assert.Equal(createdBook.Name, result.Name);
+            Assert.Equal(bookCreate.Name, result.Name);
             Assert.Equal(bookCreate.Price, result.Price);
             Assert.Equal(bookCreate.StockInStorage, result.StockInStorage);
             Assert.Equal(bookCreate.OverallRating, result.OverallRating);
@@ -153,47 +142,5 @@ namespace BusinessLayer.Tests.Services
             Assert.Equal(updatedBookDetail.StockInStorage, result.StockInStorage);
             Assert.Equal(updatedBookDetail.OverallRating, result.OverallRating);
         }
-
-        [Fact]
-        public async Task DeleteBookAsync_ExistingId_DeletesBook()
-        {
-            // Arrange
-            var service = Substitute.For<IBookService>();
-            const int bookIdToDelete = 3;
-
-            // Act
-            await service.DeleteBookAsync(bookIdToDelete);
-
-            // Assert
-            await service.Received(1).DeleteBookAsync(bookIdToDelete);
-        }
-
-        [Fact]
-        public async Task DeleteBookAsync_WhenNonExistingBookId_ReturnsFalse()
-        {
-            // Arrange
-            var service = Substitute.For<IBookService>();
-            const int nonExistentBookId = 999;
-
-            service.DeleteBookAsync(nonExistentBookId)
-                .Returns(Task.FromException<BookNotFoundException>(
-                    new BookNotFoundException($"Book with ID:'{nonExistentBookId}' not found")));
-
-            // Act
-            bool result;
-            try
-            {
-                await service.DeleteBookAsync(nonExistentBookId);
-                result = true;
-            }
-            catch (BookNotFoundException)
-            {
-                result = false;
-            }
-
-            // Assert
-            Assert.False(result);
-        }
-        
     }
 }
