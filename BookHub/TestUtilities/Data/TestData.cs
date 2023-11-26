@@ -259,8 +259,8 @@ public static class TestData
             ratings.Add(new Rating
             {
                 Id = i + 1,
-                UserId = random.Next(1, 15),
-                BookId = random.Next(1, 35),
+                UserId = i % 2 + 1,
+                BookId = i % 2 + 1,
                 Value = random.Next(10, 100),
                 Comment = comments[i],
             });
