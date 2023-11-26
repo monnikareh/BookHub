@@ -1,4 +1,5 @@
 using BusinessLayer.Exceptions;
+using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
@@ -23,13 +24,13 @@ public class OrderServiceTests
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
         await MockedDbContext.PrepareDataAsync(dbContext);
-
+    
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
-
+    
         // Act
         var result = await orderService.GetOrdersAsync(null, null, null, null, null, null, null);
         var orderDetails = result.ToList();
-
+    
         // Assert
         Assert.NotNull(result);
         Assert.Equal(dbContext.Orders.Count(), orderDetails.Count);
@@ -47,13 +48,13 @@ public class OrderServiceTests
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();        
         
         var orderToGet = dbContext.Orders.Include(order => order.User).First();
-
+    
         // Act
         var result = await orderService.GetOrderByIdAsync(orderToGet.Id);
-
+    
         // Assert
         Assert.NotNull(result);
-
+    
         Assert.Equal(orderToGet.TotalPrice, result.TotalPrice);
         Assert.Equal(orderToGet.Date, result.Date);
         Assert.NotNull(result.User);
@@ -69,17 +70,14 @@ public class OrderServiceTests
         var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
         await MockedDbContext.PrepareDataAsync(dbContext);
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
-        
+    
         var newOrder = new OrderCreate
         {
-            User = new ModelRelated
-            {
-                Id = 1,
-                Name = "John Smith"
-            },
-            TotalPrice = 15m
+            User = EntityMapper.MapModelToRelated(dbContext.Users.First()),
+            TotalPrice = 15m,
+            Books = new List<ModelRelated>{EntityMapper.MapModelToRelated(dbContext.Books.First())}
         };
-
+    
         // Act
         var result = await orderService.CreateOrderAsync(newOrder);
         var ret = await orderService.GetOrderByIdAsync(result.Id);
@@ -99,7 +97,6 @@ public class OrderServiceTests
        
         
         var orderToUpdate = dbContext.Orders.First();
-
         orderToUpdate.TotalPrice = 42m;
         
         // Act
@@ -131,7 +128,7 @@ public class OrderServiceTests
         await Assert.ThrowsAsync<OrderNotFoundException>
             (async () => await orderService.DeleteOrderAsync(orderToDelete.Id));
     }
-
+    
     private static void RunAsserts(OrderDetail? expected, OrderDetail? actual)
     {
         Assert.NotNull(actual);
