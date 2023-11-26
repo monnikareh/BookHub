@@ -65,37 +65,37 @@ public class OrderServiceTests
     }
     
     [Fact]
-    public async Task CreateOrderAsync_ReturnsNewOrder()
+    public async Task CreateOrderAsyncGetById_ReturnsOrder()
     {
         // Arrange
-        var service = Substitute.For<IOrderService>();
-        var orderCreate = new OrderCreate
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+        
+        var newOrder = new OrderCreate
         {
             User = new ModelRelated
             {
                 Id = 1,
                 Name = "John Smith"
             },
-            TotalPrice = 12m
+            TotalPrice = 15m
         };
-        var createdOrder = new OrderDetail
-        {
-            Id = 1,
-            User = new ModelRelated
-            {
-                Id = 1,
-                Name = "John Smith"
-            },
-            TotalPrice = 12m
-        };
-
-        service.CreateOrderAsync(Arg.Any<OrderCreate>()).Returns(createdOrder);
 
         // Act
-        var result = await service.CreateOrderAsync(orderCreate);
-
+        var result = await orderService.CreateOrderAsync(newOrder);
+        var ret = await orderService.GetOrderByIdAsync(result.Id);
         // Assert
-        RunAsserts(createdOrder, result);
+        Assert.NotNull(result);
+        Assert.NotNull(ret);
+        Assert.Equal(ret.TotalPrice, result.TotalPrice);
+        Assert.Equal(ret.Id, result.Id);
+        Assert.NotNull(result.User);
+        Assert.NotNull(ret.User);
+        Assert.Equal(ret.User.Name, result.User.Name);
+        Assert.Equal(ret.User.Id, result.User.Id);
     }
     
     [Fact]
