@@ -6,7 +6,7 @@ namespace BusinessLayer.Mapper;
 public static class EntityMapper
 {
   
-    private static ModelRelated MapModelToRelated<T>(T model) where T: IModelRelated
+    public static ModelRelated MapModelToRelated<T>(T model) where T: IModelRelated
     {
         return new ModelRelated
         {
