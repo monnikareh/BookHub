@@ -141,15 +141,15 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task DeleteBookAsync(int id)
+    public async Task DeleteRatingAsync(int id)
     {
-        var book = await _context.Books.FindAsync(id);
-        if (book == null)
+        var rating = await _context.Ratings.FindAsync(id);
+        if (rating == null)
         {
-            throw new BookNotFoundException($"Book with ID {id} not found");
+            throw new BookNotFoundException($"Rating with ID {id} not found");
         }
 
-        _context.Books.Remove(book);
+        _context.Ratings.Remove(rating);
         await _context.SaveChangesAsync();
     }
 }
