@@ -2,7 +2,6 @@ using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace TestUtilities.MockedObjects

@@ -5,7 +5,6 @@ using BusinessLayer.Services;
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using TestUtilities.Data;
 using TestUtilities.MockedObjects;
 using Xunit.Abstractions;
 

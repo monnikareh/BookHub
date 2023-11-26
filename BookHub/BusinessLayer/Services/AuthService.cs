@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
-using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
@@ -10,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using TestUtilities.Data;
 using TestUtilities.MockedObjects;
-using Xunit;
 using Xunit.Abstractions;
 
 namespace BusinessLayer.Tests.Services

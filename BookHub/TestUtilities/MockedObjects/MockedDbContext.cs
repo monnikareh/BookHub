@@ -1,7 +1,5 @@
 using DataAccessLayer;
-using DataAccessLayer.Entities;
 using EntityFrameworkCore.Testing.NSubstitute.Helpers;
-using Microsoft.EntityFrameworkCore;
 using TestUtilities.Data;
 
 namespace TestUtilities.MockedObjects
