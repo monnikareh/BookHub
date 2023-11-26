@@ -39,7 +39,7 @@ namespace TestUtilities.MockedObjects
             //dbContext.Orders.AddRange(TestData.GetMockedOrders());
             dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
            // dbContext.Authors.AddRange(TestData.GetMockedAuthors());
-           // dbContext.Genres.AddRange(TestData.GetMockedGenres());
+           dbContext.Genres.AddRange(TestData.GetMockedGenres());
             dbContext.Books.AddRange(TestData.GetMockedBooks());
            // dbContext.Users.AddRange(TestData.GetMockedUsers());
            // dbContext.Ratings.AddRange(TestData.GetMockedRatings());
@@ -52,7 +52,7 @@ namespace TestUtilities.MockedObjects
             dbContext.Publishers.AddRange(TestData.GetMockedPublishers());
             //dbContext.Orders.AddRange(TestData.GetMockedOrders());
             // dbContext.Authors.AddRange(TestData.GetMockedAuthors());
-            // dbContext.Genres.AddRange(TestData.GetMockedGenres());
+            dbContext.Genres.AddRange(TestData.GetMockedGenres());
             dbContext.Books.AddRange(TestData.GetMockedBooks());
             // dbContext.Users.AddRange(TestData.GetMockedUsers());
             // dbContext.Ratings.AddRange(TestData.GetMockedRatings());
