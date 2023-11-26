@@ -31,7 +31,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
 
             var customerService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
 
@@ -51,7 +51,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
 
             var publisherToGet = TestData.GetMockedPublishers().First();

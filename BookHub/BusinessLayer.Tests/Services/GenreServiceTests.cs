@@ -8,60 +8,126 @@ using TestUtilities.Data;
 using TestUtilities.MockedObjects;
 using Xunit.Abstractions;
 
-namespace BusinessLayer.Tests.Services
+namespace BusinessLayer.Tests.Services;
+
+public class GenreServiceTests
 {
-    public class GenreServiceTests
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
+        .AddServices()
+        .AddMockedDbContext();
+
+    public GenreServiceTests(ITestOutputHelper testOutputHelper)
     {
-        private readonly ITestOutputHelper _testOutputHelper;
-
-        private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
-            .AddServices()
-            .AddMockedDbContext();
-
-        public GenreServiceTests(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
+        _testOutputHelper = testOutputHelper;
+    }
         
-        [Fact]
-        public async Task GetGenresAsync_ReturnsCorrectNumber()
-        {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+    [Fact]
+    public async Task GetGenresAsync_ReturnsCorrectNumber()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
 
-            var customerService = scope.ServiceProvider.GetRequiredService<IGenreService>();
+        var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
 
-            // Act
-            var result = await customerService.GetGenresAsync(null);
-            var genreDetails = result.ToList();
+        // Act
+        var result = await genreService.GetGenresAsync(null);
+        var genreDetails = result.ToList();
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(TestData.GetMockedGenres().Count(), genreDetails.Count);
-        }
-
-        [Fact]
-        public async Task GetGenreByIdAsync_ExistingId_ReturnsGenre()
-        {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
-            var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
-
-            var genreToGet = TestData.GetMockedGenres().First();
-
-            // Act
-            var result = await genreService.GetGenreByIdAsync(genreToGet.Id);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(genreToGet.Name, result.Name);
-        }
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(TestData.GetMockedGenres().Count(), genreDetails.Count);
+    }
         
+    [Fact]
+    public async Task GetGenreByIdAsync_ExistingId_ReturnsGenre()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
+
+        var genreToGet = TestData.GetMockedGenres().First();
+
+        // Act
+        var result = await genreService.GetGenreByIdAsync(genreToGet.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(genreToGet.Name, result.Name);
+    }
+        
+    [Fact]
+    public async Task CreateGenreAsyncGetById_ReturnsGenre()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
+            
+        var newGenre = new GenreCreate
+        {
+            Name = "Awesome new genre"
+        }; 
+        // Act
+        var result = await genreService.CreateGenreAsync(newGenre);
+        var ret = await genreService.GetGenreByIdAsync(result.Id);
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotNull(ret);
+        Assert.Equal(ret.Name, result.Name);
+        Assert.Equal(ret.Id, result.Id);
+    }
+    
+    [Fact]
+    public async Task UpdateGenreAsyncGetById_ReturnsGenre()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
+        
+        var genreToUpdate = TestData.GetMockedGenres().First();
+
+        genreToUpdate.Name = "Updated genre";
+        
+        // Act
+        var result = await genreService.UpdateGenreAsync(genreToUpdate.Id, new GenreCreate
+        {
+            Name = genreToUpdate.Name
+        });
+        var ret = await genreService.GetGenreByIdAsync(result.Id);
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotNull(ret);
+        Assert.Equal(ret.Name, result.Name);
+        Assert.Equal(ret.Id, result.Id);
+    }
+        
+    [Fact]
+    public async Task DeleteGenreAsyncGetByIdDeleteAgain_ReturnsGenre()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var genreService = scope.ServiceProvider.GetRequiredService<IGenreService>();
+            
+        var genreToDelete = TestData.GetMockedGenres().First();
+            
+        await genreService.DeleteGenreAsync(genreToDelete.Id);
+        await Assert.ThrowsAsync<GenreNotFoundException>(async () => await genreService.GetGenreByIdAsync(genreToDelete.Id));
+        await Assert.ThrowsAsync<GenreNotFoundException>(async () => await genreService.DeleteGenreAsync(genreToDelete.Id));
     }
 }
