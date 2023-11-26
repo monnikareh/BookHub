@@ -94,7 +94,7 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
-    c.OperationFilter<AddQueryOperationFilter>(
+    c.OperationFilter<MyOperationFilter>(
         "format", 
         "The response content type", 
         "json",

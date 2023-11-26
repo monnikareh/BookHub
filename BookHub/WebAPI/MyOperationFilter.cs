@@ -4,8 +4,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 
-// General use IOperationFilter implementation to add query fields to swagger UI to each endpoint
-public class AddQueryOperationFilter : IOperationFilter
+public class MyOperationFilter : IOperationFilter
 {
     private readonly string _name;
     private readonly string _description;
@@ -13,7 +12,7 @@ public class AddQueryOperationFilter : IOperationFilter
     private readonly IList<string> _permittedValues;
     private readonly bool _required;
 
-    public AddQueryOperationFilter(string name, string description, string defaultValue, IList<string> permittedValues, bool required)
+    public MyOperationFilter(string name, string description, string defaultValue, IList<string> permittedValues, bool required)
     {
         _name = name;
         _description = description;
