@@ -41,7 +41,6 @@ namespace TestUtilities.MockedObjects
             dbContext.Books.AddRange(TestData.GetMockedBooks());
             dbContext.Users.AddRange(TestData.GetMockedUsers());
             dbContext.Ratings.AddRange(TestData.GetMockedRatings());
-
             dbContext.SaveChanges();
         }
 
