@@ -110,9 +110,9 @@ namespace BusinessLayer.Tests.Services
             Assert.NotNull(result);
             Assert.Equal(publisherUpdate.Name, result.Name);
         }
-
+        
         [Fact]
-        public async Task DeletePublisherAsync_WhenIdExists_DeletesPublisher()
+        public async Task DeletePublisherAsyncGetByIdDeleteAgain_ReturnsGenre()
         {
             // Arrange
             var serviceProvider = _serviceProviderBuilder.Create();
@@ -121,41 +121,11 @@ namespace BusinessLayer.Tests.Services
             await MockedDbContext.PrepareDataAsync(dbContext);
             var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
             
-            const int publisherIdToDelete = 3;
-
-            // Act
-            await publisherService.DeletePublisherAsync(publisherIdToDelete);
-
-            // Assert
-            Assert.True(dbContext.Publishers.All(p => p.Id != publisherIdToDelete));
-        }
-
-        [Fact]
-        public async Task DeletePublisherAsync_WhenNonExistingPublisherId_ReturnsFalse()
-        {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDbContext.PrepareDataAsync(dbContext);
-            var publisherService = scope.ServiceProvider.GetRequiredService<IPublisherService>();
+            var publisherToDelete = dbContext.Genres.First();
             
-            const int nonExistentPublisherId = 33;
-
-            // Act
-            bool result;
-            try
-            {
-                await publisherService.DeletePublisherAsync(nonExistentPublisherId);
-                result = true;
-            }
-            catch (PublisherNotFoundException)
-            {
-                result = false;
-            }
-
-            // Assert
-            Assert.False(result);
+            await publisherService.DeletePublisherAsync(publisherToDelete.Id);
+            await Assert.ThrowsAsync<PublisherNotFoundException>(async () => await publisherService.GetPublisherByIdAsync(publisherToDelete.Id));
+            await Assert.ThrowsAsync<PublisherNotFoundException>(async () => await publisherService.DeletePublisherAsync(publisherToDelete.Id));
         }
     }
 }
