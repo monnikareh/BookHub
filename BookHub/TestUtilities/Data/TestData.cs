@@ -161,6 +161,7 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
+                Authors = new List<Author>()
             },
             new Book
             {
@@ -170,6 +171,7 @@ public static class TestData
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
+                Authors = new List<Author>()
             },
             new Book
             {

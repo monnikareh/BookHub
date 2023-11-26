@@ -83,6 +83,7 @@ namespace BusinessLayer.Tests.Services
 
             // Assert
             Assert.NotNull(result);
+            Assert.NotNull(dbContext.Publishers.FirstOrDefault(a => a.Name == publisherCreate.Name));
             Assert.Equal(publisherCreate.Name, result.Name);
         }
 

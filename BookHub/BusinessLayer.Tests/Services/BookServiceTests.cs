@@ -5,6 +5,7 @@ using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using TestUtilities.Data;
@@ -21,7 +22,12 @@ namespace BusinessLayer.Tests.Services
         private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
             .AddServices()
             .AddMockedDbContext();
-        
+
+        public BookServiceTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public async Task GetBooksAsync_ReturnsCorrectNumber()
         {
@@ -68,7 +74,7 @@ namespace BusinessLayer.Tests.Services
             var serviceProvider = _serviceProviderBuilder.Create();
             using var scope = serviceProvider.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDBContext.PrepareDataAsync(dbContext);
+            await MockedDbContext.PrepareDataAsync(dbContext);
             var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
             
             var bookCreate = new BookCreate
@@ -82,9 +88,13 @@ namespace BusinessLayer.Tests.Services
                 Price = 10.99m,
                 StockInStorage = 100,
                 OverallRating = 50,
-                //Genres = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "Mystery" } },
-                Authors = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "George R. R. Martin" } },
+                Genres = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "Mystery" } },
+                Authors = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "George Orwell"} },
             };
+            
+            var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
+            var authorIds = bookCreate.Authors.Select(a => a.Id).ToHashSet();
+            var authors = await dbContext.Authors.Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id)).ToListAsync();
 
             // Act
             var result = await bookService.CreateBookAsync(bookCreate);
