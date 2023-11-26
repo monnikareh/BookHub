@@ -1,151 +1,161 @@
+using BusinessLayer.Exceptions;
+using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
-using TestUtilities.Data;
 using TestUtilities.MockedObjects;
 using Xunit.Abstractions;
 
-namespace BusinessLayer.Tests.Services
-{
-    public class BookServiceTests
-    {
-        private readonly ITestOutputHelper _testOutputHelper;
+namespace BusinessLayer.Tests.Services;
 
-        private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder = new MockedDependencyInjectionBuilder()
+public class BookServiceTests
+{
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    private readonly MockedDependencyInjectionBuilder _serviceProviderBuilder =
+        new MockedDependencyInjectionBuilder()
             .AddServices()
             .AddMockedDbContext();
 
-        public BookServiceTests(ITestOutputHelper testOutputHelper)
+    public BookServiceTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
+    [Fact]
+    public async Task GetBooksAsync_ReturnsCorrectNumber()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+
+        var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
+
+        // Act
+        var result = await bookService.GetBooksAsync(null, null, null, null, null, null, null);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(dbContext.Books.Count(), result.Count());
+    }
+
+    [Fact]
+    public async Task GetBookByIdAsync_ExistingId_ReturnsBook()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
+
+        var bookToGet = dbContext.Books.Include(book => book.Authors).Include(book => book.Genres).First();
+
+        // Act
+        var result = await bookService.GetBookByIdAsync(bookToGet.Id);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(bookToGet.Name, result.Name);
+        Assert.Equal(bookToGet.Id, result.Id);
+        Assert.Equal(bookToGet.Genres.Count, result.Genres.Count);
+        Assert.Equal(bookToGet.Authors.Count, result.Authors.Count);
+    }
+
+    [Fact]
+    public async Task CreateBookAsync_ReturnsNewBook()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
+
+        var bookCreate = new BookCreate
         {
-            _testOutputHelper = testOutputHelper;
-        }
+            Name = "Eragon",
+            Publisher = EntityMapper.MapModelToRelated(dbContext.Publishers.First()),
+            Price = 10.99m,
+            StockInStorage = 100,
+            OverallRating = 50,
+            Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).ToList(),
+            Authors = dbContext.Genres.Select(EntityMapper.MapModelToRelated).ToList(),
+        };
+        // Act
+        var result = await bookService.CreateBookAsync(bookCreate);
 
-        [Fact]
-        public async Task GetBooksAsync_ReturnsCorrectNumber()
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(bookCreate.Genres.Count, result.Genres.Count);
+        Assert.Equal(bookCreate.Authors.Count, result.Authors.Count);
+        Assert.Equal(bookCreate.Name, result.Name);
+        Assert.Equal(bookCreate.Price, result.Price);
+        Assert.Equal(bookCreate.StockInStorage, result.StockInStorage);
+        Assert.Equal(bookCreate.OverallRating, result.OverallRating);
+    }
+
+    [Fact]
+    public async Task UpdateBookAsync_ReturnsUpdatedBook()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
+
+        var bookToUpdate = dbContext.Books.Include(book => book.Publisher).Include(book => book.Authors)
+            .Include(book => book.Genres).First();
+        var bookUpdate = new BookDetail
         {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDbContext.PrepareDataAsync(dbContext);
+            Id = bookToUpdate.Id,
+            Name = "Update book name",
+            Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).Where(g => g.Id % 2 == 0).ToList(),
+            Publisher = EntityMapper.MapModelToRelated(dbContext.Publishers.First()),
+            StockInStorage = 10,
+            Price = 32,
+            Authors = dbContext.Authors.Select(EntityMapper.MapModelToRelated).Where(a => a.Id % 2 == 0).ToList(),
+            OverallRating = 0
+        };
+        // Act
+        var result = await bookService.UpdateBookAsync(bookToUpdate.Id, bookUpdate);
+        var ret = await bookService.GetBookByIdAsync(result.Id);
+        // Assert
+        Assert.NotNull(result);
+        Assert.NotNull(ret);
+        Assert.Equal(bookUpdate.Id, result.Id);
+        Assert.Equal(bookUpdate.Authors.Count, result.Authors.Count);
+        Assert.Equal(bookUpdate.Genres.Count, result.Genres.Count);
+        Assert.Equal(bookUpdate.Name, result.Name);
+        Assert.Equal(bookUpdate.Publisher, result.Publisher);
+        Assert.Equal(ret.Id, result.Id);
+        Assert.Equal(ret.Authors.Count, result.Authors.Count);
+        Assert.Equal(ret.Genres.Count, result.Genres.Count);
+        Assert.Equal(ret.Name, result.Name);
+        // Assert.Equal(ret.Publisher, result.Publisher);
+    }
 
-            var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
+    [Fact]
+    public async Task DeleteBookAsyncGetByIdDeleteAgain_ReturnsRating()
+    {
+        // Arrange
+        var serviceProvider = _serviceProviderBuilder.Create();
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
+        await MockedDbContext.PrepareDataAsync(dbContext);
+        var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
 
-            // Act
-            var result = await bookService.GetBooksAsync(null, null, null, null, null, null, null);
+        var bookToDelete = dbContext.Books.Include(book => book.Publisher).Include(book => book.Authors).Include(book => book.Genres).First();
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(TestData.GetMockedBooks().Count(), result.Count());
-        }
-
-        [Fact]
-        public async Task GetBookByIdAsync_ExistingId_ReturnsBook()
-        {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDbContext.PrepareDataAsync(dbContext);
-            var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
-
-            var bookToGet = TestData.GetMockedBooks().First();
-
-            // Act
-            var result = await bookService.GetBookByIdAsync(bookToGet.Id);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(bookToGet.Name, result.Name);
-        }
-
-        [Fact]
-        public async Task CreateBookAsync_ReturnsNewBook()
-        {
-            // Arrange
-            var serviceProvider = _serviceProviderBuilder.Create();
-            using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<BookHubDbContext>();
-            await MockedDbContext.PrepareDataAsync(dbContext);
-            var bookService = scope.ServiceProvider.GetRequiredService<IBookService>();
-            
-            var bookCreate = new BookCreate
-            {
-                Name = "Eragon",
-                Publisher = new ModelRelated
-                {
-                    Id = 1,
-                    Name = "Bloomsbury"
-                },
-                Price = 10.99m,
-                StockInStorage = 100,
-                OverallRating = 50,
-                Genres = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "Mystery" } },
-                Authors = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "George Orwell"} },
-            };
-            
-            var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
-            var authorIds = bookCreate.Authors.Select(a => a.Id).ToHashSet();
-            var authors = await dbContext.Authors.Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id)).ToListAsync();
-
-            // Act
-            var result = await bookService.CreateBookAsync(bookCreate);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(bookCreate.Name, result.Name);
-            Assert.Equal(bookCreate.Price, result.Price);
-            Assert.Equal(bookCreate.StockInStorage, result.StockInStorage);
-            Assert.Equal(bookCreate.OverallRating, result.OverallRating);
-        }
-          [Fact]
-        public async Task UpdateBookAsync_ReturnsUpdatedBook()
-        {
-            // Arrange
-            var service = Substitute.For<IBookService>();
-            var bookId = 4; // Assuming book with Id 4 exists
-            var bookDetailUpdate = new BookDetail
-            {
-                Id = bookId,
-                Name = "Updated Book",
-                Publisher = new ModelRelated { Id = 2, Name = "Updated Publisher" },
-                Genres = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "Mystery" } },
-                Authors = new List<ModelRelated> { new ModelRelated { Id = 2, Name = "Jane Doe" } },
-                Price = 29.99m,
-                StockInStorage = 50,
-                OverallRating = 4
-            };
-
-            var updatedBookDetail = new BookDetail
-            {
-                Id = bookId,
-                Name = bookDetailUpdate.Name,
-                Publisher = bookDetailUpdate.Publisher,
-                Genres = bookDetailUpdate.Genres,
-                Authors = bookDetailUpdate.Authors,
-                Price = bookDetailUpdate.Price,
-                StockInStorage = bookDetailUpdate.StockInStorage,
-                OverallRating = bookDetailUpdate.OverallRating
-            };
-
-            service.UpdateBookAsync(bookId, Arg.Any<BookDetail>()).Returns(updatedBookDetail);
-
-            // Act
-            var result = await service.UpdateBookAsync(bookId, bookDetailUpdate);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(updatedBookDetail.Id, result.Id);
-            Assert.Equal(updatedBookDetail.Name, result.Name);
-            Assert.Equal(updatedBookDetail.Publisher.Id, result.Publisher.Id);
-            Assert.Equal(updatedBookDetail.Genres.Count(), result.Genres.Count());
-            Assert.Equal(updatedBookDetail.Authors.Count(), result.Authors.Count());
-            Assert.Equal(updatedBookDetail.Price, result.Price);
-            Assert.Equal(updatedBookDetail.StockInStorage, result.StockInStorage);
-            Assert.Equal(updatedBookDetail.OverallRating, result.OverallRating);
-        }
+        await bookService.DeleteBookAsync(bookToDelete.Id);
+        await Assert.ThrowsAsync<BookNotFoundException>(async () =>
+            await bookService.GetBookByIdAsync(bookToDelete.Id));
+        await Assert.ThrowsAsync<BookNotFoundException>(async () =>
+            await bookService.GetBookByIdAsync(bookToDelete.Id));
     }
 }

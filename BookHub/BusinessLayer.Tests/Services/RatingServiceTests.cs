@@ -113,7 +113,7 @@ public class RatingServiceTests
 
         ratingToUpdate.Comment = "Updated rating";
 
-        // Actk
+        // Act
         var result = await ratingService.UpdateRatingAsync(ratingToUpdate.Id, new RatingDetail
         {
             Id = ratingToUpdate.Id,
@@ -126,8 +126,8 @@ public class RatingServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
-        Assert.Equal(ret.Comment, result.Comment);
-        Assert.Equal(ret.Id, result.Id);
+        Assert.Equal(result.Comment, ret.Comment);
+        Assert.Equal(result.Id, ret.Id);
     }
 
     [Fact]
