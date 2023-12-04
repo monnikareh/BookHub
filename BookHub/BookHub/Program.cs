@@ -18,14 +18,14 @@ var mariadbConnectionString = configuration.GetConnectionString("MariaDBConnecti
                               throw new InvalidOperationException(
                                   "Connection string 'MariaDBConnectionString' not found.");
 
-// builder.Services.AddDbContext<BookHubDbContext>(options =>
-//     options.UseNpgsql(postgresConnectionString,
-//         x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
+builder.Services.AddDbContext<BookHubDbContext>(options =>
+    options.UseNpgsql(postgresConnectionString,
+        x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
 
-builder.Services.AddDbContext<BookHubDbContext>(
-    options => options
-        .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
-            x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
+// builder.Services.AddDbContext<BookHubDbContext>(
+//     options => options
+//         .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
+//             x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
 
 builder.Services.AddLogging();
 
