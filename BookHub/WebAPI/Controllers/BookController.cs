@@ -3,11 +3,12 @@ using BusinessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+    [Route("[controller]")]
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -18,7 +19,7 @@ namespace WebAPI.Controllers
             _bookService = bookService;
         }
 
-        [HttpGet("GetBooks")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(string? bookName, int? genreId,
             string? genreName,
             int? publisherId, string? publisherName, int? authorId, string? authorName)
@@ -34,7 +35,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<BookDetail>> GetBookById(int id)
         {
             try
@@ -48,8 +49,8 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("CreateBook")]
-        public async Task<ActionResult<BookDetail>> PostBook(BookCreate bookCreate)
+        [HttpPost]
+        public async Task<ActionResult<BookDetail>> CreateBook(BookCreate bookCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +67,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("UpdateBook/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult> UpdateBook(int id, BookDetail bookDetail)
         {
             if (!ModelState.IsValid)
@@ -85,7 +86,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpDelete("DeleteBook/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             try

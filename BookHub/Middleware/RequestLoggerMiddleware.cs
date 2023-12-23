@@ -1,3 +1,8 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+
+namespace Middleware;
+
 public class RequestLoggerMiddleware
 {
     private readonly RequestDelegate _next;

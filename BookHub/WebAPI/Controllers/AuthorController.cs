@@ -1,14 +1,15 @@
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AuthorController : ControllerBase
     {
         private readonly IAuthorService _authorService;
@@ -17,9 +18,8 @@ namespace WebAPI.Controllers
         {
             _authorService = authorService;
         }
-
         
-        [HttpGet("GetAuthors")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorDetail>>> GetAuthors(string? name, int? bookId, string? bookName)
         {
             try
@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<AuthorDetail>> GetAuthorById(int id)
         {
            try
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
            }
         }
 
-        [HttpPost("CreateAuthor")]
+        [HttpPost]
         public async Task<ActionResult<AuthorDetail>> CreateAuthor(AuthorCreate authorCreate)
         {
             if (!ModelState.IsValid)
@@ -63,7 +63,7 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpPut("UpdateAuthor/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAuthor(int id, AuthorUpdate authorUpdate)
         {
             if (!ModelState.IsValid)
@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpDelete("DeleteAuthor/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthor(int id)
         {
             try

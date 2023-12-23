@@ -60,7 +60,7 @@ For example username: "betatesting", password: "Aa123!".
 Here are the steps to authorize:
 
 1. Open `/api/Auth/login` endpoint and enter the following credentials:
-    - userName: "betatesting"
+    - userName: "beth"
     - password: "Aa123!".
 2. Copy the generated token.
 3. Click on the authorize button

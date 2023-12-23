@@ -155,7 +155,7 @@ namespace BusinessLayer.Services
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
-                throw new BookNotFoundException($"Order 'ID={id}' could not be found");
+                throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
             }
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();

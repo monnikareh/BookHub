@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 namespace WebAPI.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -21,7 +22,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet("GetUsers")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDetail>>> GetUsers()
         {
             try
@@ -34,7 +35,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetUserById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<UserDetail>> GetUserById(int id)
         {
             try
@@ -47,7 +48,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost("CreateUser")]
+        [HttpPost]
         public async Task<ActionResult<UserDetail>> CreateUser(UserCreate userCreate)
         {
             if (!ModelState.IsValid)
@@ -65,7 +66,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("UpdateUser/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<UserDetail>> UpdateUser(int id, UserUpdate userUpdate)
         {
             if (!ModelState.IsValid)
@@ -84,7 +85,7 @@ namespace WebAPI.Controllers
             
         }
 
-        [HttpDelete("DeleteUser/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             try
@@ -100,12 +101,13 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleUserException(Exception e)
         {
-            return e is OrderNotFoundException or UserNotFoundException
-                or BookNotFoundException
-                ? NotFound(e.Message)
-                : e is UserAlreadyExistsException
-                    ? Conflict(e.Message)
-                    : Problem($"{e}Unknown problem occured");
+            return e switch
+            {
+                OrderNotFoundException or UserNotFoundException
+                    or BookNotFoundException => NotFound(e.Message),
+                UserAlreadyExistsException => Conflict(e.Message),
+                _ => Problem($"{e}Unknown problem occured")
+            };
         }
     }
 }
