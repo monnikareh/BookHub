@@ -83,6 +83,7 @@ public class BookServiceTests
             Price = 10.99m,
             StockInStorage = 100,
             OverallRating = 50,
+            PrimaryGenre = EntityMapper.MapModelToRelated(dbContext.Genres.First()),
             Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).ToList(),
             Authors = dbContext.Genres.Select(EntityMapper.MapModelToRelated).ToList(),
         };
@@ -115,6 +116,7 @@ public class BookServiceTests
         {
             Id = bookToUpdate.Id,
             Name = "Update book name",
+            PrimaryGenre = EntityMapper.MapModelToRelated(dbContext.Genres.Last()),
             Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).Where(g => g.Id % 2 == 0).ToList(),
             Publisher = EntityMapper.MapModelToRelated(dbContext.Publishers.Last()),
             StockInStorage = 10,
