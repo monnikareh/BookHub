@@ -36,11 +36,6 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     // https://docs.microsoft.com/en-us/ef/core/modeling/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Book>()
-            .HasOne(book => book.PrimaryGenre)
-            .WithMany(genre => genre.PrimaryGenreBooks)
-            .HasForeignKey(book => book.PrimaryGenreId);
-        
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;

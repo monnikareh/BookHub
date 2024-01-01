@@ -93,16 +93,7 @@ public class BookService : IBookService
             throw new PublisherNotFoundException(
                 $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
         }
-        
-        var primaryGenre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.PrimaryGenre.Name
-                                                                              || g.Id == bookCreate.PrimaryGenre.Id);
-        
-        if (primaryGenre == null)
-        {
-            throw new GenreNotFoundException(
-                $"PrimaryGenre 'Name={bookCreate.PrimaryGenre.Name}' <OR> 'ID={bookCreate.PrimaryGenre.Id}' could not be found");
-        }
-        
+
         var genreNames = bookCreate.Genres.Select(g => g.Name).ToHashSet();
         var genreIds = bookCreate.Genres.Select(g => g.Id).ToHashSet();
         var genres = await _context.Genres.Where(g => genreNames.Contains(g.Name) || genreIds.Contains(g.Id)).ToListAsync();
@@ -132,8 +123,6 @@ public class BookService : IBookService
             Genres = genres,
             Publisher = publisher,
             PublisherId = publisher.Id,
-            PrimaryGenre = primaryGenre,
-            PrimaryGenreId = primaryGenre.Id,
             Price = bookCreate.Price,
             StockInStorage = bookCreate.StockInStorage,
             OverallRating = bookCreate.OverallRating
@@ -188,21 +177,6 @@ public class BookService : IBookService
             book.Publisher = publisher;
             book.PublisherId = publisher.Id;
         }
-        
-        if (bookDetail.PrimaryGenre.Name != "string")
-        {
-            var genre = await _context.Genres.FirstOrDefaultAsync(p =>
-                p.Name == bookDetail.PrimaryGenre.Name || p.Id == bookDetail.PrimaryGenre.Id);
-            if (genre == null)
-            {
-                throw new GenreNotFoundException(
-                    $"PrimaryGenre 'Name={bookDetail.PrimaryGenre.Name}' <OR> 'ID={bookDetail.PrimaryGenre.Id}' could not be found");
-            }
-
-            book.PrimaryGenre = genre;
-            book.PrimaryGenreId = genre.Id;
-        }
-
 
         book.Price = bookDetail.Price;
         book.StockInStorage = bookDetail.StockInStorage;
