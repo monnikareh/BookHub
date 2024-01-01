@@ -1,3 +1,5 @@
+using DataAccessLayer.Entities;
+
 namespace BusinessLayer.Models;
 
 public class BookDetail
@@ -10,4 +12,5 @@ public class BookDetail
     public decimal Price { get; init; }
     public ICollection<ModelRelated> Authors { get; init; } = new List<ModelRelated>();
     public int OverallRating { get; init; }
+    public required ModelRelated PrimaryGenre{ get; set; }
 }

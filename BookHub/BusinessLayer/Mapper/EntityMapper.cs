@@ -50,6 +50,7 @@ public static class EntityMapper
         {
             Id = book.Id,
             Name = book.Name,
+            PrimaryGenre = MapModelToRelated(book.PrimaryGenre),
             Genres = book.Genres.Select(MapModelToRelated).ToList(),
             Publisher = MapModelToRelated(book.Publisher),
             Authors = book.Authors.Select(MapModelToRelated).ToList(),
