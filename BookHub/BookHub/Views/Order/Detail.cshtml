@@ -13,32 +13,32 @@
     <p>ID: @Model.Id</p>
     <p>Total Price: @Model.TotalPrice €</p>
     <p>Order status:
-    @if (Model.PaymentStatus == PaymentStatus.Unpaid)
+    @if (Model.OrderStatus == OrderStatus.Unpaid)
     {
         
-            <span class="badge btn-danger">@Model.PaymentStatus</span>
+            <span class="badge btn-danger">@Model.OrderStatus</span>
     }
-    else if (Model.PaymentStatus == PaymentStatus.Paid)
+    else if (Model.OrderStatus == OrderStatus.Paid)
     {
         
-            <span class="badge btn-warning">@Model.PaymentStatus</span>
+            <span class="badge btn-warning">@Model.OrderStatus</span>
     }
-    else if (Model.PaymentStatus == PaymentStatus.AwaitingShipment)
+    else if (Model.OrderStatus == OrderStatus.AwaitingShipment)
     {
         
-        <span class="badge btn-info">@Model.PaymentStatus</span>
-        
-    }
-    else if (Model.PaymentStatus == PaymentStatus.Shipped)
-    {
-        
-        <span class="badge btn-primary">@Model.PaymentStatus</span>
+        <span class="badge btn-info">@Model.OrderStatus</span>
         
     }
-    else if (Model.PaymentStatus == PaymentStatus.Delivered)
+    else if (Model.OrderStatus == OrderStatus.Shipped)
     {
         
-        <span class="badge btn-success">@Model.PaymentStatus</span>
+        <span class="badge btn-primary">@Model.OrderStatus</span>
+        
+    }
+    else if (Model.OrderStatus == OrderStatus.Delivered)
+    {
+        
+        <span class="badge btn-success">@Model.OrderStatus</span>
         
     }
     </p>

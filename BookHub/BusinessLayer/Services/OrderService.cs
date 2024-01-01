@@ -25,7 +25,7 @@ namespace BusinessLayer.Services
 
         public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
             DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName,
-            PaymentStatus? paymentStatus)
+            OrderStatus? orderStatus)
         {
             var orders = _context.Orders
                 .Include(o => o.User)
@@ -54,9 +54,9 @@ namespace BusinessLayer.Services
                 orders = orders.Where(o => o.Date <= endDate.Value);
             }
 
-            if (paymentStatus.HasValue)
+            if (orderStatus.HasValue)
             {
-                orders = orders.Where(ps => ps.PaymentStatus == paymentStatus);
+                orders = orders.Where(ps => ps.OrderStatus == orderStatus);
             }
 
             if (totalPrice.HasValue)
@@ -123,7 +123,7 @@ namespace BusinessLayer.Services
             }
 
             order.Books.AddRange(books);
-            order.PaymentStatus = PaymentStatus.Unpaid;
+            order.OrderStatus = OrderStatus.Unpaid;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return EntityMapper.MapOrderToOrderDetail(order);
@@ -140,7 +140,7 @@ namespace BusinessLayer.Services
             }
 
             order.TotalPrice = orderUpdate.TotalPrice;
-            order.PaymentStatus = orderUpdate.PaymentStatus;
+            order.OrderStatus = orderUpdate.OrderStatus;
 
             if (orderUpdate.Books.Count != 0)
             {
@@ -200,7 +200,7 @@ namespace BusinessLayer.Services
                 return ErrorMessages.OrderNotFound(id);
             }
 
-            order.PaymentStatus = PaymentStatus.Paid;
+            order.OrderStatus = OrderStatus.Paid;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -223,7 +223,7 @@ namespace BusinessLayer.Services
                 .Orders
                 .Include(order => order.Books)
                 .FirstOrDefaultAsync(o =>
-                    o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+                    o.UserId == userId && o.OrderStatus == OrderStatus.Unpaid);
 
             if (order == null)
             {
@@ -232,7 +232,7 @@ namespace BusinessLayer.Services
                     UserId = userId,
                     User = user,
                     TotalPrice = book.Price,
-                    PaymentStatus = PaymentStatus.Unpaid,
+                    OrderStatus = OrderStatus.Unpaid,
                     Date = DateTime.Now,
                 };
                 _context.Orders.Add(order);
@@ -284,11 +284,11 @@ namespace BusinessLayer.Services
                 .Orders
                 .Include(order => order.Books)
                 .FirstOrDefaultAsync(o =>
-                    o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+                    o.UserId == userId && o.OrderStatus == OrderStatus.Unpaid);
 
             if (order == null)
             {
-                return ErrorMessages.OrderNotFound(userId, PaymentStatus.Unpaid);
+                return ErrorMessages.OrderNotFound(userId, OrderStatus.Unpaid);
             }
             order.TotalPrice -= book.Price;
             var orderItem =
@@ -315,7 +315,7 @@ namespace BusinessLayer.Services
                 .Include(o => o.User)
                 .Include(o => o.Books)
                 .Include(o => o.BookOrders)
-                .FirstOrDefaultAsync(o => o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+                .FirstOrDefaultAsync(o => o.UserId == userId && o.OrderStatus == OrderStatus.Unpaid);
             return order;
         }
 

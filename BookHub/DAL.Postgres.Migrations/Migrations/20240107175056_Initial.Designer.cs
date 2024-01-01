@@ -4199,7 +4199,7 @@ namespace DAL.Postgres.Migrations.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("PaymentStatus")
+                    b.Property<int>("OrderStatus")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("TotalPrice")
@@ -4219,7 +4219,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 1,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8826),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 35.48m,
                             UserId = 1
                         },
@@ -4227,7 +4227,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 2,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8957),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 14.82m,
                             UserId = 1
                         },
@@ -4235,7 +4235,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 3,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8961),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 54.61m,
                             UserId = 1
                         },
@@ -4243,7 +4243,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 4,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8964),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 8.97m,
                             UserId = 1
                         },
@@ -4251,7 +4251,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 5,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8975),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 22.85m,
                             UserId = 1
                         },
@@ -4259,7 +4259,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 6,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8979),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 34.8m,
                             UserId = 1
                         },
@@ -4267,7 +4267,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 7,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8980),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 21.73m,
                             UserId = 1
                         },
@@ -4275,7 +4275,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 8,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8983),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 7.93m,
                             UserId = 1
                         },
@@ -4283,7 +4283,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 9,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8985),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 39.9m,
                             UserId = 1
                         },
@@ -4291,7 +4291,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 10,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9023),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 8.51m,
                             UserId = 2
                         },
@@ -4299,7 +4299,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 11,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9025),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 36.52m,
                             UserId = 2
                         },
@@ -4307,7 +4307,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 12,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9027),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 26.7m,
                             UserId = 2
                         },
@@ -4315,7 +4315,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 13,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9029),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 45.08m,
                             UserId = 2
                         },
@@ -4323,7 +4323,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 14,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9031),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 14m,
                             UserId = 2
                         },
@@ -4331,7 +4331,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 15,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9033),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 19.67m,
                             UserId = 2
                         },
@@ -4339,7 +4339,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 16,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9054),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 45.84m,
                             UserId = 2
                         },
@@ -4347,7 +4347,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 17,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9056),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 23.65m,
                             UserId = 2
                         },
@@ -4355,7 +4355,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 18,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9059),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 19.8m,
                             UserId = 2
                         },
@@ -4363,7 +4363,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 19,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9061),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 40.12m,
                             UserId = 2
                         },
@@ -4371,7 +4371,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 20,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9063),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 5.32m,
                             UserId = 3
                         },
@@ -4379,7 +4379,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 21,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9065),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 17.59m,
                             UserId = 3
                         },
@@ -4387,7 +4387,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 22,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9067),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 23.41m,
                             UserId = 3
                         },
@@ -4395,7 +4395,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 23,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9068),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 14.45m,
                             UserId = 3
                         },
@@ -4403,7 +4403,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 24,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9070),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 37.86m,
                             UserId = 3
                         },
@@ -4411,7 +4411,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 25,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9072),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 28.8m,
                             UserId = 3
                         },
@@ -4419,7 +4419,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 26,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9074),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 40.79m,
                             UserId = 3
                         },
@@ -4427,7 +4427,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 27,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9076),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 45.32m,
                             UserId = 3
                         },
@@ -4435,7 +4435,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 28,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9078),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 17.94m,
                             UserId = 3
                         },
@@ -4443,7 +4443,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 29,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9080),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 15.97m,
                             UserId = 3
                         },
@@ -4451,7 +4451,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 30,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9093),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 54.59m,
                             UserId = 4
                         },
@@ -4459,7 +4459,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 31,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9154),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 12.64m,
                             UserId = 4
                         },
@@ -4467,7 +4467,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 32,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9156),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 40.91m,
                             UserId = 4
                         },
@@ -4475,7 +4475,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 33,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9158),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 15.09m,
                             UserId = 4
                         },
@@ -4483,7 +4483,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 34,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9161),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 32.23m,
                             UserId = 4
                         },
@@ -4491,7 +4491,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 35,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9163),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 9.76m,
                             UserId = 4
                         },
@@ -4499,7 +4499,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 36,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9165),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 21.39m,
                             UserId = 4
                         },
@@ -4507,7 +4507,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 37,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9167),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 21.53m,
                             UserId = 4
                         },
@@ -4515,7 +4515,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 38,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9169),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 42.64m,
                             UserId = 4
                         },
@@ -4523,7 +4523,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 39,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9170),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 38.95m,
                             UserId = 4
                         },
@@ -4531,7 +4531,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 40,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9172),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 21.33m,
                             UserId = 5
                         },
@@ -4539,7 +4539,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 41,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9174),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 36.96m,
                             UserId = 5
                         },
@@ -4547,7 +4547,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 42,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9176),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 9.4m,
                             UserId = 5
                         },
@@ -4555,7 +4555,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 43,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9178),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 6.26m,
                             UserId = 5
                         },
@@ -4563,7 +4563,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 44,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9179),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 50.65m,
                             UserId = 5
                         },
@@ -4571,7 +4571,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 45,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9182),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 34.61m,
                             UserId = 5
                         },
@@ -4579,7 +4579,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 46,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9183),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 53.25m,
                             UserId = 5
                         },
@@ -4587,7 +4587,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 47,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9185),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 49.62m,
                             UserId = 5
                         },
@@ -4595,7 +4595,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 48,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9187),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 17.46m,
                             UserId = 5
                         },
@@ -4603,7 +4603,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 49,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9189),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 35.51m,
                             UserId = 5
                         },
@@ -4611,7 +4611,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 50,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9191),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 49.13m,
                             UserId = 6
                         },
@@ -4619,7 +4619,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 51,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9192),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 45.44m,
                             UserId = 6
                         },
@@ -4627,7 +4627,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 52,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9195),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 38.17m,
                             UserId = 6
                         },
@@ -4635,7 +4635,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 53,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9197),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 50.12m,
                             UserId = 6
                         },
@@ -4643,7 +4643,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 54,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9198),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 18.21m,
                             UserId = 6
                         },
@@ -4651,7 +4651,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 55,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9200),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 31.14m,
                             UserId = 6
                         },
@@ -4659,7 +4659,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 56,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9202),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 24.99m,
                             UserId = 6
                         },
@@ -4667,7 +4667,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 57,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9204),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 33.65m,
                             UserId = 6
                         },
@@ -4675,7 +4675,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 58,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9206),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 25.9m,
                             UserId = 6
                         },
@@ -4683,7 +4683,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 59,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9207),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 13.4m,
                             UserId = 6
                         },
@@ -4691,7 +4691,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 60,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9299),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 33.9m,
                             UserId = 7
                         },
@@ -4699,7 +4699,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 61,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9302),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 32.03m,
                             UserId = 7
                         },
@@ -4707,7 +4707,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 62,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9303),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 24.07m,
                             UserId = 7
                         },
@@ -4715,7 +4715,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 63,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9305),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 31.35m,
                             UserId = 7
                         },
@@ -4723,7 +4723,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 64,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9307),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 38.34m,
                             UserId = 7
                         },
@@ -4731,7 +4731,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 65,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9309),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 10.71m,
                             UserId = 7
                         },
@@ -4739,7 +4739,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 66,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9311),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 11.93m,
                             UserId = 7
                         },
@@ -4747,7 +4747,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 67,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9313),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 26.62m,
                             UserId = 7
                         },
@@ -4755,7 +4755,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 68,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9315),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 52.29m,
                             UserId = 7
                         },
@@ -4763,7 +4763,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 69,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9317),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 10.54m,
                             UserId = 7
                         },
@@ -4771,7 +4771,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 70,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9319),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 25.57m,
                             UserId = 8
                         },
@@ -4779,7 +4779,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 71,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9320),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 25.69m,
                             UserId = 8
                         },
@@ -4787,7 +4787,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 72,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9322),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 8.71m,
                             UserId = 8
                         },
@@ -4795,7 +4795,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 73,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9324),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 30m,
                             UserId = 8
                         },
@@ -4803,7 +4803,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 74,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9326),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 37.02m,
                             UserId = 8
                         },
@@ -4811,7 +4811,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 75,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9328),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 44.88m,
                             UserId = 8
                         },
@@ -4819,7 +4819,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 76,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9330),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 43.21m,
                             UserId = 8
                         },
@@ -4827,7 +4827,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 77,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9331),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 50.51m,
                             UserId = 8
                         },
@@ -4835,7 +4835,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 78,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9333),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 19.18m,
                             UserId = 8
                         },
@@ -4843,7 +4843,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 79,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9335),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 25.45m,
                             UserId = 8
                         },
@@ -4851,7 +4851,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 80,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9337),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 47.32m,
                             UserId = 9
                         },
@@ -4859,7 +4859,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 81,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9339),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 52.17m,
                             UserId = 9
                         },
@@ -4867,7 +4867,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 82,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9341),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 7.31m,
                             UserId = 9
                         },
@@ -4875,7 +4875,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 83,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9343),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 32.33m,
                             UserId = 9
                         },
@@ -4883,7 +4883,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 84,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9344),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 23.37m,
                             UserId = 9
                         },
@@ -4891,7 +4891,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 85,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9346),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 6.98m,
                             UserId = 9
                         },
@@ -4899,7 +4899,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 86,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9348),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 20.37m,
                             UserId = 9
                         },
@@ -4907,7 +4907,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 87,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9350),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 15.19m,
                             UserId = 9
                         },
@@ -4915,7 +4915,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 88,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9352),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 16.08m,
                             UserId = 9
                         },
@@ -4923,7 +4923,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 89,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9354),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 33.1m,
                             UserId = 9
                         },
@@ -4931,7 +4931,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 90,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9356),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 36.97m,
                             UserId = 10
                         },
@@ -4939,7 +4939,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 91,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9357),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 23.24m,
                             UserId = 10
                         },
@@ -4947,7 +4947,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 92,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9359),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 32.78m,
                             UserId = 10
                         },
@@ -4955,7 +4955,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 93,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9361),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 28.18m,
                             UserId = 10
                         },
@@ -4963,7 +4963,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 94,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9363),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 9.61m,
                             UserId = 10
                         },
@@ -4971,7 +4971,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 95,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9365),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 50.78m,
                             UserId = 10
                         },
@@ -4979,7 +4979,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 96,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9367),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 17.04m,
                             UserId = 10
                         },
@@ -4987,7 +4987,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 97,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9369),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 7.53m,
                             UserId = 10
                         },
@@ -4995,7 +4995,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 98,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9370),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 50.85m,
                             UserId = 10
                         },
@@ -5003,7 +5003,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 99,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9372),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 7.46m,
                             UserId = 10
                         },
@@ -5011,7 +5011,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 100,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9374),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 49.77m,
                             UserId = 11
                         },
@@ -5019,7 +5019,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 101,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9376),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 9.42m,
                             UserId = 11
                         },
@@ -5027,7 +5027,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 102,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9378),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 30.63m,
                             UserId = 11
                         },
@@ -5035,7 +5035,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 103,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9380),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 23.51m,
                             UserId = 11
                         },
@@ -5043,7 +5043,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 104,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9381),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 24.89m,
                             UserId = 11
                         },
@@ -5051,7 +5051,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 105,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9383),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 29.74m,
                             UserId = 11
                         },
@@ -5059,7 +5059,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 106,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9385),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 44.66m,
                             UserId = 11
                         },
@@ -5067,7 +5067,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 107,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9387),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 14.69m,
                             UserId = 11
                         },
@@ -5075,7 +5075,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 108,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9388),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 39.21m,
                             UserId = 11
                         },
@@ -5083,7 +5083,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 109,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9440),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 12.24m,
                             UserId = 11
                         },
@@ -5091,7 +5091,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 110,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9442),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 10.93m,
                             UserId = 12
                         },
@@ -5099,7 +5099,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 111,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9444),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 13.49m,
                             UserId = 12
                         },
@@ -5107,7 +5107,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 112,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9446),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 15.06m,
                             UserId = 12
                         },
@@ -5115,7 +5115,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 113,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9448),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 39.35m,
                             UserId = 12
                         },
@@ -5123,7 +5123,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 114,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9450),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 53.43m,
                             UserId = 12
                         },
@@ -5131,7 +5131,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 115,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9451),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 21.27m,
                             UserId = 12
                         },
@@ -5139,7 +5139,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 116,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9453),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 10.84m,
                             UserId = 12
                         },
@@ -5147,7 +5147,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 117,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9455),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 46.88m,
                             UserId = 12
                         },
@@ -5155,7 +5155,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 118,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9457),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 47.35m,
                             UserId = 12
                         },
@@ -5163,7 +5163,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 119,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9459),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 6.19m,
                             UserId = 12
                         },
@@ -5171,7 +5171,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 120,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9461),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 14.1m,
                             UserId = 13
                         },
@@ -5179,7 +5179,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 121,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9462),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 16.49m,
                             UserId = 13
                         },
@@ -5187,7 +5187,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 122,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9464),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 32.38m,
                             UserId = 13
                         },
@@ -5195,7 +5195,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 123,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9466),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 35.64m,
                             UserId = 13
                         },
@@ -5203,7 +5203,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 124,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9468),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 25.24m,
                             UserId = 13
                         },
@@ -5211,7 +5211,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 125,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9470),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 16.01m,
                             UserId = 13
                         },
@@ -5219,7 +5219,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 126,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9471),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 22.71m,
                             UserId = 13
                         },
@@ -5227,7 +5227,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 127,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9473),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 27.51m,
                             UserId = 13
                         },
@@ -5235,7 +5235,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 128,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9475),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 37.59m,
                             UserId = 13
                         },
@@ -5243,7 +5243,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 129,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9477),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 17.27m,
                             UserId = 13
                         },
@@ -5251,7 +5251,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 130,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9480),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 26.74m,
                             UserId = 14
                         },
@@ -5259,7 +5259,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 131,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9481),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 46.59m,
                             UserId = 14
                         },
@@ -5267,7 +5267,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 132,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9483),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 51.21m,
                             UserId = 14
                         },
@@ -5275,7 +5275,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 133,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9485),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 33.73m,
                             UserId = 14
                         },
@@ -5283,7 +5283,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 134,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9487),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 6.96m,
                             UserId = 14
                         },
@@ -5291,7 +5291,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 135,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9488),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 38.47m,
                             UserId = 14
                         },
@@ -5299,7 +5299,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 136,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9490),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 38.89m,
                             UserId = 14
                         },
@@ -5307,7 +5307,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 137,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9492),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 34.3m,
                             UserId = 14
                         },
@@ -5315,7 +5315,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 138,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9494),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 14.38m,
                             UserId = 14
                         },
@@ -5323,7 +5323,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 139,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9496),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 16.22m,
                             UserId = 14
                         },
@@ -5331,7 +5331,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 140,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9498),
-                            PaymentStatus = 2,
+                            OrderStatus = 2,
                             TotalPrice = 53.61m,
                             UserId = 15
                         },
@@ -5339,7 +5339,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 141,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9500),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 11.23m,
                             UserId = 15
                         },
@@ -5347,7 +5347,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 142,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9502),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 6.38m,
                             UserId = 15
                         },
@@ -5355,7 +5355,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 143,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9504),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 37.82m,
                             UserId = 15
                         },
@@ -5363,7 +5363,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 144,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9506),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 10.59m,
                             UserId = 15
                         },
@@ -5371,7 +5371,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 145,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9508),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 7.99m,
                             UserId = 15
                         },
@@ -5379,7 +5379,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 146,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9509),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 5.15m,
                             UserId = 15
                         },
@@ -5387,7 +5387,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 147,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9511),
-                            PaymentStatus = 1,
+                            OrderStatus = 1,
                             TotalPrice = 15.19m,
                             UserId = 15
                         },
@@ -5395,7 +5395,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 148,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9513),
-                            PaymentStatus = 3,
+                            OrderStatus = 3,
                             TotalPrice = 5.73m,
                             UserId = 15
                         },
@@ -5403,7 +5403,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 149,
                             Date = new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(9515),
-                            PaymentStatus = 4,
+                            OrderStatus = 4,
                             TotalPrice = 25.52m,
                             UserId = 15
                         });

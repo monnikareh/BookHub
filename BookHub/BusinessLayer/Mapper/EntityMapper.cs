@@ -86,7 +86,7 @@ public static class EntityMapper
             Id = order.Id,
             User = MapModelToRelated(order.User),
             TotalPrice = order.TotalPrice,
-            PaymentStatus = order.PaymentStatus,
+            OrderStatus = order.OrderStatus,
             Date = order.Date,
             Books = order.Books.Select(MapModelToRelated).ToList(),
             OrderItems = order.BookOrders.Where(bo => bo.OrderId == order.Id).Select(MapBookOrderToOrderItem).ToList()

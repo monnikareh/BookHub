@@ -18,7 +18,7 @@
         </div>
         
         <div class="col-auto">
-            @if (Model.PaymentStatus == PaymentStatus.Unpaid)
+            @if (Model.OrderStatus == OrderStatus.Unpaid)
                 {
                     <div>@Html.ActionLink("Pay", "Pay", new { id = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
                 }

@@ -209,7 +209,7 @@ namespace DAL.Postgres.Migrations.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    PaymentStatus = table.Column<int>(type: "integer", nullable: false),
+                    OrderStatus = table.Column<int>(type: "integer", nullable: false),
                     Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
@@ -547,7 +547,7 @@ namespace DAL.Postgres.Migrations.Migrations
 
             migrationBuilder.InsertData(
                 table: "Orders",
-                columns: new[] { "Id", "Date", "PaymentStatus", "TotalPrice", "UserId" },
+                columns: new[] { "Id", "Date", "OrderStatus", "TotalPrice", "UserId" },
                 values: new object[,]
                 {
                     { 1, new DateTime(2024, 1, 7, 18, 50, 56, 49, DateTimeKind.Local).AddTicks(8826), 3, 35.48m, 1 },

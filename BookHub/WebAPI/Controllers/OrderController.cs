@@ -21,11 +21,11 @@ namespace WebAPI.Controllers
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName, PaymentStatus? paymentStatus)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName, OrderStatus? orderStatus)
         {
             try
             {
-                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName, paymentStatus));
+                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName, orderStatus));
             }
             catch (Exception e)
             {

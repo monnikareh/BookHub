@@ -1,6 +1,6 @@
 namespace DataAccessLayer.Entities;
 
-public enum PaymentStatus
+public enum OrderStatus
 {
     Unpaid,
     Paid,
