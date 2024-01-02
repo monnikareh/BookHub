@@ -1,23 +1,28 @@
 ﻿using System.Diagnostics;
 using BookHub.Models;
+using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
 
-public class HomeController : Controller
+public class PublisherController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    private readonly IPublisherService _publisherService;
+    
+    public PublisherController(ILogger<HomeController> logger, IPublisherService publisherService)
     {
         _logger = logger;
+        _publisherService = publisherService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();        
+        var publishers = await _publisherService.GetPublishersAsync(null);
+        return View(publishers);    
     }
+    
 
     public IActionResult Privacy()
     {
