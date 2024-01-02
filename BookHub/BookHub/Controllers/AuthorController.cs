@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using BookHub.Models;
+using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -48,20 +49,28 @@ public class AuthorController : Controller
         await _authorService.CreateAuthorAsync(model);
         return RedirectToAction("Index");
     }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit(int id, IFormCollection collection)
+    
+    [HttpGet("edit/{id:int}")]
+    public async Task<IActionResult> Edit(int id)
     {
-        try
+        var author = await _authorService.GetAuthorByIdAsync(id);
+        return View(new AuthorUpdate
         {
-            // _authorService.UpdateAuthorAsync(id)
-            return RedirectToAction(nameof(Index));
-        }
-        catch
+            Name = author.Name,
+            Books = author.Books
+        });
+    }
+
+    
+    [HttpPost("edit/{id:int}")]
+    public async Task<IActionResult> Edit(int id, AuthorUpdate model)
+    {
+        if (!ModelState.IsValid)
         {
-            return View();
+            return View(model);
         }
+        await _authorService.UpdateAuthorAsync(id, model);
+        return RedirectToAction("Index");
     }
     
     public async Task<ActionResult> Delete(int id)
