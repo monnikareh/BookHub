@@ -2,6 +2,7 @@
 using BookHub.Models;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
@@ -35,12 +36,14 @@ public class AuthorController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
     
+    [Authorize]
     public ActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<ActionResult> Create(AuthorCreate model)
     {
@@ -77,4 +80,15 @@ public class AuthorController : Controller
         await _authorService.DeleteAuthorAsync(id);
         return RedirectToAction("Index");
     }
+    
+    // posts/detail/id
+    //       detail?id=...
+    [HttpGet("detail/{id:int}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Detail(int id)
+    {
+        var author = await _authorService.GetAuthorByIdAsync(id);
+        return View(author);
+    }
+    
 }
