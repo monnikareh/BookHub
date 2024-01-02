@@ -36,15 +36,15 @@ public class AuthorController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
     
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public ActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
-    [Authorize]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Create(AuthorCreate model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -52,6 +52,7 @@ public class AuthorController : Controller
         return RedirectToAction("Index");
     }
     
+    [Authorize(Roles = "Admin")]
     [HttpGet("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
@@ -63,7 +64,7 @@ public class AuthorController : Controller
         });
     }
 
-    
+    [Authorize(Roles = "Admin")]
     [HttpPost("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id, AuthorUpdate model)
     {
@@ -75,16 +76,15 @@ public class AuthorController : Controller
         return RedirectToAction("Index");
     }
     
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(int id)
     {
         await _authorService.DeleteAuthorAsync(id);
         return RedirectToAction("Index");
     }
     
-    // posts/detail/id
-    //       detail?id=...
-    [HttpGet("detail/{id:int}")]
     [AllowAnonymous]
+    [HttpGet("detail/{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
         var author = await _authorService.GetAuthorByIdAsync(id);
