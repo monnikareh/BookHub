@@ -34,4 +34,39 @@ public class AuthorController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+    
+    public ActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Create(AuthorCreate model)
+    {
+        if (!ModelState.IsValid) return View(model);
+        await _authorService.CreateAuthorAsync(model);
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Edit(int id, IFormCollection collection)
+    {
+        try
+        {
+            // _authorService.UpdateAuthorAsync(id)
+            return RedirectToAction(nameof(Index));
+        }
+        catch
+        {
+            return View();
+        }
+    }
+    
+    public async Task<ActionResult> Delete(int id)
+    {
+        await _authorService.DeleteAuthorAsync(id);
+        return RedirectToAction("Index");
+    }
 }
