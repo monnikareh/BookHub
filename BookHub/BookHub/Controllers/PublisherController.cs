@@ -7,10 +7,10 @@ namespace BookHub.Controllers;
 
 public class PublisherController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<PublisherController> _logger;
     private readonly IPublisherService _publisherService;
     
-    public PublisherController(ILogger<HomeController> logger, IPublisherService publisherService)
+    public PublisherController(ILogger<PublisherController> logger, IPublisherService publisherService)
     {
         _logger = logger;
         _publisherService = publisherService;
@@ -22,11 +22,6 @@ public class PublisherController : Controller
         return View(publishers);    
     }
     
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

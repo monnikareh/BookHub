@@ -9,10 +9,10 @@ namespace BookHub.Controllers;
 
 public class AuthorController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<AuthorController> _logger;
     private readonly IAuthorService _authorService;
     
-    public AuthorController(ILogger<HomeController> logger, IAuthorService authorService)
+    public AuthorController(ILogger<AuthorController> logger, IAuthorService authorService)
     {
         _logger = logger;
         _authorService = authorService;
@@ -25,11 +25,6 @@ public class AuthorController : Controller
     }
     
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
@@ -37,7 +32,7 @@ public class AuthorController : Controller
     }
     
     [Authorize(Roles = "Admin")]
-    public ActionResult Create()
+    public IActionResult Create()
     {
         return View();
     }
@@ -45,7 +40,7 @@ public class AuthorController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult> Create(AuthorCreate model)
+    public async Task<IActionResult> Create(AuthorCreate model)
     {
         if (!ModelState.IsValid) return View(model);
         await _authorService.CreateAuthorAsync(model);

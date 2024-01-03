@@ -1,16 +1,17 @@
 ﻿using System.Diagnostics;
 using BookHub.Models;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
 
 public class GenreController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<GenreController> _logger;
     private readonly IGenreService _genreService;
     
-    public GenreController(ILogger<HomeController> logger, IGenreService genreService)
+    public GenreController(ILogger<GenreController> logger, IGenreService genreService)
     {
         _logger = logger;
         _genreService = genreService;
@@ -22,11 +23,6 @@ public class GenreController : Controller
         return View(genres);    
     }
     
-
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
