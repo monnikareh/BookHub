@@ -1,12 +1,18 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 @model System.Collections.Generic.IEnumerable<BusinessLayer.Models.AuthorDetail>
 @{
     ViewData["Title"] = "Authors";
 }
 
 <h1>Authors</h1>
-<p>
-    @Html.ActionLink("Create", "Create", new {}, new { @class = "btn btn-sm btn-success" })
-</p>
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create", "Create", new { }, new { @class = "btn btn-sm btn-success" })
+    </p>
+}
 
 <table class="table">
     <thead>
@@ -27,12 +33,15 @@
             <td>
                 @Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id } ,new { @class = "btn btn-sm btn-danger" })
-            </td>
+            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
+                </td>
+            }
         </tr>
     }
     </tbody>
