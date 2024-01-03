@@ -541,7 +541,7 @@ public static class DataSeeder
             {
                 Id = i + 1,
                 Name = names[i],
-                PublisherId = 1,
+                PublisherId = random.Next(1,15),
                 PrimaryGenreId = random.Next(1,20),
                 StockInStorage = random.Next(1, 50),
                 Price = randomPrice,
