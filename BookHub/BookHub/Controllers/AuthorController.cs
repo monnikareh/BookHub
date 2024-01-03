@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
 
+[Route("[controller]/[action]")]
 public class AuthorController : Controller
 {
     private readonly ILogger<AuthorController> _logger;
@@ -48,7 +49,7 @@ public class AuthorController : Controller
     }
     
     [Authorize(Roles = "Admin")]
-    [HttpGet("edit/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
         var author = await _authorService.GetAuthorByIdAsync(id);
@@ -60,7 +61,7 @@ public class AuthorController : Controller
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("edit/{id:int}")]
+    [HttpPost("{id:int}")]
     public async Task<IActionResult> Edit(int id, AuthorUpdate model)
     {
         if (!ModelState.IsValid)
@@ -79,7 +80,7 @@ public class AuthorController : Controller
     }
     
     [AllowAnonymous]
-    [HttpGet("detail/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
         var author = await _authorService.GetAuthorByIdAsync(id);

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
 
+[Route("[controller]/[action]")]
 public class GenreController : Controller
 {
     private readonly ILogger<GenreController> _logger;
