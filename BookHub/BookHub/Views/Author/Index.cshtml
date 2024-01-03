@@ -1,6 +1,5 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager
 @model System.Collections.Generic.IEnumerable<BusinessLayer.Models.AuthorDetail>
 @{
     ViewData["Title"] = "Authors";
@@ -17,31 +16,25 @@
 <table class="table">
     <thead>
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
     </tr>
     </thead>
     <tbody>
     @foreach (var item in Model)
     {
         <tr>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                 <div class="btn-group" role="group" aria-label="Author Actions">
+                    <div>@Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })</div>
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
+                        <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })</div>
+                    }
+                </div>
+
             </td>
-            <td>
-                @Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })
-            </td>
-            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-            {
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
-                </td>
-                <td>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
-                </td>
-            }
         </tr>
     }
     </tbody>
