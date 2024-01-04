@@ -25,12 +25,6 @@ public class AuthorController : Controller
         return View(authors);    
     }
     
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
     
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
@@ -56,7 +50,6 @@ public class AuthorController : Controller
         return View(new AuthorUpdate
         {
             Name = author.Name,
-            Books = author.Books
         });
     }
 
@@ -87,4 +80,10 @@ public class AuthorController : Controller
         return View(author);
     }
     
+    
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
 }
