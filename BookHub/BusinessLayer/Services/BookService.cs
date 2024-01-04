@@ -25,6 +25,7 @@ public class BookService : IBookService
         int? publisherId, string? publisherName, int? authorId, string? authorName)
     {
         var books = _context.Books
+            .Include(pg => pg.PrimaryGenre)
             .Include(g => g.Genres)
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
@@ -66,6 +67,7 @@ public class BookService : IBookService
     {
         var book = await _context
             .Books
+            .Include(pg => pg.PrimaryGenre)
             .Include(g => g.Genres)
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
@@ -146,6 +148,7 @@ public class BookService : IBookService
     public async Task<BookDetail> UpdateBookAsync(int id, BookCreate bookUpdate)
     {
         var book = await _context.Books
+            .Include(pg => pg.PrimaryGenre)
             .Include(b => b.Genres)
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
