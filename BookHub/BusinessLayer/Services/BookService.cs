@@ -143,7 +143,7 @@ public class BookService : IBookService
         return EntityMapper.MapBookToBookDetail(book);
     }
 
-    public async Task<BookDetail> UpdateBookAsync(int id, BookDetail bookDetail)
+    public async Task<BookDetail> UpdateBookAsync(int id, BookCreate bookUpdate)
     {
         var book = await _context.Books
             .Include(b => b.Genres)
@@ -156,18 +156,18 @@ public class BookService : IBookService
             throw new BookNotFoundException($"Book 'ID={id}' could not be found");
         }
 
-        book.Name = bookDetail.Name;
+        book.Name = bookUpdate.Name;
 
-        if (bookDetail.Genres.Count > 0)
+        if (bookUpdate.Genres.Count > 0)
         {
-            var genreNames = bookDetail.Genres.Select(g => g.Name).ToHashSet();
-            var genreIds = bookDetail.Genres.Select(g => g.Id).ToHashSet();
+            var genreNames = bookUpdate.Genres.Select(g => g.Name).ToHashSet();
+            var genreIds = bookUpdate.Genres.Select(g => g.Id).ToHashSet();
 
             var genres = await _context.Genres
                 .Where(g => genreNames.Contains(g.Name) || genreIds.Contains(g.Id))
                 .ToListAsync();
 
-            if (genres.Count != bookDetail.Genres.Count)
+            if (genres.Count != bookUpdate.Genres.Count)
             {
                 throw new GenreNotFoundException("One or more genres could not be found");
             }
@@ -175,28 +175,28 @@ public class BookService : IBookService
             book.Genres.AddRange(genres);
         }
 
-        if (bookDetail.Publisher.Name != "string")
+        if (bookUpdate.Publisher.Name != "string")
         {
             var publisher = await _context.Publishers.FirstOrDefaultAsync(p =>
-                p.Name == bookDetail.Publisher.Name || p.Id == bookDetail.Publisher.Id);
+                p.Name == bookUpdate.Publisher.Name || p.Id == bookUpdate.Publisher.Id);
             if (publisher == null)
             {
                 throw new PublisherNotFoundException(
-                    $"Publisher 'Name={bookDetail.Publisher.Name}' <OR> 'ID={bookDetail.Publisher.Id}' could not be found");
+                    $"Publisher 'Name={bookUpdate.Publisher.Name}' <OR> 'ID={bookUpdate.Publisher.Id}' could not be found");
             }
 
             book.Publisher = publisher;
             book.PublisherId = publisher.Id;
         }
         
-        if (bookDetail.PrimaryGenre.Name != "string")
+        if (bookUpdate.PrimaryGenre.Name != "string")
         {
             var genre = await _context.Genres.FirstOrDefaultAsync(p =>
-                p.Name == bookDetail.PrimaryGenre.Name || p.Id == bookDetail.PrimaryGenre.Id);
+                p.Name == bookUpdate.PrimaryGenre.Name || p.Id == bookUpdate.PrimaryGenre.Id);
             if (genre == null)
             {
                 throw new GenreNotFoundException(
-                    $"PrimaryGenre 'Name={bookDetail.PrimaryGenre.Name}' <OR> 'ID={bookDetail.PrimaryGenre.Id}' could not be found");
+                    $"PrimaryGenre 'Name={bookUpdate.PrimaryGenre.Name}' <OR> 'ID={bookUpdate.PrimaryGenre.Id}' could not be found");
             }
 
             book.PrimaryGenre = genre;
@@ -204,20 +204,20 @@ public class BookService : IBookService
         }
 
 
-        book.Price = bookDetail.Price;
-        book.StockInStorage = bookDetail.StockInStorage;
-        book.OverallRating = bookDetail.OverallRating;
+        book.Price = bookUpdate.Price;
+        book.StockInStorage = bookUpdate.StockInStorage;
+        book.OverallRating = bookUpdate.OverallRating;
 
-        if (bookDetail.Authors is { Count: > 0 })
+        if (bookUpdate.Authors is { Count: > 0 })
         {
-            var authorNames = bookDetail.Authors.Select(a => a.Name).ToHashSet();
-            var authorIds = bookDetail.Authors.Select(a => a.Id).ToHashSet();
+            var authorNames = bookUpdate.Authors.Select(a => a.Name).ToHashSet();
+            var authorIds = bookUpdate.Authors.Select(a => a.Id).ToHashSet();
 
             var authors = await _context.Authors
                 .Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id))
                 .ToListAsync();
 
-            if (authors.Count != bookDetail.Authors.Count)
+            if (authors.Count != bookUpdate.Authors.Count)
             {
                 throw new AuthorNotFoundException("One or more authors could not be found");
             }

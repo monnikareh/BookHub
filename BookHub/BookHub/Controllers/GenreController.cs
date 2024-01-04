@@ -2,6 +2,7 @@
 using BookHub.Models;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,15 +48,16 @@ public class GenreController : Controller
         await _genreService.CreateGenreAsync(model);
         return RedirectToAction("Index");
     }
+
     
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
         var genre = await _genreService.GetGenreByIdAsync(id);
-        return View(new GenreCreate
+        return View(new GenreCreate()
         {
-            Name = genre.Name
+            Name = genre.Name,
         });
     }
 
@@ -82,9 +84,8 @@ public class GenreController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
-        var author = await _genreService.GetGenreByIdAsync(id);
-        return View(author);
+        var genre = await _genreService.GetGenreByIdAsync(id);
+        return View(genre);
     }
-
     
 }

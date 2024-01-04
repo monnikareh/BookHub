@@ -112,9 +112,8 @@ public class BookServiceTests
 
         var bookToUpdate = dbContext.Books.Include(book => book.Publisher).Include(book => book.Authors)
             .Include(book => book.Genres).First();
-        var bookUpdate = new BookDetail
+        var bookUpdate = new BookCreate()
         {
-            Id = bookToUpdate.Id,
             Name = "Update book name",
             PrimaryGenre = EntityMapper.MapModelToRelated(dbContext.Genres.Last()),
             Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).Where(g => g.Id % 2 == 0).ToList(),
@@ -130,7 +129,6 @@ public class BookServiceTests
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
-        Assert.Equal(bookUpdate.Id, result.Id);
         Assert.Equal(bookUpdate.Authors.Count, result.Authors.Count);
         Assert.Equal(bookUpdate.Genres.Count, result.Genres.Count);
         Assert.Equal(bookUpdate.Name, result.Name);

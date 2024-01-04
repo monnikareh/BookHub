@@ -6,12 +6,12 @@
 
 <div class="col-6">
     <h3>Books:</h3>
-    @if (Model.Books != null && Model.Books.Any())
+    @if (Model.Books.Any())
     {
         foreach (var book in Model.Books)
         {
             <div class="border-bottom mb-2">
-                <p>   @book.Name</p>
+                <a href="@Url.Action("Detail", "Book", new {id = book.Id})"><p>@book.Name</p></a>
             </div>
         }
     }

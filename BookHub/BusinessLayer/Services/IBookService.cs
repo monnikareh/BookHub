@@ -8,6 +8,6 @@ public interface IBookService
         int? publisherId, string? publisherName, int? authorId, string? authorName);
     public Task<BookDetail> GetBookByIdAsync(int id);
     public Task<BookDetail> CreateBookAsync(BookCreate bookCreate);
-    public Task<BookDetail> UpdateBookAsync(int id, BookDetail bookDetail);
+    public Task<BookDetail> UpdateBookAsync(int id, BookCreate bookUpdate);
     public Task DeleteBookAsync(int id);
 }
