@@ -82,8 +82,8 @@ public class GenreController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
-        var author = await _genreService.GetGenreByIdAsync(id);
-        return View(author);
+        var genre = await _genreService.GetGenreByIdAsync(id);
+        return View(genre);
     }
 
     
