@@ -82,8 +82,8 @@ public class PublisherController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
-        var author = await _publisherService.GetPublisherByIdAsync(id);
-        return View(author);
+        var publisher = await _publisherService.GetPublisherByIdAsync(id);
+        return View(publisher);
     }
     
 }
