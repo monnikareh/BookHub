@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBook(int id, BookDetail bookDetail)
+        public async Task<ActionResult> UpdateBook(int id, BookCreate bookUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _bookService.UpdateBookAsync(id, bookDetail));
+                return Ok(await _bookService.UpdateBookAsync(id, bookUpdate));
             }
             catch (Exception e)
             {
