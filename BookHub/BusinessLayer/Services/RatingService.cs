@@ -169,4 +169,10 @@ public class RatingService : IRatingService
         _context.Ratings.Remove(rating);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<bool> ExistRatingForUser(int userId, int bookId)
+    {
+        var ratings = await GetRatingsAsync(userId, null, bookId, null);
+        return ratings.Any();
+    }
 }

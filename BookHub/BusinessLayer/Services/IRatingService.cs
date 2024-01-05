@@ -10,4 +10,5 @@ public interface IRatingService
     Task<RatingDetail> CreateRatingAsync(RatingCreate ratingCreate);
     Task<RatingDetail> UpdateRatingAsync(int id, RatingDetail ratingDetail);
     Task DeleteRatingAsync(int id);
+    Task<bool> ExistRatingForUser(int userId, int bookId);
 }
