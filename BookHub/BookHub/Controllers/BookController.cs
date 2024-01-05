@@ -12,11 +12,13 @@ public class BookController : Controller
 {
     private readonly ILogger<BookController> _logger;
     private readonly IBookService _bookService;
-    
-    public BookController(ILogger<BookController> logger, IBookService bookService)
+    private readonly IRatingService _ratingService;
+
+    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService)
     {
         _logger = logger;
         _bookService = bookService;
+        _ratingService = ratingService;
     }
 
     public async Task<IActionResult> Index()
@@ -92,5 +94,12 @@ public class BookController : Controller
     {
         var book = await _bookService.GetBookByIdAsync(id);
         return View(book);
+    }
+    
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> ShowRatings(int id)
+    {
+        var reviews = await _ratingService.GetRatingsAsync(null, null, id, null);
+        return PartialView("_RatingsPartial", reviews);
     }
 }

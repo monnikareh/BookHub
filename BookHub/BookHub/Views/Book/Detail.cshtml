@@ -6,21 +6,16 @@
 
 <div class="col-6">
 
-    <p>
-        Publisher:
-        <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">
-            <p>@Model.Publisher.Name</p>
-        </a>
+    <p>Publisher: <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">@Model.Publisher.Name</a>
     </p>
    <p>Primary Genre: @Model.PrimaryGenre.Name</p> 
-    <p>Genres:</p>
+    <p>Genres: </p>
     @if (Model.Genres.Any())
     {
         foreach (var genre in Model.Genres)
         {
             <div class="border-bottom mb-2">
-                <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })">
-                    <p>@genre.Name</p>
+                <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })"> @genre.Name
                 </a>
             </div>
         }
@@ -42,9 +37,36 @@
     <p>Stock: @Model.StockInStorage</p>
     <p>Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price</p>
-    <h3>Ratings: PartialView to Ratings</h3>
-</div>
+     <h3>
+            <button id="showReviewsBtn" class="btn btn-primary">
+                Show all reviews
+            </button>
+        </h3>
+    
+        <div id="reviewsContainer">
+            <!-- Reviews partial view content will be loaded here -->
+        </div>
+    </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(document).ready(function () {
+            // Handle button click event
+            $('#showReviewsBtn').on('click', function () {
+                // Load reviews partial view content
+                $.ajax({
+                    url: '@Url.Action("ShowRatings", "Book", new { id = Model.Id })',
+                    type: 'GET',
+                    success: function (result) {
+                        // Display the reviews content in the 'reviewsContainer'
+                        $('#reviewsContainer').html(result);
+                    },
+                    error: function (error) {
+                        console.error('Error loading reviews: ', error);
+                    }
+                });
+            });
+        });
+    </script>
 }
