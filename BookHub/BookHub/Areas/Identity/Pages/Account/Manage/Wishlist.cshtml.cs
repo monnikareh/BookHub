@@ -36,6 +36,8 @@ namespace BookHub.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public IEnumerable<BookDetail> Wishlist { get; set; }
 
+        public User UserModel { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -43,24 +45,11 @@ namespace BookHub.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
         
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public class InputModel
-        {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
-        }
 
         private async Task LoadAsync(User user)
         {
             var wishlist = await _userService.GetBooksInWishlist(user.Id);
+            UserModel = user;
             Wishlist = wishlist;
         }
 
@@ -75,6 +64,12 @@ namespace BookHub.Areas.Identity.Pages.Account.Manage
             await LoadAsync(user);
             return Page();
         }
+        public async Task<IActionResult> OnPostDelete(int userid, int bookid)
+        {
+            await _userService.DeleteBookFromWishlist(userid, bookid);
+            return RedirectToPage("Wishlist");
+        }
+
         
     }
 }
