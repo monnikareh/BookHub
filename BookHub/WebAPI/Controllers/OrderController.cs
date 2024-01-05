@@ -1,6 +1,7 @@
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,11 @@ namespace WebAPI.Controllers
         
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName, PaymentStatus? paymentStatus)
         {
             try
             {
-                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName));
+                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName, paymentStatus));
             }
             catch (Exception e)
             {
