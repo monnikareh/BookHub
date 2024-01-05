@@ -1,0 +1,38 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model System.Collections.Generic.IEnumerable<BusinessLayer.Models.UserDetail>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Id)</th>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>@Html.DisplayNameFor(model => model.UserName)</th>
+        <th>@Html.DisplayNameFor(model => model.Email)</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Id)</td>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+            <td>
+                <div class="btn-group" role="group" aria-label="User Actions">
+                    <div style="margin-left: 10px">@Html.ActionLink("Reset Password", "ResetPassword", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
+                    <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })</div>
+                </div>
+
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

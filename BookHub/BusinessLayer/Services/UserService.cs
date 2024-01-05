@@ -168,4 +168,15 @@ public class UserService : IUserService
 
         await _userManager.DeleteAsync(user);
     }
+    
+    public async Task<(string, User user)> GetUserAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+
+        return (await _userManager.GeneratePasswordResetTokenAsync(user), user);
+    }
 }
