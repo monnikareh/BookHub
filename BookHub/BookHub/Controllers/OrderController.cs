@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using BookHub.Models;
-using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +36,8 @@ public class OrderController : Controller
     [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> Append(int userId, int bookId)
     {
-        Console.WriteLine($"{userId}, {bookId}");
-        await _orderService.AppendBook(userId, bookId);
-        return RedirectToAction("Index", "Book");
+        var res = await _orderService.AppendBook(userId, bookId);
+        return res ? RedirectToAction("Index", "Book") : Error();
     }
     //
     //

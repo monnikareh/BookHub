@@ -187,7 +187,7 @@ namespace BusinessLayer.Services
             await _context.SaveChangesAsync();
         }
         
-        public async Task AppendBook(int userId, int bookId)
+        public async Task<bool> AppendBook(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
@@ -199,7 +199,7 @@ namespace BusinessLayer.Services
             {
                 throw new BookNotFoundException($"Book 'ID={bookId}' could not be found");
             }
-            var order = await _context.Orders.FirstOrDefaultAsync(o =>
+            var order = await _context.Orders.Include(order => order.Books).FirstOrDefaultAsync(o =>
                 o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
             
             if (order == null)
@@ -217,10 +217,15 @@ namespace BusinessLayer.Services
             }
             else
             {
+                if (order.Books.Contains(book))
+                {
+                    return false;
+                }
                 order.TotalPrice += book.Price;
                 order.Books.Add(book);
             }
             await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
