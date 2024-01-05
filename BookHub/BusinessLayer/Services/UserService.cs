@@ -178,7 +178,7 @@ public class UserService : IUserService
         return (await _userManager.GeneratePasswordResetTokenAsync(user), user);
     }
     
-    public async Task AddBookToWishlist(int id, int bookId)
+    public async Task<bool> AddBookToWishlist(int id, int bookId)
     {
         var user = await _context.Users
             .Include(b => b.Books)
@@ -189,8 +189,20 @@ public class UserService : IUserService
             throw new UserNotFoundException($"User with ID {id} not found");
         }
         var toBeAddedBook =  _context.Books.First(b => b.Id == bookId);
+        
+        if (toBeAddedBook == null)
+        {
+            throw new BookNotFoundException($"Book with ID {bookId} not found");
+        }
+        
+        if (user.Books.Any(b => b.Id == bookId))
+        {
+            return false;
+        }
+        
         user.Books.Add(toBeAddedBook);
         await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<IEnumerable<BookDetail>> GetBooksInWishlist(int id)
