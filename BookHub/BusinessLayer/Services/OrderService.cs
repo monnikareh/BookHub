@@ -93,7 +93,7 @@ namespace BusinessLayer.Services
 
             var mapped = EntityMapper.MapOrderToOrderDetail(order);
             var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+                .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
             _memoryCache.Set(key, mapped, cacheEntryOptions);
             return mapped;
         }
