@@ -5,26 +5,28 @@
 </div>
 
 <div class="col-6">
-    @if (Model.Authors.Any())
+
+    <p>
+        Publisher:
+        <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">
+            <p>@Model.Publisher.Name</p>
+        </a>
+    </p>
+   <p>Primary Genre: @Model.PrimaryGenre.Name</p> 
+    <p>Genres:</p>
+    @if (Model.Genres.Any())
     {
-        <p>
-            Publisher:
-            <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">
-                <p>@Model.Publisher.Name</p>
-            </a>
-        </p>
-        <p>Genres:</p>
         foreach (var genre in Model.Genres)
         {
-            {
-                <div class="border-bottom mb-2">
-                    <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })">
-                        <p>@genre.Name</p>
-                    </a>
-                </div>
-            }
+            <div class="border-bottom mb-2">
+                <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })">
+                    <p>@genre.Name</p>
+                </a>
+            </div>
         }
-
+    }
+    @if (Model.Authors.Any())
+    {
         <p>Authors:</p>
         foreach (var author in Model.Authors)
         {
@@ -37,13 +39,11 @@
             }
         }
     }
-    else
-    {
-        <p>No books yet.</p>
-    }
+    <p>Stock: @Model.StockInStorage</p>
+    <p>Overall Rating: @Model.OverallRating %</p>
+    <h3>Ratings: PartialView to Ratings</h3>
 </div>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-
