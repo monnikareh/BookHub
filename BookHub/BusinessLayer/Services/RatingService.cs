@@ -121,7 +121,7 @@ public class RatingService : IRatingService
 
         rating.Value = ratingUpdate.Value;
 
-        if (ratingUpdate.Comment != "string")
+        if (!string.IsNullOrEmpty(ratingUpdate.Comment) && ratingUpdate.Comment != "string")
         {
             rating.Comment = ratingUpdate.Comment;
         }

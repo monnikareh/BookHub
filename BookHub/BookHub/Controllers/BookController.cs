@@ -149,6 +149,10 @@ public class BookController : Controller
 
         var user = await _userService.GetUserByIdAsync(userId);
         var book = await _bookService.GetBookByIdAsync(id);
+        //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
+        //{
+       //     return _PartialView;
+        //}
         var newRating = new RatingCreate
         {
             User = EntityMapper.MapUserDetailToRelated(user),
@@ -156,7 +160,6 @@ public class BookController : Controller
             Value = value,
             Comment = null,
         };
-        // pridat sem ze ak uz existuje rating od toho usera tak sa to neprida
         var result =  await _ratingService.CreateRatingAsync(newRating);
         await UpdateRating(id, value);
         return RedirectToAction("Detail", new { id = id });

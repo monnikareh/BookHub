@@ -41,13 +41,20 @@ public class RatingController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
-        var rating = await _ratingService.GetRatingByIdAsync(id);
-        
-        return View(new RatingUpdate
+        try
         {
-            Value = rating.Value,
-            Comment = rating.Comment
-        });
+            var rating = await _ratingService.GetRatingByIdAsync(id);
+            return View(new RatingUpdate
+            {
+                Value = rating.Value,
+                Comment = rating.Comment
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error retrieving rating with ID {id}: {ex.Message}");
+            return RedirectToAction("Error");
+        }
     }
 
     [HttpPost("{id:int}")]
@@ -70,6 +77,7 @@ public class RatingController : Controller
 
         return RedirectToAction("Index");
     }
+
     
     public async Task<ActionResult> Delete(int id)
     {
