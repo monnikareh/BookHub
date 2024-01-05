@@ -4,18 +4,22 @@ using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BusinessLayer.Services;
 
 public class GenreService : IGenreService
 {
     private readonly BookHubDbContext _context;
+    private readonly IMemoryCache _memoryCache;
 
-    public GenreService(BookHubDbContext context)
+
+    public GenreService(BookHubDbContext context, IMemoryCache memoryCache)
     {
         _context = context;
+        _memoryCache = memoryCache;
     }
-    
+
     public async Task<IEnumerable<GenreDetail>> GetGenresAsync(string? name)
     {
         var genres = _context.Genres
@@ -32,6 +36,12 @@ public class GenreService : IGenreService
 
     public async Task<GenreDetail> GetGenreByIdAsync(int id)
     {
+        var key = $"GenreById_{id}";
+        if (_memoryCache.TryGetValue(key, out GenreDetail? cached) && cached is not null)
+        {
+            return cached;
+        }
+
         var genre = await _context
             .Genres
             .Include(g => g.Books)
@@ -42,7 +52,11 @@ public class GenreService : IGenreService
             throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapGenreToGenreDetail(genre);
+        var mapped = EntityMapper.MapGenreToGenreDetail(genre);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+        _memoryCache.Set(key, mapped, cacheEntryOptions);
+        return mapped;
     }
 
     public async Task<GenreDetail> CreateGenreAsync(GenreCreate genreCreate)
@@ -65,9 +79,10 @@ public class GenreService : IGenreService
         {
             throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
         }
+
         genre.Name = genreUpdate.Name;
-        
-        await _context.SaveChangesAsync();   
+
+        await _context.SaveChangesAsync();
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
@@ -78,6 +93,7 @@ public class GenreService : IGenreService
         {
             throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
         }
+
         _context.Genres.Remove(genre);
         await _context.SaveChangesAsync();
     }
