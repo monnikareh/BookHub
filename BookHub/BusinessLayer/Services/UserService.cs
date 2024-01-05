@@ -182,7 +182,7 @@ public class UserService : IUserService
     {
         var user = await _context.Users
             .Include(b => b.Books)
-            .FirstOrDefaultAsync(b => b.Id == id);
+            .FirstOrDefaultAsync(u => u.Id == id);
         
         if (user == null)
         {
@@ -191,5 +191,26 @@ public class UserService : IUserService
         var toBeAddedBook =  _context.Books.First(b => b.Id == bookId);
         user.Books.Add(toBeAddedBook);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<BookDetail>> GetBooksInWishlist(int id)
+    {
+        var user = await _context
+                .Users
+                .Include(b => b.Books)
+                .ThenInclude(pg => pg.PrimaryGenre)
+                .Include(b => b.Books)
+                .ThenInclude(g => g.Genres)
+                .Include(b => b.Books)
+                .ThenInclude(b => b.Publisher)
+                .Include(b => b.Books)
+                .ThenInclude(b => b.Authors)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+
+        return user.Books.Select(EntityMapper.MapBookToBookDetail);
     }
 }

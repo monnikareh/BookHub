@@ -13,4 +13,5 @@ public interface IUserService
     Task<(string, User user)> GetUserAsync(int id);
 
     Task AddBookToWishlist(int id, int bookId);
+    Task<IEnumerable<BookDetail>> GetBooksInWishlist(int id);
 }

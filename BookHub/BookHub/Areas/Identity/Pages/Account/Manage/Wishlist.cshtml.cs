@@ -19,22 +19,22 @@ namespace BookHub.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IOrderService _orderService;
+        private readonly IUserService _userService;
 
         public WishListModel (
             UserManager<User> userManager,
-            SignInManager<User> signInManager, IOrderService orderService)
+            SignInManager<User> signInManager, IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _orderService = orderService;
+            _userService = userService;
         }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public IEnumerable<OrderDetail> Orders { get; set; }
+        public IEnumerable<BookDetail> Wishlist { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -60,8 +60,8 @@ namespace BookHub.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(User user)
         {
-            var order = await _orderService.GetOrdersAsync(user.Id, null, null, null, null, null, null, null);
-            Orders = order.OrderByDescending(o => o.Date);
+            var wishlist = await _userService.GetBooksInWishlist(user.Id);
+            Wishlist = wishlist;
         }
 
         public async Task<IActionResult> OnGetAsync()
