@@ -199,6 +199,12 @@
                     $('#addRatingModal').modal('hide');
                 });
             });
+            
+            $('#addRatingModal').on('shown.bs.modal', function () { 
+                $('#addRatingModal').find('.close').on('click', function () {
+                    $('#addRatingModal').modal('hide');
+                });
+            });
 
             $('#addRatingForm').submit(function (e) {
                 e.preventDefault();
