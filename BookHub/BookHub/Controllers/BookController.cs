@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
 using BookHub.Models;
+using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -130,6 +131,32 @@ public class BookController : Controller
         {
             TempData["WishlistMessage"] = "Book already in Wishlist";
         }
+        return RedirectToAction("Detail", new { id = id });
+    }
+    
+    [Authorize]
+    [HttpPost("{id:int}")]
+    public async Task<IActionResult> AddRating(int id, int value)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        int.TryParse(userIdClaim, out int userId);
+
+        /*
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        } */
+
+        var user = await _userService.GetUserByIdAsync(userId);
+        var book = await _bookService.GetBookByIdAsync(id);
+        var newRating = new RatingCreate
+        {
+            User = EntityMapper.MapUserDetailToRelated(user),
+            Book = EntityMapper.MapBookDetailToRelated(book),
+            Value = value,
+            Comment = null,
+        };
+        var result =  await _ratingService.CreateRatingAsync(newRating);
         return RedirectToAction("Detail", new { id = id });
     }
 }

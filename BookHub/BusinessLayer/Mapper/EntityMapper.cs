@@ -94,4 +94,22 @@ public static class EntityMapper
             Books = user.Books.Select(MapModelToRelated).ToList(),
         };
     }
+    
+    public static ModelRelated MapBookDetailToRelated(BookDetail model)
+    {
+        return new ModelRelated
+        {
+            Id = model.Id,
+            Name = model.Name
+        };
+    }
+    
+    public static ModelRelated MapUserDetailToRelated(UserDetail model)
+    {
+        return new ModelRelated
+        {
+            Id = model.Id,
+            Name = model.Name
+        };
+    }
 }
