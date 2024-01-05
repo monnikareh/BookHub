@@ -52,7 +52,14 @@
     <p>Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price €</p>
     
-    <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier), bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier), bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+    }
+    else
+    {
+        <a class = "btn btn-sm btn-primary" asp-area="Identity" asp-page="/Account/Login">Login or register to buy this book</a>   
+    }
     
     @if (User.Identity.IsAuthenticated)
     {
