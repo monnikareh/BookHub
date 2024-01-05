@@ -49,7 +49,7 @@
         }
     </p>
     <p>Stock: @Model.StockInStorage</p>
-    <p>Overall Rating: @Model.OverallRating %</p>
+    <p id="ratingContainer">Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price €</p>
     
     <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier), bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
@@ -67,17 +67,13 @@
             alert('@TempData["WishlistMessage"]');
         </script>
     }
-    
-    <h3>
-        <button id="addRatingBtn" class="btn btn-primary">
-            Add Rating
-        </button>
-    </h3>
-    
     <h3>
         <button id="showReviewsBtn" class="btn btn-primary">
             Show all reviews
         </button>
+         <button id="addRatingBtn" class="btn btn-success">
+                Add Rating
+            </button>
     </h3>
     
     <div id="reviewsContainer">
@@ -98,6 +94,31 @@
                 {
                     <p>@TempData["WishlistMessage"]</p>
                 }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addRatingModal" tabindex="-1" role="dialog" aria-labelledby="addRatingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRatingModalLabel">Add Rating</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Rating Form -->
+                <form id="addRatingForm">
+                    <label for="ratingValue">Rating Value:</label>
+                    <input type="number" id="ratingValue" name="ratingValue" min="1" max="5" required>
+                    <button type="submit" class="btn btn-success">Submit Rating</button>
+                </form>
+                <!-- End Add Rating Form -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -160,6 +181,27 @@
                     },
                     error: function (error) {
                         console.error('Error loading reviews: ', error);
+                    }
+                });
+            });
+            
+            $('#addRatingBtn').on('click', function () {
+                $('#addRatingModal').modal('show');
+            });
+
+            $('#addRatingForm').submit(function (e) {
+                e.preventDefault();
+                var ratingValue = $('#ratingValue').val();
+                $.ajax({
+                    url: '@Url.Action("AddRating", "Book", new { id = Model.Id})',
+                    type: 'POST',
+                    data: { value: ratingValue },
+                    success: function (result) {
+                           $('#addRatingModal').modal('hide');
+                            window.location.href = '@Url.Action("Detail", "Book", new { id = Model.Id })';                                                     w                  
+                    },
+                    error: function (error) {
+                        console.error('Error adding rating: ', error);
                     }
                 });
             });

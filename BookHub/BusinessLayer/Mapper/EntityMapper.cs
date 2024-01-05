@@ -112,4 +112,18 @@ public static class EntityMapper
             Name = model.Name
         };
     }
+
+    public static BookCreate MapBookDetailToCreate(BookDetail book)
+    {
+        return new BookCreate
+        {
+            Name = book.Name,
+            Authors = book.Authors,
+            Publisher = book.Publisher,
+            PrimaryGenre = book.PrimaryGenre,
+            Genres = book.Genres,
+            OverallRating = book.OverallRating,
+            StockInStorage = book.StockInStorage,
+        };
+    }
 }
