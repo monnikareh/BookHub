@@ -47,6 +47,8 @@
     <p>Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price €</p>
     
+    <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = 1, bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+    
     @if (User.Identity.IsAuthenticated)
     {
         <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">

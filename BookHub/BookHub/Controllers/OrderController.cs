@@ -32,21 +32,15 @@ public class OrderController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
     
-    // [Authorize(Roles = "Admin")]
-    // public IActionResult Create()
-    // {
-    //     return View();
-    // }
-    //
-    // [HttpPost]
-    // [ValidateAntiForgeryToken]
-    // [Authorize(Roles = "Admin")]
-    // public async Task<IActionResult> Create(OrderCreate model)
-    // {
-    //     if (!ModelState.IsValid) return View(model);
-    //     await _orderService.CreateOrderAsync(model);
-    //     return RedirectToAction("Index");
-    // }
+    
+    [HttpGet("{userId:int}/{bookId:int}")]
+    [Authorize(Roles = "Admin,User")]
+    public async Task<IActionResult> Append(int userId, int bookId)
+    {
+        Console.WriteLine("KOKOT");
+        await _orderService.AppendBook(userId, bookId);
+        return RedirectToAction("Index", "Book");
+    }
     //
     //
     // [Authorize(Roles = "Admin")]
