@@ -64,6 +64,12 @@
     }
     
     <h3>
+        <button id="addRatingBtn" class="btn btn-primary">
+            Add Rating
+        </button>
+    </h3>
+    
+    <h3>
         <button id="showReviewsBtn" class="btn btn-primary">
             Show all reviews
         </button>
@@ -130,6 +136,19 @@
             $('#showReviewsBtn').on('click', function () {
                 $.ajax({
                     url: '@Url.Action("ShowRatings", "Book", new { id = Model.Id })',
+                    type: 'GET',
+                    success: function (result) {
+                        $('#reviewsContainer').html(result);
+                    },
+                    error: function (error) {
+                        console.error('Error loading reviews: ', error);
+                    }
+                });
+            });
+            
+            $('#addRatingBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("AddRating", "Book", new { id = Model.Id })',
                     type: 'GET',
                     success: function (result) {
                         $('#reviewsContainer').html(result);
