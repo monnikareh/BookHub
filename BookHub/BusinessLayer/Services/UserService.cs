@@ -190,5 +190,6 @@ public class UserService : IUserService
         }
         var toBeAddedBook =  _context.Books.First(b => b.Id == bookId);
         user.Books.Add(toBeAddedBook);
+        await _context.SaveChangesAsync();
     }
 }
