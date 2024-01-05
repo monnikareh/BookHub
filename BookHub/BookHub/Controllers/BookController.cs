@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
 using BookHub.Models;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace BookHub.Controllers;
 
@@ -13,12 +15,14 @@ public class BookController : Controller
     private readonly ILogger<BookController> _logger;
     private readonly IBookService _bookService;
     private readonly IRatingService _ratingService;
+    private readonly IUserService _userService;
 
-    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService)
+    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService, IUserService userService)
     {
         _logger = logger;
         _bookService = bookService;
         _ratingService = ratingService;
+        _userService = userService;
     }
 
     public async Task<IActionResult> Index()
@@ -101,5 +105,26 @@ public class BookController : Controller
     {
         var reviews = await _ratingService.GetRatingsAsync(null, null, id, null);
         return PartialView("_RatingsPartial", reviews);
+    }
+    
+    [Authorize]
+    [HttpPost("{id:int}")]
+    public async Task<IActionResult> AddToWishlist(int id)
+    {
+        // Get the authenticated user's ID
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        int.TryParse(userIdClaim, out int userId);
+
+        /*
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        } */
+
+        var user = await _userService.GetUserByIdAsync(userId);
+
+        await _userService.AddBookToWishlist(user.Id, id);
+        TempData["WishlistMessage"] = "Book added to Wishlist";
+        return RedirectToAction("Detail", new { id = id });
     }
 }

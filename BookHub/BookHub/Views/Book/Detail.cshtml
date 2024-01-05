@@ -34,14 +34,28 @@
     <p>Stock: @Model.StockInStorage</p>
     <p>Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price €</p>
-     <h3>
+    
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
+            <button type="submit">Add to Wishlist</button>
+        </form>
+    }
+    
+    @if (TempData.ContainsKey("WishlistMessage"))
+    {
+        <script>
+            alert('@TempData["WishlistMessage"]');
+        </script>
+    }
+    
+    <h3>
             <button id="showReviewsBtn" class="btn btn-primary">
                 Show all reviews
             </button>
         </h3>
     
         <div id="reviewsContainer">
-            <!-- Reviews partial view content will be loaded here -->
         </div>
     </div>
 
@@ -61,6 +75,9 @@
                     }
                 });
             });
+            window.addToWishlist = function () {
+                
+            };
         });
     </script>
 }

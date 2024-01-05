@@ -6,7 +6,6 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
 
@@ -19,20 +18,18 @@ public class UserService : IUserService
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IUserEmailStore<User> _emailStore;
-    private readonly IMemoryCache _memoryCache;
 
 
     public UserService(
         BookHubDbContext context,
         IUserStore<User> userStore,
         UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager, IMemoryCache memoryCache)
+        RoleManager<IdentityRole<int>> roleManager)
     {
         _context = context;
         _userStore = userStore;
         _userManager = userManager;
         _roleManager = roleManager;
-        _memoryCache = memoryCache;
         if (!_userManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
@@ -53,23 +50,13 @@ public class UserService : IUserService
 
     public async Task<UserDetail> GetUserByIdAsync(int id)
     {
-        var key = $"BookById_{id}";
-        if (_memoryCache.TryGetValue(key, out UserDetail? cached) && cached is not null)
-        {
-            return cached;
-        }
-
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             throw new UserNotFoundException($"User 'ID={id}' could not be found");
         }
 
-        var mapped = EntityMapper.MapUserToUserDetail(user);
-        var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
-        _memoryCache.Set(key, mapped, cacheEntryOptions);
-        return mapped;
+        return EntityMapper.MapUserToUserDetail(user);
     }
 
     public async Task<UserDetail> CreateUserAsync(UserCreate userCreate)
@@ -95,7 +82,7 @@ public class UserService : IUserService
                 throw new BooksEmptyException("One or more books could not be found");
             }
         }
-
+        
         user.Name = userCreate.Name;
         user.Books = books;
         await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
@@ -125,7 +112,7 @@ public class UserService : IUserService
         var user = await _context.Users
             .Include(b => b.Books)
             .FirstOrDefaultAsync(b => b.Id == id);
-
+        
         if (user == null)
         {
             throw new UserNotFoundException($"User with ID {id} not found");
@@ -145,11 +132,9 @@ public class UserService : IUserService
             {
                 throw new BooksEmptyException("One or more books could not be found");
             }
-
             user.Books.Clear();
             user.Books.AddRange(books);
         }
-
         await _userManager.SetUserNameAsync(user, userUpdate.UserName);
         await _userManager.SetEmailAsync(user, userUpdate.Email);
         await _userManager.ChangePasswordAsync(user, userUpdate.OldPassword, userUpdate.NewPassword);
@@ -167,5 +152,19 @@ public class UserService : IUserService
         }
 
         await _userManager.DeleteAsync(user);
+    }
+    
+    public async Task AddBookToWishlist(int id, int bookId)
+    {
+        var user = await _context.Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(b => b.Id == id);
+        
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+        var toBeAddedBook =  _context.Books.First(b => b.Id == bookId);
+        user.Books.Add(toBeAddedBook);
     }
 }

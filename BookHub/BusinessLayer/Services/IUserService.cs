@@ -9,4 +9,6 @@ public interface IUserService
     Task<UserDetail> CreateUserAsync(UserCreate userCreate); 
     Task<UserDetail> UpdateUserAsync(int id, UserUpdate userUpdate); 
     Task DeleteUserAsync(int id);
+
+    Task AddBookToWishlist(int id, int bookId);
 }
