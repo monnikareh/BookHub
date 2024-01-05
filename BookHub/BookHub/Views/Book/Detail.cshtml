@@ -16,6 +16,7 @@
         {
             <div class="border-bottom mb-2">
                 <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })"> @genre.Name
+                    @if (!genre.Equals(Model.Genres.Last())) { <span>,</span> }
                 </a>
             </div>
         }
@@ -36,7 +37,7 @@
     }
     <p>Stock: @Model.StockInStorage</p>
     <p>Overall Rating: @Model.OverallRating %</p>
-    <p>Price: @Model.Price</p>
+    <p>Price: @Model.Price €</p>
      <h3>
             <button id="showReviewsBtn" class="btn btn-primary">
                 Show all reviews
