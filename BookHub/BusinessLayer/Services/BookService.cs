@@ -1,5 +1,6 @@
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
+using Microsoft.Extensions.Caching.Memory;
 using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
@@ -13,10 +14,12 @@ using Microsoft.IdentityModel.Tokens;
 public class BookService : IBookService
 {
     private readonly BookHubDbContext _context;
+    private readonly IMemoryCache _memoryCache;
 
-    public BookService(BookHubDbContext context)
+    public BookService(BookHubDbContext context, IMemoryCache memoryCache)
     {
         _context = context;
+        _memoryCache = memoryCache;
     }
 
 
@@ -25,6 +28,7 @@ public class BookService : IBookService
         int? publisherId, string? publisherName, int? authorId, string? authorName)
     {
         var books = _context.Books
+            .Include(pg => pg.PrimaryGenre)
             .Include(g => g.Genres)
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
@@ -52,7 +56,7 @@ public class BookService : IBookService
         {
             books = books.Where(b => b.Authors.Contains(author));
         }
-        
+
         if (!bookName.IsNullOrEmpty())
         {
             books = books.Where(b => b.Name == bookName);
@@ -64,8 +68,15 @@ public class BookService : IBookService
 
     public async Task<BookDetail> GetBookByIdAsync(int id)
     {
+        var key = $"BookById_{id}";
+        if (_memoryCache.TryGetValue(key, out BookDetail? cached) && cached is not null)
+        {
+            return cached;
+        }
+
         var book = await _context
             .Books
+            .Include(pg => pg.PrimaryGenre)
             .Include(g => g.Genres)
             .Include(b => b.Publisher)
             .Include(b => b.Authors)
@@ -75,7 +86,11 @@ public class BookService : IBookService
             throw new BookNotFoundException($"Book 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapBookToBookDetail(book);
+        var mapped = EntityMapper.MapBookToBookDetail(book);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+        _memoryCache.Set(key, mapped, cacheEntryOptions);
+        return mapped;
     }
 
 
@@ -93,38 +108,41 @@ public class BookService : IBookService
             throw new PublisherNotFoundException(
                 $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
         }
-        
+
         var primaryGenre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.PrimaryGenre.Name
-                                                                              || g.Id == bookCreate.PrimaryGenre.Id);
-        
+                                                                          || g.Id == bookCreate.PrimaryGenre.Id);
+
         if (primaryGenre == null)
         {
             throw new GenreNotFoundException(
                 $"PrimaryGenre 'Name={bookCreate.PrimaryGenre.Name}' <OR> 'ID={bookCreate.PrimaryGenre.Id}' could not be found");
         }
-        
+
         var genreNames = bookCreate.Genres.Select(g => g.Name).ToHashSet();
         var genreIds = bookCreate.Genres.Select(g => g.Id).ToHashSet();
-        var genres = await _context.Genres.Where(g => genreNames.Contains(g.Name) || genreIds.Contains(g.Id)).ToListAsync();
-        
+        var genres = await _context.Genres.Where(g => genreNames.Contains(g.Name) || genreIds.Contains(g.Id))
+            .ToListAsync();
+
         if (genres.Count != bookCreate.Genres.Count)
         {
             throw new GenreNotFoundException("One or more genres could not be found");
         }
+
         if (bookCreate.Authors == null)
         {
             throw new AuthorsEmptyException("One or more author could not be found");
         }
-        
+
         var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
         var authorIds = bookCreate.Authors.Select(a => a.Id).ToHashSet();
-        var authors = await _context.Authors.Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id)).ToListAsync();
-        
+        var authors = await _context.Authors.Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id))
+            .ToListAsync();
+
         if (authors.Count != bookCreate.Authors.Count)
         {
             throw new AuthorNotFoundException("One or more authors could not be found");
         }
-        
+
         var book = new Book
         {
             Name = bookCreate.Name,
