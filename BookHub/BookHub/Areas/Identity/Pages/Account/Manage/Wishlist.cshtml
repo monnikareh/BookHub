@@ -1,0 +1,70 @@
+@page
+@model WishListModel
+@{
+    ViewData["Title"] = "Orders";
+    ViewData["ActivePage"] = ManageNavPages.Wishlist;
+}
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage"/>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Total Price</th>
+                <th>Date</th>
+                <th>Payment Status</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("Detail", "Book", new { id = order.Id })">@order.Id</a>
+                    </td>
+                    <td>@order.TotalPrice</td>
+                    <td>@order.Date</td>
+                    @if (order.PaymentStatus == PaymentStatus.Unpaid)
+                    {
+                        <td>
+                            <span class="badge btn-danger">@order.PaymentStatus</span>
+                        </td>
+                    }
+                    else if (order.PaymentStatus == PaymentStatus.Paid)
+                    {
+                        <td>
+                            <span class="badge btn-warning">@order.PaymentStatus</span>
+                        </td>
+                    }
+                    else if (order.PaymentStatus == PaymentStatus.AwaitingShipment)
+                    {
+                        <td>
+                            <span class="badge btn-info">@order.PaymentStatus</span>
+                        </td>
+                    }
+                    else if (order.PaymentStatus == PaymentStatus.Shipped)
+                    {
+                        <td>
+                            <span class="badge btn-primary">@order.PaymentStatus</span>
+                        </td>
+                    }
+                    else if (order.PaymentStatus == PaymentStatus.Delivered)
+                    {
+                        <td>
+                            <span class="badge btn-success">@order.PaymentStatus</span>
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

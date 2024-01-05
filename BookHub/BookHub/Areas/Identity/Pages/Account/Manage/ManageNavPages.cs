@@ -62,6 +62,7 @@ namespace  BookHub.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         public static string Order => "Order";
+        public static string Wishlist => "Wishlist";
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -124,5 +125,6 @@ namespace  BookHub.Areas.Identity.Pages.Account.Manage
                 ?? System.IO.Path.GetFileNameWithoutExtension(viewContext.ActionDescriptor.DisplayName);
             return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : null;
         }
+        public static string WishlistNavClass(ViewContext viewContext) => PageNavClass(viewContext, Wishlist);
     }
 }

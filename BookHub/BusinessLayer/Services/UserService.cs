@@ -6,6 +6,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
 
@@ -18,18 +19,20 @@ public class UserService : IUserService
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IUserEmailStore<User> _emailStore;
+    private readonly IMemoryCache _memoryCache;
 
 
     public UserService(
         BookHubDbContext context,
         IUserStore<User> userStore,
         UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager)
+        RoleManager<IdentityRole<int>> roleManager, IMemoryCache memoryCache)
     {
         _context = context;
         _userStore = userStore;
         _userManager = userManager;
         _roleManager = roleManager;
+        _memoryCache = memoryCache;
         if (!_userManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
@@ -50,13 +53,23 @@ public class UserService : IUserService
 
     public async Task<UserDetail> GetUserByIdAsync(int id)
     {
+        var key = $"BookById_{id}";
+        if (_memoryCache.TryGetValue(key, out UserDetail? cached) && cached is not null)
+        {
+            return cached;
+        }
+
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             throw new UserNotFoundException($"User 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapUserToUserDetail(user);
+        var mapped = EntityMapper.MapUserToUserDetail(user);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+        _memoryCache.Set(key, mapped, cacheEntryOptions);
+        return mapped;
     }
 
     public async Task<UserDetail> CreateUserAsync(UserCreate userCreate)
@@ -152,6 +165,17 @@ public class UserService : IUserService
         }
 
         await _userManager.DeleteAsync(user);
+    }
+    
+    public async Task<(string, User user)> GetUserAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+
+        return (await _userManager.GeneratePasswordResetTokenAsync(user), user);
     }
     
     public async Task AddBookToWishlist(int id, int bookId)
