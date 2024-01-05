@@ -593,7 +593,12 @@ public static class DataSeeder
     }
 
     private static IEnumerable<Order> PrepareOrders()
-    {        
+    {
+        var paymentStatuses = new List<PaymentStatus>
+        {
+            PaymentStatus.Delivered, PaymentStatus.Paid, PaymentStatus.Shipped, PaymentStatus.Unpaid,
+            PaymentStatus.AwaitingShipment
+        };
         var random = new Random();
         var orders = new List<Order>();
         for (var i = 1; i <= 30; i++)
@@ -603,7 +608,8 @@ public static class DataSeeder
             {
                 Id = i,
                 UserId = random.Next(1, 15),
-                TotalPrice = randomPrice
+                TotalPrice = randomPrice,
+                PaymentStatus = paymentStatuses[random.Next(0,5)] 
             });
         }
         return orders;
@@ -613,13 +619,13 @@ public static class DataSeeder
     {
         return new List<IdentityRole<int>>
         {
-            new IdentityRole<int>
+            new()
             {
                 Id = 1,
                 Name = UserRoles.Admin,
                 NormalizedName = UserRoles.Admin.ToUpper(),
             },
-            new IdentityRole<int>
+            new()
             {
                 Id = 2,
                 Name = UserRoles.User,

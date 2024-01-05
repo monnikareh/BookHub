@@ -20,7 +20,7 @@ namespace BusinessLayer.Services
         }
 
         public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName, PaymentStatus? paymentStatus)
         {
             var orders = _context.Orders
                 .Include(o => o.User)
@@ -42,12 +42,18 @@ namespace BusinessLayer.Services
             {
                 orders = orders.Where(o => o.Date >= startDate.Value);
             }
-
+            
+            
             if (endDate.HasValue)
             {
                 orders = orders.Where(o => o.Date <= endDate.Value);
             }
 
+            if (paymentStatus.HasValue)
+            {
+                orders = orders.Where(ps => ps.PaymentStatus == paymentStatus);
+            }
+            
             if (totalPrice.HasValue)
             {
                 orders = orders.Where(o => o.TotalPrice == totalPrice.Value);
@@ -107,7 +113,7 @@ namespace BusinessLayer.Services
                 throw new BookNotFoundException("One or more books could not be found");
             }
             order.Books.AddRange(books);
-
+            order.PaymentStatus = PaymentStatus.Unpaid;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             return EntityMapper.MapOrderToOrderDetail(order);
@@ -124,6 +130,7 @@ namespace BusinessLayer.Services
             }
             
             order.TotalPrice = orderUpdate.TotalPrice;
+            order.PaymentStatus = orderUpdate.PaymentStatus;
 
             if (orderUpdate.Books.Count != 0)
             {

@@ -28,7 +28,7 @@ public class OrderServiceTests
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
     
         // Act
-        var result = await orderService.GetOrdersAsync(null, null, null, null, null, null, null);
+        var result = await orderService.GetOrdersAsync(null, null, null, null, null, null, null, null);
         var orderDetails = result.ToList();
     
         // Assert
