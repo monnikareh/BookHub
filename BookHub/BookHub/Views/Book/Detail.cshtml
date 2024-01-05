@@ -119,13 +119,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Add Rating Form -->
                 <form id="addRatingForm">
                     <label for="ratingValue">Rating Value:</label>
                     <input type="number" id="ratingValue" name="ratingValue" min="1" max="5" required>
                     <button type="submit" class="btn btn-success">Submit Rating</button>
                 </form>
-                <!-- End Add Rating Form -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -194,6 +192,12 @@
             
             $('#addRatingBtn').on('click', function () {
                 $('#addRatingModal').modal('show');
+            });
+            
+            $('#addRatingModal').on('shown.bs.modal', function () { 
+                $('#addRatingModal').find('.btn-secondary').on('click', function () {
+                    $('#addRatingModal').modal('hide');
+                });
             });
 
             $('#addRatingForm').submit(function (e) {

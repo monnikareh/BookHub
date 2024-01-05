@@ -156,6 +156,7 @@ public class BookController : Controller
             Value = value,
             Comment = null,
         };
+        // pridat sem ze ak uz existuje rating od toho usera tak sa to neprida
         var result =  await _ratingService.CreateRatingAsync(newRating);
         await UpdateRating(id, value);
         return RedirectToAction("Detail", new { id = id });

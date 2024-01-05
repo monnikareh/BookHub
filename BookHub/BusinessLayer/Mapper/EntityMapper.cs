@@ -124,6 +124,7 @@ public static class EntityMapper
             Genres = book.Genres,
             OverallRating = book.OverallRating,
             StockInStorage = book.StockInStorage,
+            Price = book.Price
         };
     }
 }
