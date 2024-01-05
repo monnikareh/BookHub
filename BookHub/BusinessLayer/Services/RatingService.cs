@@ -4,6 +4,7 @@ using BusinessLayer.Models;
 using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Entities;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace BusinessLayer.Services;
@@ -11,10 +12,13 @@ namespace BusinessLayer.Services;
 public class RatingService : IRatingService
 {
     private readonly BookHubDbContext _context;
+    private readonly IMemoryCache _memoryCache;
 
-    public RatingService(BookHubDbContext context)
+
+    public RatingService(BookHubDbContext context, IMemoryCache memoryCache)
     {
         _context = context;
+        _memoryCache = memoryCache;
     }
 
     public async Task<IEnumerable<RatingDetail>> GetRatingsAsync(int? userId, string? userName,
@@ -42,6 +46,12 @@ public class RatingService : IRatingService
 
     public async Task<RatingDetail> GetRatingByIdAsync(int id)
     {
+        var key = $"RatingById_{id}";
+        if (_memoryCache.TryGetValue(key, out RatingDetail? cached) && cached is not null)
+        {
+            return cached;
+        }
+
         var rating = await _context
             .Ratings
             .Include(r => r.User)
@@ -52,7 +62,11 @@ public class RatingService : IRatingService
             throw new RatingNotFoundException($"Rating 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapRatingToRatingDetail(rating);
+        var mapped = EntityMapper.MapRatingToRatingDetail(rating);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+        _memoryCache.Set(key, mapped, cacheEntryOptions);
+        return mapped;
     }
 
 
@@ -104,6 +118,7 @@ public class RatingService : IRatingService
         {
             throw new RatingNotFoundException($"Rating with ID {id} not found");
         }
+
         rating.Value = ratingDetail.Value;
 
         if (ratingDetail.Comment != "string")
@@ -118,7 +133,8 @@ public class RatingService : IRatingService
             if (user == null)
             {
                 throw new UserNotFoundException(
-                    $"User Name={ratingDetail.User.Name}' <OR> 'ID={ratingDetail.User.Id}' could not be found");            }
+                    $"User Name={ratingDetail.User.Name}' <OR> 'ID={ratingDetail.User.Id}' could not be found");
+            }
 
             rating.User = user;
             rating.UserId = user.Id;
@@ -131,7 +147,8 @@ public class RatingService : IRatingService
             if (book == null)
             {
                 throw new BookNotFoundException(
-                    $"Book 'Name={ratingDetail.Book.Name}' <OR> 'ID={ratingDetail.Book.Id}' could not be found");            }
+                    $"Book 'Name={ratingDetail.Book.Name}' <OR> 'ID={ratingDetail.Book.Id}' could not be found");
+            }
 
             rating.Book = book;
             rating.BookId = book.Id;
