@@ -37,7 +37,7 @@ public class OrderController : Controller
     [Authorize(Roles = "Admin,User")]
     public async Task<IActionResult> Append(int userId, int bookId)
     {
-        Console.WriteLine("KOKOT");
+        Console.WriteLine($"{userId}, {bookId}");
         await _orderService.AppendBook(userId, bookId);
         return RedirectToAction("Index", "Book");
     }

@@ -1,4 +1,9 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims;
 @model BusinessLayer.Models.BookDetail
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
@@ -47,7 +52,7 @@
     <p>Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price €</p>
     
-    <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = 1, bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+    <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier), bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
     
     @if (User.Identity.IsAuthenticated)
     {
