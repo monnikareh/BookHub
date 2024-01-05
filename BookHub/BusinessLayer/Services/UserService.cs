@@ -67,7 +67,7 @@ public class UserService : IUserService
 
         var mapped = EntityMapper.MapUserToUserDetail(user);
         var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
         _memoryCache.Set(key, mapped, cacheEntryOptions);
         return mapped;
     }
