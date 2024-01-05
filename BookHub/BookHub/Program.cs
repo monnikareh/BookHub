@@ -60,7 +60,7 @@ else
 
 
 // WE WANT SWAGGER IN PRODUCTION AS WELL
-app.UseMiddleware<RequestLoggerMiddleware>();
+app.UseMiddleware<RequestLoggerMiddleware>("BookHubWeb");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
