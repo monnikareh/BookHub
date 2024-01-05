@@ -14,4 +14,5 @@ public interface IUserService
 
     Task<bool> AddBookToWishlist(int id, int bookId);
     Task<IEnumerable<BookDetail>> GetBooksInWishlist(int id);
+    Task DeleteBookFromWishlist(int userId, int bookId);
 }

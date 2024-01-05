@@ -225,4 +225,24 @@ public class UserService : IUserService
 
         return user.Books.Select(EntityMapper.MapBookToBookDetail);
     }
+    
+    public async Task DeleteBookFromWishlist(int userId, int bookId)
+    {
+        var user = await _context
+            .Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {userId} not found");
+        }
+
+        var book = await _context.Books.FindAsync(bookId);
+        if (book == null)
+        {
+            throw new BookNotFoundException($"Book with ID {bookId} not found");
+        }
+        user.Books.Remove(book);
+        await _context.SaveChangesAsync();
+    }
 }
