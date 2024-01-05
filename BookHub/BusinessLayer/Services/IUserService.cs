@@ -12,5 +12,5 @@ public interface IUserService
     Task DeleteUserAsync(int id);
     Task<(string, User user)> GetUserAsync(int id);
 
-    Task AddBookToWishlist(int id, int bookId);
+    Task<bool> AddBookToWishlist(int id, int bookId);
 }

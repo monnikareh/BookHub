@@ -111,7 +111,6 @@ public class BookController : Controller
     [HttpPost("{id:int}")]
     public async Task<IActionResult> AddToWishlist(int id)
     {
-        // Get the authenticated user's ID
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int userId);
 
@@ -122,9 +121,15 @@ public class BookController : Controller
         } */
 
         var user = await _userService.GetUserByIdAsync(userId);
-
-        await _userService.AddBookToWishlist(user.Id, id);
-        TempData["WishlistMessage"] = "Book added to Wishlist";
+        var result =  await _userService.AddBookToWishlist(user.Id, id);
+        if (result)
+        {
+            TempData["WishlistMessage"] = "Book added to Wishlist";
+        }
+        else
+        {
+            TempData["WishlistMessage"] = "Book already in Wishlist";
+        }
         return RedirectToAction("Detail", new { id = id });
     }
 }
