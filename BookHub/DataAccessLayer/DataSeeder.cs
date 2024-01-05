@@ -611,7 +611,7 @@ public static class DataSeeder
             orders.Add(new Order
             {
                 Id = i,
-                UserId = random.Next(1, 15),
+                UserId = random.Next(1, 5),
                 TotalPrice = randomPrice,
                 PaymentStatus = paymentStatuses[random.Next(0, 5)]
             });
