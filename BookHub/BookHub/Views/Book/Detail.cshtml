@@ -1,5 +1,13 @@
 @model BusinessLayer.Models.BookDetail
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+<style>
+    .modal {
+        z-index: 1050;
+    }
+</style>
+
 <div class="col-12">
     <h2>@Model.Name</h2>
 </div>
@@ -8,7 +16,7 @@
 
     <p>Publisher: <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">@Model.Publisher.Name</a>
     </p>
-   <p>Primary Genre: @Model.PrimaryGenre.Name</p> 
+    <p>Primary Genre: @Model.PrimaryGenre.Name</p> 
     <p>Genres: 
         @if (Model.Genres.Any())
         {
@@ -20,16 +28,16 @@
         }
     </p>
     <p>Authors:
-    @if (Model.Authors.Any())
-    {
-        foreach (var author in Model.Authors)
+        @if (Model.Authors.Any())
         {
+            foreach (var author in Model.Authors)
             {
-                <a href="@Url.Action("Detail", "Author", new { id = author.Id })">@author.Name</a>
-                @if (!author.Equals(Model.Authors.Last())) { <span>,</span> }
+                {
+                    <a href="@Url.Action("Detail", "Author", new { id = author.Id })">@author.Name</a>
+                    @if (!author.Equals(Model.Authors.Last())) { <span>,</span> }
+                }
             }
         }
-    }
     </p>
     <p>Stock: @Model.StockInStorage</p>
     <p>Overall Rating: @Model.OverallRating %</p>
@@ -50,19 +58,63 @@
     }
     
     <h3>
-            <button id="showReviewsBtn" class="btn btn-primary">
-                Show all reviews
-            </button>
-        </h3>
+        <button id="showReviewsBtn" class="btn btn-primary">
+            Show all reviews
+        </button>
+    </h3>
     
-        <div id="reviewsContainer">
+    <div id="reviewsContainer">
+    </div>
+</div>
+
+<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wishlistModalLabel">Wishlist Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (TempData.ContainsKey("WishlistMessage"))
+                {
+                    <p>@TempData["WishlistMessage"]</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script>
         $(document).ready(function () {
+            $('#addToWishlistForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("AddToWishlist", "Book", new { id = Model.Id })',
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.success) {
+                            $('#wishlistModal').modal('show');
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error adding to wishlist: ', error);
+                    }
+                });
+            });
+
             $('#showReviewsBtn').on('click', function () {
                 $.ajax({
                     url: '@Url.Action("ShowRatings", "Book", new { id = Model.Id })',
@@ -75,9 +127,6 @@
                     }
                 });
             });
-            window.addToWishlist = function () {
-                
-            };
         });
     </script>
 }
