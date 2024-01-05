@@ -5,17 +5,37 @@
 </div>
 
 <div class="col-6">
-    <h3>Books:</h3>
     @if (Model.Authors.Any())
     {
-        @* foreach (var author in Model.Authors) *@
-        @* { *@
-        @*     { *@
-        @*         <div class="border-bottom mb-2"> *@
-        @*             <a href="@Url.Action("Detail", "Book", new {id = author.Id})"><p>@author.Name</p></a> *@
-        @*         </div> *@
-        @*     } *@
-        @* } *@
+        <p>
+            Publisher:
+            <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">
+                <p>@Model.Publisher.Name</p>
+            </a>
+        </p>
+        <p>Genres:</p>
+        foreach (var genre in Model.Genres)
+        {
+            {
+                <div class="border-bottom mb-2">
+                    <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })">
+                        <p>@genre.Name</p>
+                    </a>
+                </div>
+            }
+        }
+
+        <p>Authors:</p>
+        foreach (var author in Model.Authors)
+        {
+            {
+                <div class="border-bottom mb-2">
+                    <a href="@Url.Action("Detail", "Author", new { id = author.Id })">
+                        <p>@author.Name</p>
+                    </a>
+                </div>
+            }
+        }
     }
     else
     {
@@ -24,5 +44,6 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
+
