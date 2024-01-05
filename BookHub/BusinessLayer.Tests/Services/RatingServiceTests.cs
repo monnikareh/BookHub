@@ -114,11 +114,8 @@ public class RatingServiceTests
         ratingToUpdate.Comment = "Updated rating";
 
         // Act
-        var result = await ratingService.UpdateRatingAsync(ratingToUpdate.Id, new RatingDetail
+        var result = await ratingService.UpdateRatingAsync(ratingToUpdate.Id, new RatingUpdate
         {
-            Id = ratingToUpdate.Id,
-            User = EntityMapper.MapModelToRelated(ratingToUpdate.User),
-            Book = EntityMapper.MapModelToRelated(ratingToUpdate.Book),
             Value = 100,
             Comment = ratingToUpdate.Comment,
         });

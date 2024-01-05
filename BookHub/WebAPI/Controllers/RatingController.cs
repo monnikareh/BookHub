@@ -68,7 +68,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRating(int id, RatingDetail ratingDetail)
+        public async Task<ActionResult> UpdateRating(int id, RatingUpdate ratingDetail)
         {
             if (!ModelState.IsValid)
             {

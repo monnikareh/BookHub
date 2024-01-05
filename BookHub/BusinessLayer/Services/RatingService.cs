@@ -111,7 +111,7 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task<RatingDetail> UpdateRatingAsync(int id, RatingDetail ratingDetail)
+    public async Task<RatingDetail> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
     {
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)
@@ -119,41 +119,13 @@ public class RatingService : IRatingService
             throw new RatingNotFoundException($"Rating with ID {id} not found");
         }
 
-        rating.Value = ratingDetail.Value;
+        rating.Value = ratingUpdate.Value;
 
-        if (ratingDetail.Comment != "string")
+        if (ratingUpdate.Comment != "string")
         {
-            rating.Comment = ratingDetail.Comment;
+            rating.Comment = ratingUpdate.Comment;
         }
-
-        if (ratingDetail.User.Name != "string")
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u =>
-                u.Name == ratingDetail.User.Name || u.Id == ratingDetail.User.Id);
-            if (user == null)
-            {
-                throw new UserNotFoundException(
-                    $"User Name={ratingDetail.User.Name}' <OR> 'ID={ratingDetail.User.Id}' could not be found");
-            }
-
-            rating.User = user;
-            rating.UserId = user.Id;
-        }
-
-        if (ratingDetail.Book.Name != "string")
-        {
-            var book = await _context.Books.FirstOrDefaultAsync(b =>
-                b.Name == ratingDetail.Book.Name || b.Id == ratingDetail.Book.Id);
-            if (book == null)
-            {
-                throw new BookNotFoundException(
-                    $"Book 'Name={ratingDetail.Book.Name}' <OR> 'ID={ratingDetail.Book.Id}' could not be found");
-            }
-
-            rating.Book = book;
-            rating.BookId = book.Id;
-        }
-
+        
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
