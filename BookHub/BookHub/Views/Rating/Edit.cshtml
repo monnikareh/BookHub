@@ -1,5 +1,9 @@
 @model BusinessLayer.Models.RatingUpdate
 
+@{
+    ViewData["Title"] = "Edit";
+}
+
 @using (Html.BeginForm("Edit", "Rating", FormMethod.Post))
 {
     <div>

@@ -108,6 +108,7 @@ public class RatingService : IRatingService
         var rating = await _context
             .Ratings
             .Include(r => r.Book)
+            .Include(r => r.User)
             .FirstOrDefaultAsync(r => r.Id ==id);
         if (rating == null)
         {
