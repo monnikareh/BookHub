@@ -36,12 +36,6 @@ public class BookController : BaseController
         return View(books);    
     }
     
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
     
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
@@ -149,8 +143,8 @@ public class BookController : BaseController
             return RedirectToAction("Login", "Account");
         } */
 
-        var user = await _userService.GetUserByIdAsync(userId);
-        var result =  await _userService.AddBookToWishlist(user.Id, id);
+        var user = (await _userService.GetUserByIdAsync(userId)).Value;
+        var result = (await _userService.AddBookToWishlist(user.Id, id)).Value;
         if (result)
         {
             TempData["WishlistMessage"] = "Book added to Wishlist";
@@ -175,7 +169,7 @@ public class BookController : BaseController
             return RedirectToAction("Login", "Account");
         } */
 
-        var user = await _userService.GetUserByIdAsync(userId);
+        var user = (await _userService.GetUserByIdAsync(userId)).Value;
         var book = (await _bookService.GetBookByIdAsync(id)).Value;
         //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
         //{

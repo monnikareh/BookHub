@@ -40,7 +40,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _userService.GetUserByIdAsync(id));
+                var user = await _userService.GetUserByIdAsync(id);
+                return user.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -58,7 +62,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _userService.CreateUserAsync(userCreate));
+                var user = await _userService.CreateUserAsync(userCreate);
+                return user.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -76,7 +84,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _userService.UpdateUserAsync(id, userUpdate));
+                var user = await _userService.UpdateUserAsync(id, userUpdate);
+                return user.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -90,8 +102,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _userService.DeleteUserAsync(id);
-                return Ok();
+                var user = await _userService.DeleteUserAsync(id);
+                return user.Match<ActionResult>(
+                    _ => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {

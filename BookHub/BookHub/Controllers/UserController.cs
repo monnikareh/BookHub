@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.WebUtilities;
 namespace BookHub.Controllers;
 
 [Route("[controller]/[action]")]
-public class UserController : Controller
+public class UserController : BaseController
 {
     private readonly ILogger<UserController> _logger;
     private readonly IUserService _userService;
@@ -38,19 +38,18 @@ public class UserController : Controller
         return View(users);    
     }
     
-    [Authorize(Roles = "Admin")]
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-    
     
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> ResetPassword(int id)
     {
-        var (token, user) = await _userService.GetUserAsync(id);
+        var res = await _userService.GetUserAsync(id);
+        if (!res.IsOk)
+        {
+            return Error(res.Error);
+        }
+
+        var (token, user) = res.Value;
         var callbackUrl = Url.Page(
             "/Account/ConfirmEmail",
             pageHandler: null,
@@ -78,6 +77,8 @@ public class UserController : Controller
     public async Task<IActionResult> Detail(int id)
     {
         var user = await _userService.GetUserByIdAsync(id);
-        return RedirectToAction("Index");
+        return user.Match(
+            View,
+            Error);
     }
 }

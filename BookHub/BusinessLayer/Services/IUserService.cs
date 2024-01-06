@@ -1,3 +1,4 @@
+using BusinessLayer.Errors;
 using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 
@@ -6,13 +7,13 @@ namespace BusinessLayer.Services;
 public interface IUserService
 {
     Task<IEnumerable<UserDetail>> GetUsersAsync();
-    Task<UserDetail> GetUserByIdAsync(int id);
-    Task<UserDetail> CreateUserAsync(UserCreate userCreate);
-    Task<UserDetail> UpdateUserAsync(int id, UserUpdate userUpdate);
-    Task DeleteUserAsync(int id);
-    Task<(string, User user)> GetUserAsync(int id);
+    Task<Result<UserDetail, string>> GetUserByIdAsync(int id);
+    Task<Result<UserDetail, string>> CreateUserAsync(UserCreate userCreate);
+    Task<Result<UserDetail, string>> UpdateUserAsync(int id, UserUpdate userUpdate);
+    Task<Result<bool, string>> DeleteUserAsync(int id);
+    Task<Result<(string, User user), string>> GetUserAsync(int id);
 
-    Task<bool> AddBookToWishlist(int id, int bookId);
-    Task<IEnumerable<BookDetail>> GetBooksInWishlist(int id);
-    Task DeleteBookFromWishlist(int userId, int bookId);
+    Task<Result<bool, string>> AddBookToWishlist(int id, int bookId);
+    Task<Result<IEnumerable<BookDetail>, string>> GetBooksInWishlist(int id);
+    Task<Result<bool, string>> DeleteBookFromWishlist(int userId, int bookId);
 }

@@ -48,7 +48,7 @@ namespace BookHub.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(User user)
         {
-            var wishlist = await _userService.GetBooksInWishlist(user.Id);
+            var wishlist = (await _userService.GetBooksInWishlist(user.Id)).Value;
             UserModel = user;
             Wishlist = wishlist;
         }

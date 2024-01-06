@@ -61,6 +61,11 @@ public static class ErrorMessages
         return $"User 'Name={name}' <OR> 'ID={id}' could not be found";
     }
 
+    public static string UserAlreadyExists(string name)
+    {
+        return $"User 'Name={name}' already exists";
+    }
+    
     public static string RatingNotFound(int id)
     {
         return $"Rating with 'ID={id}' could not be found";
