@@ -83,19 +83,23 @@ public class BookController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
-        var book = await _bookService.GetBookByIdAsync(id);
-        return View(new BookCreate()
-        {
-            Name = book.Name,
-            PrimaryGenre = book.PrimaryGenre,
-            Genres = book.Genres,
-            Publisher = book.Publisher,
-            StockInStorage = book.StockInStorage,
-            OverallRating = 0,
-            Price = book.Price,
-            Authors = book.Authors
-        });
+        var bookRes = await _bookService.GetBookByIdAsync(id);
+        return bookRes.Match(
+            book => View(new BookCreate()
+            {
+                Name = book.Name,
+                PrimaryGenre = book.PrimaryGenre,
+                Genres = book.Genres,
+                Publisher = book.Publisher,
+                StockInStorage = book.StockInStorage,
+                OverallRating = 0,
+                Price = book.Price,
+                Authors = book.Authors
+            }),
+            _ => View("Error")
+        );
     }
+
 
     [Authorize(Roles = "Admin")]
     [HttpPost("{id:int}")]
@@ -121,7 +125,10 @@ public class BookController : Controller
     public async Task<IActionResult> Detail(int id)
     {
         var book = await _bookService.GetBookByIdAsync(id);
-        return View(book);
+        return book.Match(
+            View,
+            _ => View("Error")
+        );
     }
     
     [HttpGet("{id:int}")]
@@ -171,7 +178,7 @@ public class BookController : Controller
         } */
 
         var user = await _userService.GetUserByIdAsync(userId);
-        var book = await _bookService.GetBookByIdAsync(id);
+        var book = (await _bookService.GetBookByIdAsync(id)).Value;
         //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
         //{
        //     return _PartialView;
@@ -191,7 +198,7 @@ public class BookController : Controller
     [HttpPost("{id:int}")]
     public async Task UpdateRating(int id, int value)
     {
-        var book = await _bookService.GetBookByIdAsync(id);
+        var book = (await _bookService.GetBookByIdAsync(id)).Value;
         book.OverallRating += value;
         await _bookService.UpdateBookAsync(id, EntityMapper.MapBookDetailToCreate(book));
     }
