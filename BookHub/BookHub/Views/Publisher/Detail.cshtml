@@ -1,5 +1,9 @@
 @model BusinessLayer.Models.PublisherDetail
 
+@{
+    ViewData["Title"] = "Detail";
+}
+
 <div class="col-12">
     <h2>@Model.Name</h2>
 </div>
@@ -11,7 +15,7 @@
         foreach (var book in Model.Books)
         {
             <div class="border-bottom mb-2">
-                <p>   @book.Name</p>
+                <a href="@Url.Action("Detail", "Book", new {id = book.Id})"><p>@book.Name</p></a>
             </div>
         }
     }
