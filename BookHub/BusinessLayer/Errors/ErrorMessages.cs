@@ -26,6 +26,11 @@ public static class ErrorMessages
     {
         return "Author field cannot be empty";
     }
+    
+    public static string BooksEmpty()
+    {
+        return "Book field cannot be empty";
+    }
     public static string GenreNotFound(int id)
     {
         return $"Genre with 'ID={id}' could not be found";
@@ -49,6 +54,11 @@ public static class ErrorMessages
     public static string GenreNotFound(int id, string name)
     {
         return $"Genre 'Name={name}' <OR> 'ID={id}' could not be found";
+    }
+    
+    public static string UserNotFound(int id, string name)
+    {
+        return $"User 'Name={name}' <OR> 'ID={id}' could not be found";
     }
 
     public static string RatingNotFound(int id)

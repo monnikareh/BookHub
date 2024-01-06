@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookHub.Controllers;
 
 [Route("[controller]/[action]")]
-public class OrderController : Controller
+public class OrderController : BaseController
 {
     private readonly ILogger<OrderController> _logger;
     private readonly IOrderService _orderService;
@@ -19,13 +19,6 @@ public class OrderController : Controller
         _logger = logger;
         _orderService = orderService;
     }
-    
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-    
     
     [HttpGet("{userId:int}/{bookId:int}")]
     [Authorize]
@@ -48,7 +41,9 @@ public class OrderController : Controller
     public async Task<IActionResult> Detail(int id)
     {
         var order = await _orderService.GetOrderByIdAsync(id);
-        return View(order);
+        return order.Match(
+            View,
+            Error);
     }
     
     

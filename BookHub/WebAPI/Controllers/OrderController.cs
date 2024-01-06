@@ -39,7 +39,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _orderService.GetOrderByIdAsync(id));
+                var order = await _orderService.GetOrderByIdAsync(id);
+                return order.Match<ActionResult<OrderDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -56,7 +60,11 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _orderService.CreateOrderAsync(orderCreate));
+                var order = await _orderService.CreateOrderAsync(orderCreate);
+                return order.Match<ActionResult<OrderDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -65,7 +73,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<ActionResult<OrderUpdate>> UpdateOrder(int id, OrderUpdate orderUpdate)
+        public async Task<ActionResult<OrderDetail>> UpdateOrder(int id, OrderUpdate orderUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -73,7 +81,11 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _orderService.UpdateOrderAsync(id, orderUpdate));
+                var order = await _orderService.UpdateOrderAsync(id, orderUpdate);
+                return order.Match<ActionResult<OrderDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -86,8 +98,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _orderService.DeleteOrderAsync(id);
-                return Ok();
+                var res= await _orderService.DeleteOrderAsync(id);
+                return res.Match<ActionResult>(
+                    g => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -97,10 +112,7 @@ namespace WebAPI.Controllers
         
         private ActionResult HandleOrderException(Exception e)
         {
-            return e is OrderNotFoundException or UserNotFoundException
-                or BookNotFoundException or BooksEmptyException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     } 
 }

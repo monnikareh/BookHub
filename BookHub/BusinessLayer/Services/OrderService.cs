@@ -75,14 +75,8 @@ namespace BusinessLayer.Services
             return filteredOrders.Select(EntityMapper.MapOrderToOrderDetail);
         }
 
-        public async Task<OrderDetail> GetOrderByIdAsync(int id)
+        public async Task<Result<OrderDetail, string>> GetOrderByIdAsync(int id)
         {
-            // var key = $"OrderById_{id}";
-            // if (_memoryCache.TryGetValue(key, out OrderDetail? cached) && cached is not null)
-            // {
-            //     return cached;
-            // }
-
             var order = await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
@@ -90,29 +84,25 @@ namespace BusinessLayer.Services
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
-                throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
+                return ErrorMessages.OrderNotFound(id);
             }
 
             var mapped = EntityMapper.MapOrderToOrderDetail(order);
-            // var cacheEntryOptions = new MemoryCacheEntryOptions()
-            // .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
-            // _memoryCache.Set(key, mapped, cacheEntryOptions);
             return mapped;
         }
 
-        public async Task<OrderDetail> CreateOrderAsync(OrderCreate orderCreate)
+        public async Task<Result<OrderDetail, string>> CreateOrderAsync(OrderCreate orderCreate)
         {
             if (orderCreate.Books.IsNullOrEmpty())
             {
-                throw new BooksEmptyException("Collection Books is empty");
+                return ErrorMessages.BooksEmpty();
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u =>
                 u.Name == orderCreate.User.Name || u.Id == orderCreate.User.Id);
             if (user == null)
             {
-                throw new UserNotFoundException(
-                    $"User 'Name={orderCreate.User.Name}' <OR> 'ID={orderCreate.User.Id}' could not be found");
+                return ErrorMessages.UserNotFound(orderCreate.User.Id, orderCreate.User.Name);
             }
 
             var order = new Order
@@ -130,7 +120,7 @@ namespace BusinessLayer.Services
 
             if (books.Count != orderCreate.Books.Count)
             {
-                throw new BookNotFoundException("One or more books could not be found");
+                return ErrorMessages.BookNotFound();
             }
 
             order.Books.AddRange(books);
@@ -140,14 +130,14 @@ namespace BusinessLayer.Services
             return EntityMapper.MapOrderToOrderDetail(order);
         }
 
-        public async Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
+        public async Task<Result<OrderDetail, string>> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
         {
             var order = await _context.Orders
                 .Include(o => o.Books)
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
-                throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
+                return ErrorMessages.OrderNotFound(id);
             }
 
             order.TotalPrice = orderUpdate.TotalPrice;
@@ -164,7 +154,7 @@ namespace BusinessLayer.Services
 
                 if (books.Count != orderUpdate.Books.Count)
                 {
-                    throw new BookNotFoundException("One or more books could not be found");
+                    return ErrorMessages.BookNotFound();
                 }
 
                 order.Books.Clear();
@@ -175,18 +165,19 @@ namespace BusinessLayer.Services
             return EntityMapper.MapOrderToOrderDetail(order);
         }
 
-        public async Task DeleteOrderAsync(int id)
+        public async Task<Result<bool, string>> DeleteOrderAsync(int id)
         {
             var order = await _context.Orders
                 .Include(o => o.Books)
                 .FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
-                throw new OrderNotFoundException($"Order 'ID={id}' could not be found");
+                return ErrorMessages.OrderNotFound(id);
             }
 
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
+            return true;
         }
 
         private async Task<Order?> GetUnpaid(int userId)

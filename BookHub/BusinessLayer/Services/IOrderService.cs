@@ -10,10 +10,10 @@ public interface IOrderService
         DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName,
         PaymentStatus? paymentStatus);
 
-    Task<OrderDetail> GetOrderByIdAsync(int id);
-    Task<OrderDetail> CreateOrderAsync(OrderCreate orderCreate);
-    Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
-    Task DeleteOrderAsync(int id);
+    Task<Result<OrderDetail, string>> GetOrderByIdAsync(int id);
+    Task<Result<OrderDetail, string>> CreateOrderAsync(OrderCreate orderCreate);
+    Task<Result<OrderDetail, string>> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
+    Task<Result<bool, string>> DeleteOrderAsync(int id);
     Task<Result<bool, string>> AppendBook(int userId, int bookId);
     Task<Result<OrderDetail, string>> GetUnpaidOrder(int userId);
 
