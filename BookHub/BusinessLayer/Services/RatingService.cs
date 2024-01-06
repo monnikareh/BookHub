@@ -97,13 +97,7 @@ public class RatingService : IRatingService
             Value = ratingCreate.Value,
             Comment = ratingCreate.Comment
         };
-        var bookRatings = await _context.Ratings
-            .Where(r => r.Book.Id == book.Id).ToListAsync();
-        if (!bookRatings.IsNullOrEmpty())
-        {
-            book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value) / bookRatings.Count;    
-        }
-        
+        UpdateOverallRatingValue(book, ratingCreate.Value);
         _context.Ratings.Add(rating);
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
@@ -111,13 +105,22 @@ public class RatingService : IRatingService
 
     public async Task<Result<RatingDetail, (Error err, string message)>> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
     {
-        var rating = await _context.Ratings.FindAsync(id);
+        var rating = await _context
+            .Ratings
+            .Include(r => r.Book)
+            .FirstOrDefaultAsync(r => r.Id ==id);
         if (rating == null)
         {
             return ErrorMessages.RatingNotFound(id);
         }
-
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == rating.Book.Name
+                                                                 || b.Id == rating.Book.Id);
+        if (book == null)
+        {
+            return ErrorMessages.BookNotFound(rating.Book.Id, rating.Book.Name);
+        }
         rating.Value = ratingUpdate.Value;
+        UpdateOverallRatingValue(book, ratingUpdate.Value);
 
         if (!string.IsNullOrEmpty(ratingUpdate.Comment) && ratingUpdate.Comment != "string")
         {
@@ -145,5 +148,15 @@ public class RatingService : IRatingService
     {
         var ratings = await GetRatingsAsync(userId, null, bookId, null);
         return ratings.Any();
+    }
+
+    private void UpdateOverallRatingValue(Book book, int ratingValue)
+    {
+        var bookRatings = _context.Ratings
+            .Where(r => r.Book.Id == book.Id).ToList();
+        if (!bookRatings.IsNullOrEmpty())
+        {
+            book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingValue) / bookRatings.Count;    
+        }
     }
 }
