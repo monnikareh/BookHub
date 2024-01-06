@@ -1,0 +1,18 @@
+namespace BusinessLayer.Errors;
+
+public static class ErrorMessages
+{
+    public static string UserNotFound(int id)
+    {
+        return $"User with 'ID={id}' has no unpaid orders";
+    }
+
+    public static string OrderNotFound(int id)
+    {
+        return $"Order with 'ID={id}' could not be found";
+    }
+    public static string BookNotFound(int id)
+    {
+        return $"Book with 'ID={id}' could not be found";
+    }
+}
