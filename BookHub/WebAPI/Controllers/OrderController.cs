@@ -1,6 +1,7 @@
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,13 @@ namespace WebAPI.Controllers
             _orderService = orderService;
         }
         
-        [HttpGet("GetOrders")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrders(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName, PaymentStatus? paymentStatus)
         {
             try
             {
-                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName));
+                return Ok(await _orderService.GetOrdersAsync(userId, username, startDate, endDate, totalPrice, bookId, bookName, paymentStatus));
             }
             catch (Exception e)
             {
@@ -33,7 +34,7 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<OrderDetail>> GetOrderById(int id)
         {
             try
@@ -46,7 +47,7 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpPost("CreateOrder")]
+        [HttpPost]
         public async Task<ActionResult<OrderDetail>> CreateOrder(OrderCreate orderCreate)
         {
             if (!ModelState.IsValid)
@@ -63,7 +64,7 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpPut("UpdateOrder/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<OrderUpdate>> UpdateOrder(int id, OrderUpdate orderUpdate)
         {
             if (!ModelState.IsValid)
@@ -80,7 +81,7 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpDelete("DeleteOrder/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteOrder(int id)
         {
             try

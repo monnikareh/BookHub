@@ -1,12 +1,8 @@
-using System.Reflection;
-using System.Text;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,18 +13,9 @@ var postgresConnectionString = configuration.GetConnectionString("PostgresConnec
                                throw new InvalidOperationException(
                                    "Connection string 'PostgresConnectionString' not found.");
 
-var mariadbConnectionString = configuration.GetConnectionString("MariaDBConnectionString") ??
-                              throw new InvalidOperationException(
-                                  "Connection string 'MariaDBConnectionString' not found.");
-
 builder.Services.AddDbContext<BookHubDbContext>(options =>
     options.UseNpgsql(postgresConnectionString,
         x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
-
-// builder.Services.AddDbContext<BookHubDbContext>(
-//     options => options
-//         .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
-//             x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
 
 builder.Services.AddLogging();
 
@@ -44,21 +31,7 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services
     .AddAuthentication()
-    .AddCookie()
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = configuration["JWT:ValidIssuer"],
-            ValidAudience = configuration["JWT:ValidAudience"],
-            IssuerSigningKey =
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? string.Empty))
-        };
-    });
+    .AddCookie();
 
 builder.Services.AddRazorPages();
 
@@ -87,7 +60,7 @@ else
 
 
 // WE WANT SWAGGER IN PRODUCTION AS WELL
-app.UseMiddleware<RequestLoggerMiddleware>();
+app.UseMiddleware<RequestLoggerMiddleware>("BookHubWeb");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

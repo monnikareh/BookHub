@@ -1,0 +1,231 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims;
+@model BusinessLayer.Models.BookDetail
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<style>
+    .modal {
+        z-index: 1050;
+    }
+</style>
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<div class="col-12">
+    <h2>@Model.Name</h2>
+</div>
+
+<div class="col-6">
+
+    <p>Publisher: <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">@Model.Publisher.Name</a>
+    </p>
+    <p>Primary Genre: @Model.PrimaryGenre.Name</p> 
+    <p>Genres: 
+        @if (Model.Genres.Any())
+        {
+            foreach (var genre in Model.Genres)
+            {
+                <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })">@genre.Name</a>
+                @if (!genre.Equals(Model.Genres.Last())) { <span>,</span> }
+            }
+        }
+    </p>
+    <p>Authors:
+        @if (Model.Authors.Any())
+        {
+            foreach (var author in Model.Authors)
+            {
+                {
+                    <a href="@Url.Action("Detail", "Author", new { id = author.Id })">@author.Name</a>
+                    @if (!author.Equals(Model.Authors.Last())) { <span>,</span> }
+                }
+            }
+        }
+    </p>
+    <p>Stock: @Model.StockInStorage</p>
+    <p id="ratingContainer">Overall Rating: @Model.OverallRating %</p>
+    <p>Price: @Model.Price €</p>
+    
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div style="margin-left: 10px">@Html.ActionLink("Buy", "Append","Order", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier), bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+    }
+    else
+    {
+        <a class = "btn btn-sm btn-primary" asp-area="Identity" asp-page="/Account/Login">Login or register to buy this book</a>   
+    }
+    
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
+            <button type="submit">Add to Wishlist</button>
+        </form>
+    }
+    
+    @if (TempData.ContainsKey("WishlistMessage"))
+    {
+        <script>
+            alert('@TempData["WishlistMessage"]');
+        </script>
+    }
+    <h3>
+        <button id="showReviewsBtn" class="btn btn-primary">
+            Show all reviews
+        </button>
+         <button id="addRatingBtn" class="btn btn-success">
+                Add Rating
+            </button>
+    </h3>
+    
+    <div id="reviewsContainer">
+    </div>
+</div>
+
+<div class="modal fade" id="wishlistModal" tabindex="-1" role="dialog" aria-labelledby="wishlistModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wishlistModalLabel">Wishlist Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (TempData.ContainsKey("WishlistMessage"))
+                {
+                    <p>@TempData["WishlistMessage"]</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addRatingModal" tabindex="-1" role="dialog" aria-labelledby="addRatingModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRatingModalLabel">Add Rating</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addRatingForm">
+                    <label for="ratingValue">Rating Value:</label>
+                    <input type="number" id="ratingValue" name="ratingValue" min="1" max="5" required>
+                    <button type="submit" class="btn btn-success">Submit Rating</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        $(document).ready(function () {
+                $('#wishlistModal').on('hidden.bs.modal', function () {
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                });
+                $('#wishlistModal').on('shown.bs.modal', function () {
+                    $('body').addClass('modal-open');
+                    $('body').append('<div class="modal-backdrop fade show"></div>');
+                });
+            });
+        $(document).ready(function () {
+            $('#addToWishlistForm').submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '@Url.Action("AddToWishlist", "Book", new { id = Model.Id })',
+                    type: 'POST',
+                    success: function (result) {
+                        if (result.success) {
+                            $('#wishlistModal').modal('show');
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error adding to wishlist: ', error);
+                    }
+                });
+            });
+
+            $('#showReviewsBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("ShowRatings", "Book", new { id = Model.Id })',
+                    type: 'GET',
+                    success: function (result) {
+                        $('#reviewsContainer').html(result);
+                    },
+                    error: function (error) {
+                        console.error('Error loading reviews: ', error);
+                    }
+                });
+            });
+            
+            $('#addRatingBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("AddRating", "Book", new { id = Model.Id })',
+                    type: 'GET',
+                    success: function (result) {
+                        $('#reviewsContainer').html(result);
+                    },
+                    error: function (error) {
+                        console.error('Error loading reviews: ', error);
+                    }
+                });
+            });
+            
+            $('#addRatingBtn').on('click', function () {
+                $('#addRatingModal').modal('show');
+            });
+            
+            $('#addRatingModal').on('shown.bs.modal', function () { 
+                $('#addRatingModal').find('.btn-secondary').on('click', function () {
+                    $('#addRatingModal').modal('hide');
+                });
+            });
+            
+            $('#addRatingModal').on('shown.bs.modal', function () { 
+                $('#addRatingModal').find('.close').on('click', function () {
+                    $('#addRatingModal').modal('hide');
+                });
+            });
+
+            $('#addRatingForm').submit(function (e) {
+                e.preventDefault();
+                var ratingValue = $('#ratingValue').val();
+                $.ajax({
+                    url: '@Url.Action("AddRating", "Book", new { id = Model.Id})',
+                    type: 'POST',
+                    data: { value: ratingValue },
+                    success: function (result) {
+                           $('#addRatingModal').modal('hide');
+                            window.location.href = '@Url.Action("Detail", "Book", new { id = Model.Id })';                                                     w                  
+                    },
+                    error: function (error) {
+                        console.error('Error adding rating: ', error);
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -6,6 +6,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
 
@@ -18,18 +19,20 @@ public class UserService : IUserService
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
     private readonly IUserEmailStore<User> _emailStore;
+    private readonly IMemoryCache _memoryCache;
 
 
     public UserService(
         BookHubDbContext context,
         IUserStore<User> userStore,
         UserManager<User> userManager,
-        RoleManager<IdentityRole<int>> roleManager)
+        RoleManager<IdentityRole<int>> roleManager, IMemoryCache memoryCache)
     {
         _context = context;
         _userStore = userStore;
         _userManager = userManager;
         _roleManager = roleManager;
+        _memoryCache = memoryCache;
         if (!_userManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
@@ -50,13 +53,23 @@ public class UserService : IUserService
 
     public async Task<UserDetail> GetUserByIdAsync(int id)
     {
+        var key = $"BookById_{id}";
+        if (_memoryCache.TryGetValue(key, out UserDetail? cached) && cached is not null)
+        {
+            return cached;
+        }
+
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             throw new UserNotFoundException($"User 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapUserToUserDetail(user);
+        var mapped = EntityMapper.MapUserToUserDetail(user);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
+        _memoryCache.Set(key, mapped, cacheEntryOptions);
+        return mapped;
     }
 
     public async Task<UserDetail> CreateUserAsync(UserCreate userCreate)
@@ -70,20 +83,19 @@ public class UserService : IUserService
         {
             throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. ");
         }
-        if (userCreate.Books.IsNullOrEmpty())
+
+        ICollection<Book> books = new List<Book>();
+        if (!userCreate.Books.IsNullOrEmpty())
         {
-            throw new BooksEmptyException("Collection Books is empty");
+            var bookIds = userCreate.Books.Select(a => a.Id).ToHashSet();
+            var bookNames = userCreate.Books.Select(a => a.Name).ToHashSet();
+            books = await _context.Books.Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id)).ToListAsync();
+            if (books.Count != userCreate.Books.Count)
+            {
+                throw new BooksEmptyException("One or more books could not be found");
+            }
         }
-        var bookNames = userCreate.Books.Select(a => a.Name).ToHashSet();
-        var bookIds = userCreate.Books.Select(a => a.Id).ToHashSet();
-        var books = await _context.Books.Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id)).ToListAsync();
         
-        if (books.Count != userCreate.Books.Count)
-        {
-            throw new BooksEmptyException("One or more books could not be found");
-        }
-
-
         user.Name = userCreate.Name;
         user.Books = books;
         await _userStore.SetUserNameAsync(user, userCreate.UserName, CancellationToken.None);
@@ -153,5 +165,84 @@ public class UserService : IUserService
         }
 
         await _userManager.DeleteAsync(user);
+    }
+    
+    public async Task<(string, User user)> GetUserAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+
+        return (await _userManager.GeneratePasswordResetTokenAsync(user), user);
+    }
+    
+    public async Task<bool> AddBookToWishlist(int id, int bookId)
+    {
+        var user = await _context.Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(u => u.Id == id);
+        
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+        var toBeAddedBook =  _context.Books.First(b => b.Id == bookId);
+        
+        if (toBeAddedBook == null)
+        {
+            throw new BookNotFoundException($"Book with ID {bookId} not found");
+        }
+        
+        if (user.Books.Any(b => b.Id == bookId))
+        {
+            return false;
+        }
+        
+        user.Books.Add(toBeAddedBook);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<IEnumerable<BookDetail>> GetBooksInWishlist(int id)
+    {
+        var user = await _context
+                .Users
+                .Include(b => b.Books)
+                .ThenInclude(pg => pg.PrimaryGenre)
+                .Include(b => b.Books)
+                .ThenInclude(g => g.Genres)
+                .Include(b => b.Books)
+                .ThenInclude(b => b.Publisher)
+                .Include(b => b.Books)
+                .ThenInclude(b => b.Authors)
+                .FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {id} not found");
+        }
+
+        return user.Books.Select(EntityMapper.MapBookToBookDetail);
+    }
+    
+    public async Task DeleteBookFromWishlist(int userId, int bookId)
+    {
+        var user = await _context
+            .Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+        {
+            throw new UserNotFoundException($"User with ID {userId} not found");
+        }
+
+        var book = await _context.Books.FindAsync(bookId);
+        if (book == null)
+        {
+            throw new BookNotFoundException($"Book with ID {bookId} not found");
+        }
+        user.Books.Remove(book);
+        await _context.SaveChangesAsync();
     }
 }

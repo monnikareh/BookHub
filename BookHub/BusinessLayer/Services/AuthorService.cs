@@ -4,6 +4,7 @@ using BusinessLayer.Models;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
@@ -11,12 +12,15 @@ namespace BusinessLayer.Services;
 public class AuthorService : IAuthorService
 {
     private readonly BookHubDbContext _context;
+    private readonly IMemoryCache _memoryCache;
 
-    public AuthorService(BookHubDbContext context)
+
+    public AuthorService(BookHubDbContext context, IMemoryCache memoryCache)
     {
         _context = context;
+        _memoryCache = memoryCache;
     }
-    
+
     public async Task<IEnumerable<AuthorDetail>> GetAuthorsAsync(string? name, int? bookId, string? bookName)
     {
         var authors = _context.Authors
@@ -32,12 +36,19 @@ public class AuthorService : IAuthorService
         {
             authors = authors.Where(o => o.Books.Contains(book));
         }
+
         var authorsList = await authors.ToListAsync();
         return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
 
     public async Task<AuthorDetail> GetAuthorByIdAsync(int id)
     {
+        var key = $"AuthorById_{id}";
+        if (_memoryCache.TryGetValue(key, out AuthorDetail? cached) && cached is not null)
+        {
+            return cached;
+        }
+
         var author = await _context
             .Authors
             .Include(a => a.Books)
@@ -51,7 +62,11 @@ public class AuthorService : IAuthorService
             throw new AuthorNotFoundException($"Author 'ID={id}' could not be found");
         }
 
-        return EntityMapper.MapAuthorToAuthorDetail(author);
+        var mapped = EntityMapper.MapAuthorToAuthorDetail(author);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+        _memoryCache.Set(key, mapped, cacheEntryOptions);
+        return mapped;
     }
 
     public async Task<AuthorDetail> CreateAuthorAsync(AuthorCreate authorCreate)
@@ -77,7 +92,7 @@ public class AuthorService : IAuthorService
 
         author.Name = authorUpdate.Name;
 
-        if (authorUpdate.Books.Count != 0)
+        if (authorUpdate.Books != null && authorUpdate.Books.Count != 0)
         {
             var bookNames = authorUpdate.Books.Select(a => a.Name).ToHashSet();
             var bookIds = authorUpdate.Books.Select(a => a.Id).ToHashSet();
@@ -94,18 +109,19 @@ public class AuthorService : IAuthorService
             author.Books.Clear();
             author.Books.AddRange(books);
         }
+
         await _context.SaveChangesAsync();
-        return EntityMapper.MapAuthorToAuthorDetail(author); 
+        return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
     public async Task DeleteAuthorAsync(int id)
     {
-
         var author = await _context.Authors.FindAsync(id);
         if (author == null)
         {
             throw new AuthorNotFoundException($"Author 'ID={id}' could not be found");
         }
+
         _context.Authors.Remove(author);
         await _context.SaveChangesAsync();
     }

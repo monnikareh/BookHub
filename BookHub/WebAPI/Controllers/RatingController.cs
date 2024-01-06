@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpGet("GetRatings")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<RatingDetail>>> GetRatings(int? userId, string? userName,
             int? bookId, string? bookName)
         {
@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<RatingDetail>> GetRatingById(int id)
         {
             try
@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("CreateRating")]
+        [HttpPost]
         public async Task<ActionResult<RatingDetail>> CreateRating(RatingCreate ratingCreate)
         {
             if (!ModelState.IsValid)
@@ -67,8 +67,8 @@ namespace WebAPI.Controllers
             }
         }
         
-        [HttpPut("UpdateRating/{id}")]
-        public async Task<ActionResult> UpdateRating(int id, RatingDetail ratingDetail)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateRating(int id, RatingUpdate ratingDetail)
         {
             if (!ModelState.IsValid)
             {
@@ -84,12 +84,12 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpDelete("DeleteRating/{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRating(int id)
         {
             try
             {
-                await _ratingService.DeleteBookAsync(id);
+                await _ratingService.DeleteRatingAsync(id);
                 return Ok();
                 
             }

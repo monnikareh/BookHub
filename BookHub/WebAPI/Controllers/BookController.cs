@@ -19,7 +19,7 @@ namespace WebAPI.Controllers
             _bookService = bookService;
         }
 
-        [HttpGet("GetBooks")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<BookDetail>>> GetBooks(string? bookName, int? genreId,
             string? genreName,
             int? publisherId, string? publisherName, int? authorId, string? authorName)
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpGet("GetById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<BookDetail>> GetBookById(int id)
         {
             try
@@ -49,8 +49,8 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpPost("CreateBook")]
-        public async Task<ActionResult<BookDetail>> PostBook(BookCreate bookCreate)
+        [HttpPost]
+        public async Task<ActionResult<BookDetail>> CreateBook(BookCreate bookCreate)
         {
             if (!ModelState.IsValid)
             {
@@ -67,8 +67,8 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("UpdateBook/{id}")]
-        public async Task<ActionResult> UpdateBook(int id, BookDetail bookDetail)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateBook(int id, BookCreate bookUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _bookService.UpdateBookAsync(id, bookDetail));
+                return Ok(await _bookService.UpdateBookAsync(id, bookUpdate));
             }
             catch (Exception e)
             {
@@ -86,7 +86,7 @@ namespace WebAPI.Controllers
         }
 
 
-        [HttpDelete("DeleteBook/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             try

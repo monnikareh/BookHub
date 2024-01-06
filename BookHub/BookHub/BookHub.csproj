@@ -59,8 +59,8 @@
       <AdditionalFiles Include="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
       <AdditionalFiles Include="Areas\Identity\Pages\_ViewImports.cshtml" />
       <AdditionalFiles Include="Areas\Identity\Pages\_ViewStart.cshtml" />
+      <AdditionalFiles Include="Views\Author\Index.cshtml" />
       <AdditionalFiles Include="Views\Home\Index.cshtml" />
-      <AdditionalFiles Include="Views\Home\Privacy.cshtml" />
       <AdditionalFiles Include="Views\Shared\Error.cshtml" />
       <AdditionalFiles Include="Views\Shared\_Layout.cshtml" />
       <AdditionalFiles Include="Views\Shared\_LoginPartial.cshtml" />

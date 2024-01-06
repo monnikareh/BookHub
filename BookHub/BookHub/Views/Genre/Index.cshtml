@@ -1,0 +1,44 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model System.Collections.Generic.IEnumerable<BusinessLayer.Models.GenreDetail>
+@{
+    ViewData["Title"] = "Genres";
+}
+
+<h1>Genres</h1>
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create Genre", "Create", new { }, new { @class = "btn btn-sm btn-success" })
+    </p>
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Name)</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(i => item.Name)</td>
+            <td>
+                <div class="btn-group" role="group" aria-label="Genre Actions">
+                    <div>@Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })</div>
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
+                        <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
+                        </div>
+                        @* <a href="@Url.Action("Delete", "Author", new {id = item.Id})" class="material-icons" style="color: red">delete</a> *@
+                    }
+                </div>
+
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

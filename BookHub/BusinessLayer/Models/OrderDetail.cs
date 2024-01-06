@@ -1,10 +1,15 @@
+using DataAccessLayer.Entities;
+
 namespace BusinessLayer.Models;
 
 public class OrderDetail
 {
-    public int Id { get; set; }
-    public ModelRelated User { get; set; }
+    public required int Id { get; set; }
+    public required ModelRelated User { get; init; }
+    public PaymentStatus PaymentStatus { get; set; }
     public decimal TotalPrice { get; set; }
     public DateTime Date { get; set; } 
-    public virtual ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
+    public ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
+    
+    public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

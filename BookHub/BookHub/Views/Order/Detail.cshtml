@@ -1,0 +1,52 @@
+@model BusinessLayer.Models.OrderDetail
+
+<div class="col-12">
+    <h2>Order @Model.Id created at @Model.Date</h2>
+</div>
+
+<div class="col-6">
+    <p>ID: @Model.Id</p>
+    <p>Total Price: @Model.TotalPrice</p>
+    <p>Order status: </p>
+    @if (Model.PaymentStatus == PaymentStatus.Unpaid)
+    {
+        <p>
+            <span class="badge btn-danger">@Model.PaymentStatus</span>
+        </p>
+    }
+    else if (Model.PaymentStatus == PaymentStatus.Paid)
+    {
+        <p>
+            <span class="badge btn-warning">@Model.PaymentStatus</span>
+        </p>
+    }
+    else if (Model.PaymentStatus == PaymentStatus.AwaitingShipment)
+    {
+        <p>
+            <span class="badge btn-info">@Model.PaymentStatus</span>
+        </p>
+    }
+    else if (Model.PaymentStatus == PaymentStatus.Shipped)
+    {
+        <p>
+            <span class="badge btn-primary">@Model.PaymentStatus</span>
+        </p>
+    }
+    else if (Model.PaymentStatus == PaymentStatus.Delivered)
+    {
+        <p>
+            <span class="badge btn-success">@Model.PaymentStatus</span>
+        </p>
+    }
+    <p>Date: @Model.Date</p>
+
+    <h3>Order items</h3>
+    @foreach (var book in Model.Books)
+    {
+        <p>@Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id)?.Count x <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p>
+    }
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
