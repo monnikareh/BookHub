@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Runtime.InteropServices.JavaScript;
+using System.Security.Claims;
 using BusinessLayer.Facades;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
@@ -57,7 +58,7 @@ public class BookController : BaseController
             return RedirectToAction("Index");
         }
         
-        if (book.Error.err == Error.GenreNotFound || book.Error.err == Error.MultipleGenresNotFound)
+        if (book.Error.err is Error.GenreNotFound or Error.MultipleGenresNotFound)
         {
             ModelState.AddModelError(nameof(model.PrimaryGenre.Name), book.Error.message);
         }
@@ -65,11 +66,11 @@ public class BookController : BaseController
         {
             ModelState.AddModelError(nameof(model.Publisher.Name), book.Error.message);
         }
-        else if (book.Error.err == Error.AuthorNotFound || book.Error.err == Error.MultipleAuthorsNotFound)
+        else if (book.Error.err is Error.AuthorNotFound or Error.MultipleAuthorsNotFound or Error.AuthorFieldEmpty)
         {
             ModelState.AddModelError(nameof(model.Authors), book.Error.message);
         }
-
+        
         return View(model);
     }
 
