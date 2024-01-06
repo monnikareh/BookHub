@@ -58,17 +58,17 @@ public class BookController : BaseController
             return RedirectToAction("Index");
         }
         
-        if (book.Error.err is Error.GenreNotFound or Error.MultipleGenresNotFound)
+        switch (book.Error.err)
         {
-            ModelState.AddModelError(nameof(model.PrimaryGenre.Name), book.Error.message);
-        }
-        else if (book.Error.err == Error.PublisherNotFound)
-        {
-            ModelState.AddModelError(nameof(model.Publisher.Name), book.Error.message);
-        }
-        else if (book.Error.err is Error.AuthorNotFound or Error.MultipleAuthorsNotFound or Error.AuthorFieldEmpty)
-        {
-            ModelState.AddModelError(nameof(model.Authors), book.Error.message);
+            case Error.GenreNotFound or Error.MultipleGenresNotFound:
+                ModelState.AddModelError(nameof(model.PrimaryGenre.Name), book.Error.message);
+                break;
+            case Error.PublisherNotFound:
+                ModelState.AddModelError(nameof(model.Publisher.Name), book.Error.message);
+                break;
+            case Error.AuthorNotFound or Error.MultipleAuthorsNotFound or Error.AuthorFieldEmpty:
+                ModelState.AddModelError(nameof(model.Authors), book.Error.message);
+                break;
         }
         
         return View(model);
