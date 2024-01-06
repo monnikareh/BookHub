@@ -39,6 +39,11 @@ public static class ErrorMessages
     {
         return (Error.GenreNotFound ,$"Genre with 'ID={id}' could not be found");
     }
+    
+    public static (Error err, string message) GenresEmpty()
+    {
+        return (Error.GenreFieldEmpty,"Genre field cannot be empty");
+    }
 
     public static (Error err, string message) GenreNotFound()
     {

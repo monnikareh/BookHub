@@ -13,6 +13,7 @@ public enum Error
     MultipleBooksNotFound,
     MultipleAuthorsNotFound,
     AuthorFieldEmpty,
+    GenreFieldEmpty,
     BookFieldEmpty,
     UserAlreadyExists
 }

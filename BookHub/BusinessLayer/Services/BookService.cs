@@ -100,6 +100,11 @@ public class BookService : IBookService
         {
             return ErrorMessages.AuthorsEmpty();
         }
+        
+        if (bookCreate.Genres.IsNullOrEmpty())
+        {
+            return ErrorMessages.GenresEmpty();
+        }
 
         var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.Publisher.Name
                                                                            || p.Id == bookCreate.Publisher.Id);

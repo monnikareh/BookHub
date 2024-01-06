@@ -67,7 +67,10 @@ public class BookController : BaseController
                 ModelState.AddModelError(nameof(model.Publisher.Name), "Publisher does not exist, you must create it first");
                 break;
             case Error.AuthorNotFound or Error.MultipleAuthorsNotFound or Error.AuthorFieldEmpty:
-                ModelState.AddModelError(nameof(model.Authors), "Author does not exist, you must create it first");
+                ModelState.AddModelError(nameof(model.Authors), "Authors do not exist, you must create it first");
+                break;
+            case Error.GenreNotFound or Error.MultipleGenresNotFound or Error.GenreFieldEmpty:
+                ModelState.AddModelError(nameof(model.Genres), "Genres do not exist, you must create it first");
                 break;
         }
         
