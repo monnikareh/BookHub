@@ -12,4 +12,6 @@ public interface IOrderService
     Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
     Task DeleteOrderAsync(int id);
     Task AppendBook(int userId, int bookId);
+    Task PayOrderAsync(int id);
+    Task<OrderDetail> GetUnpaidOrder(int userId);
 }

@@ -186,6 +186,39 @@ namespace BusinessLayer.Services
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
         }
+
+        private async Task<Order> GetUnpaid(int userId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Books)
+                .Include(o => o.BookOrders)
+                .FirstOrDefaultAsync(o => o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+            if (order == null)
+            {
+                throw new OrderNotFoundException($"User with 'ID={userId}' has no unpaid orders");
+            }
+
+            return order;
+        }
+        
+        
+        public async Task<OrderDetail> GetUnpaidOrder(int userId)
+        {
+            return EntityMapper.MapOrderToOrderDetail(await GetUnpaid(userId));
+        }
+        
+        
+        public async Task PayOrderAsync(int id)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (order == null)
+            {
+                throw new OrderNotFoundException($"Order with 'ID={id}' could not be found");
+            }
+            order.PaymentStatus = PaymentStatus.Paid;
+            await _context.SaveChangesAsync();
+        }
         
         public async Task AppendBook(int userId, int bookId)
         {
