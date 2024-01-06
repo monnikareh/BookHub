@@ -56,14 +56,11 @@ public class OrderController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Unpaid(int id)
     {
-        try
-        {
+  
             var order = await _orderService.GetUnpaidOrder(id);
-            return View(order);
-        }
-        catch (OrderNotFoundException e)
-        {
-            return View("Empty");
-        }
+            return order.Match(
+                View,
+                _ => View("Empty")
+            );
     }
 }

@@ -1,3 +1,4 @@
+using BusinessLayer.Errors;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
 using BusinessLayer.Exceptions;
@@ -24,7 +25,8 @@ namespace BusinessLayer.Services
         }
 
         public async Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
-            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName, PaymentStatus? paymentStatus)
+            DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName,
+            PaymentStatus? paymentStatus)
         {
             var orders = _context.Orders
                 .Include(o => o.User)
@@ -46,8 +48,8 @@ namespace BusinessLayer.Services
             {
                 orders = orders.Where(o => o.Date >= startDate.Value);
             }
-            
-            
+
+
             if (endDate.HasValue)
             {
                 orders = orders.Where(o => o.Date <= endDate.Value);
@@ -57,7 +59,7 @@ namespace BusinessLayer.Services
             {
                 orders = orders.Where(ps => ps.PaymentStatus == paymentStatus);
             }
-            
+
             if (totalPrice.HasValue)
             {
                 orders = orders.Where(o => o.TotalPrice == totalPrice.Value);
@@ -93,7 +95,7 @@ namespace BusinessLayer.Services
 
             var mapped = EntityMapper.MapOrderToOrderDetail(order);
             // var cacheEntryOptions = new MemoryCacheEntryOptions()
-                // .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
+            // .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
             // _memoryCache.Set(key, mapped, cacheEntryOptions);
             return mapped;
         }
@@ -187,57 +189,62 @@ namespace BusinessLayer.Services
             await _context.SaveChangesAsync();
         }
 
-        private async Task<Order> GetUnpaid(int userId)
+        private async Task<Order?> GetUnpaid(int userId)
         {
             var order = await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Books)
                 .Include(o => o.BookOrders)
                 .FirstOrDefaultAsync(o => o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
-            if (order == null)
-            {
-                throw new OrderNotFoundException($"User with 'ID={userId}' has no unpaid orders");
-            }
-
             return order;
         }
-        
-        
-        public async Task<OrderDetail> GetUnpaidOrder(int userId)
+
+
+        public async Task<Result<OrderDetail, string>> GetUnpaidOrder(int userId)
         {
-            return EntityMapper.MapOrderToOrderDetail(await GetUnpaid(userId));
+            var res = await GetUnpaid(userId);
+            if (res is null)
+            {
+                return ErrorMessages.UserNotFound(userId);
+            }
+
+            return EntityMapper.MapOrderToOrderDetail(res);
         }
-        
-        
-        public async Task PayOrderAsync(int id)
+
+
+        public async Task<Result<bool, string>> PayOrderAsync(int id)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
-                throw new OrderNotFoundException($"Order with 'ID={id}' could not be found");
+                return ErrorMessages.OrderNotFound(id);
             }
+
             order.PaymentStatus = PaymentStatus.Paid;
             await _context.SaveChangesAsync();
+            return true;
         }
-        
-        public async Task AppendBook(int userId, int bookId)
+
+        public async Task<Result<bool, string>> AppendBook(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
             if (user == null)
             {
-                throw new UserNotFoundException($"User 'ID={userId}' could not be found");
+                return ErrorMessages.UserNotFound(userId);
             }
+
             if (book == null)
             {
-                throw new BookNotFoundException($"Book 'ID={bookId}' could not be found");
+                return ErrorMessages.BookNotFound(bookId);
             }
+
             var order = await _context
                 .Orders
                 .Include(order => order.Books)
                 .FirstOrDefaultAsync(o =>
-                o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
-            
+                    o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+
             if (order == null)
             {
                 order = new Order
@@ -254,7 +261,9 @@ namespace BusinessLayer.Services
             {
                 order.TotalPrice += book.Price;
             }
-            var orderItem = await _context.BookOrders.FirstOrDefaultAsync(bo => bo.BookId == book.Id && bo.OrderId == order.Id);
+
+            var orderItem =
+                await _context.BookOrders.FirstOrDefaultAsync(bo => bo.BookId == book.Id && bo.OrderId == order.Id);
             if (orderItem != null)
             {
                 orderItem.Count += 1;
@@ -270,8 +279,9 @@ namespace BusinessLayer.Services
                     Count = 1
                 });
             }
+
             await _context.SaveChangesAsync();
+            return true;
         }
     }
-
 }
