@@ -37,7 +37,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _publisherService.GetPublisherByIdAsync(id));
+                var publisher = await _publisherService.GetPublisherByIdAsync(id);
+                return publisher.Match<ActionResult<PublisherDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -72,7 +76,11 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _publisherService.UpdatePublisherAsync(id, publisherUpdate));
+                var publisher = await _publisherService.UpdatePublisherAsync(id, publisherUpdate);
+                return publisher.Match<ActionResult>(
+                    g => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -86,8 +94,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _publisherService.DeletePublisherAsync(id);
-                return Ok();
+                var publisher = await _publisherService.DeletePublisherAsync(id);
+                return publisher.Match<ActionResult>(
+                    g => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -97,10 +108,7 @@ namespace WebAPI.Controllers
         
         private ActionResult HandlePublisherException(Exception e)
         {
-            return e is PublisherNotFoundException or UserNotFoundException
-                or BookNotFoundException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }
