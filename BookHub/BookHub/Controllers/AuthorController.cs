@@ -50,7 +50,7 @@ public class AuthorController : BaseController
             {
                 Name = a.Name
             }),
-            Error
+            ErrorView
         );
     }
 
@@ -81,7 +81,7 @@ public class AuthorController : BaseController
         var author = await _authorService.GetAuthorByIdAsync(id);
         return author.Match(
             View,
-            Error
+            ErrorView
         );
     }
     

@@ -45,12 +45,12 @@ public class RatingController : BaseController
                     Value = r.Value,
                     Comment = r.Comment
                 }),
-                Error);
+                ErrorView);
         }
         catch (Exception ex)
         {
             _logger.LogError($"Error retrieving rating with ID {id}: {ex.Message}");
-            return RedirectToAction("Error");
+            return RedirectToAction("ErrorView");
         }
     }
 
@@ -70,7 +70,7 @@ public class RatingController : BaseController
         catch (Exception ex)
         {
             _logger.LogError($"Error updating rating with ID {id}: {ex.Message}");
-            return RedirectToAction("Error");
+            return RedirectToAction("ErrorView");
         }
 
         return RedirectToAction("Index");
@@ -89,7 +89,7 @@ public class RatingController : BaseController
         var rating = await _ratingService.GetRatingByIdAsync(id);
         return rating.Match(
             View,
-            Error);
+            ErrorView);
         ;
     }
 }

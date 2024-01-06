@@ -51,7 +51,7 @@ public class GenreController : BaseController
             {
                 Name = g.Name,
             }),
-            Error);
+            ErrorView);
     }
 
     [Authorize(Roles = "Admin")]
@@ -81,6 +81,6 @@ public class GenreController : BaseController
         var genre = await _genreService.GetGenreByIdAsync(id);
         return genre.Match(
             View,
-            Error);
+            ErrorView);
     }
 }

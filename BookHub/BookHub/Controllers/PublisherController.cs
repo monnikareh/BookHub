@@ -51,7 +51,7 @@ public class PublisherController : BaseController
                 Name = p.Name,
                 Books = p.Books
             }),
-            Error
+            ErrorView
         );
     }
 
@@ -82,6 +82,6 @@ public class PublisherController : BaseController
         var publisher = await _publisherService.GetPublisherByIdAsync(id);
         return publisher.Match(
             View,
-            Error);
+            ErrorView);
     }
 }

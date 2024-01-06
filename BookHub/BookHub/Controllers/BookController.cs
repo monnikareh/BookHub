@@ -5,6 +5,7 @@ using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BusinessLayer.Errors;
 
 namespace BookHub.Controllers;
 
@@ -51,10 +52,25 @@ public class BookController : BaseController
         }
 
         var book = await _bookFacade.AddNewBook(model);
-        // ModelState.AddModelError(nameof(model.PrimaryGenre.Name), "Primary genre does not exist. Create it first.");
-        return book.Match(
-            _ => RedirectToAction("Index"),
-            e => Error(e));
+        if (book.IsOk)
+        {
+            return RedirectToAction("Index");
+        }
+        
+        if (book.Error.err == Error.GenreNotFound || book.Error.err == Error.MultipleGenresNotFound)
+        {
+            ModelState.AddModelError(nameof(model.PrimaryGenre.Name), book.Error.message);
+        }
+        else if (book.Error.err == Error.PublisherNotFound)
+        {
+            ModelState.AddModelError(nameof(model.Publisher.Name), book.Error.message);
+        }
+        else if (book.Error.err == Error.AuthorNotFound || book.Error.err == Error.MultipleAuthorsNotFound)
+        {
+            ModelState.AddModelError(nameof(model.Authors), book.Error.message);
+        }
+
+        return View(model);
     }
 
     [Authorize(Roles = "Admin")]
@@ -74,7 +90,7 @@ public class BookController : BaseController
                 Price = book.Price,
                 Authors = book.Authors
             }),
-            Error);
+            ErrorView);
     }
 
 
@@ -105,7 +121,7 @@ public class BookController : BaseController
         var book = await _bookService.GetBookByIdAsync(id);
         return book.Match(
             View,
-            Error);
+            ErrorView);
     }
 
     [HttpGet("{id:int}")]
@@ -131,7 +147,7 @@ public class BookController : BaseController
         var user = await _userService.GetUserByIdAsync(userId);
         if (!user.IsOk)
         {
-            return Error(user.Error);
+            return ErrorView(user.Error);
         }
         var result = await _userService.AddBookToWishlist(user.Value.Id, id);
         if (result is { IsOk: true, Value: true })
@@ -163,12 +179,12 @@ public class BookController : BaseController
         var book = (await _bookService.GetBookByIdAsync(id));
         if (!user.IsOk)
         {
-            return Error(user.Error);
+            return ErrorView(user.Error);
         }
 
         if (!book.IsOk)
         {
-            return Error(book.Error);
+            return ErrorView(book.Error);
         }
         //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
         //{

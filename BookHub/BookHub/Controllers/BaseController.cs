@@ -7,8 +7,8 @@ namespace BookHub.Controllers;
 
 public class BaseController : Controller
 {
-    public IActionResult Error((Error e, string message) error)
+    public IActionResult ErrorView((Error err, string message) error)
     {
-        return View("Error", new ErrorViewModel { Message = error.message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View("ErrorView", new ErrorViewModel { Message = error.message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

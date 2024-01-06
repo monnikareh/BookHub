@@ -39,7 +39,7 @@ public class OrderController : BaseController
         var order = await _orderService.GetOrderByIdAsync(id);
         return order.Match(
             View,
-            Error);
+            ErrorView);
     }
     
     

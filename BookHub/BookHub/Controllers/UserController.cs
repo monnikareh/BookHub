@@ -41,7 +41,7 @@ public class UserController : BaseController
         var res = await _userService.GetUserAsync(id);
         if (!res.IsOk)
         {
-            return Error(res.Error);
+            return ErrorView(res.Error);
         }
 
         var (token, user) = res.Value;
@@ -74,6 +74,6 @@ public class UserController : BaseController
         var user = await _userService.GetUserByIdAsync(id);
         return user.Match(
             View,
-            Error);
+            ErrorView);
     }
 }
