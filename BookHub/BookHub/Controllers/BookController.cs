@@ -54,7 +54,7 @@ public class BookController : Controller
     public async Task<IActionResult> Create(BookCreate model)
     {
         if (!ModelState.IsValid) return View(model);
-        await _bookService.CreateBookAsync(model);
+        await _bookFacade.AddNewBook(model);
         return RedirectToAction("Index");
     }
 

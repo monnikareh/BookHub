@@ -24,4 +24,9 @@ public class BookFacade
         var books = await _bookService.GetBooksAsync(null, null, null, null, null, null, null);
         return books;
     }
+    
+    public async Task AddNewBook(BookCreate model)
+    {
+        await _bookService.CreateBookAsync(model);
+    }
 }
