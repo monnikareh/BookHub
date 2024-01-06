@@ -37,7 +37,7 @@ public class OrderController : Controller
     public async Task<IActionResult> Append(int userId, int bookId)
     {
         await _orderService.AppendBook(userId, bookId);
-        return RedirectToAction("Index", "Book");
+        return RedirectToAction("Detail", "Book", new { id = bookId});
     }
     //
     //
