@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
 using BookHub.Models;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Facades;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
@@ -53,11 +54,30 @@ public class BookController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create(BookCreate model)
     {
-        if (!ModelState.IsValid) return View(model);
-        await _bookFacade.AddNewBook(model);
-        return RedirectToAction("Index");
-    }
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
 
+        try
+        {
+            await _bookFacade.AddNewBook(model);
+            return RedirectToAction("Index");
+        }
+        catch (GenreNotFoundException)
+        {
+            ModelState.AddModelError(nameof(model.PrimaryGenre.Name), "Primary genre does not exist. Create it first.");
+        }
+        catch (PublisherNotFoundException)
+        {
+            ModelState.AddModelError(nameof(model.Publisher.Name), "Publisher does not exist. Create it first.");
+        }
+        catch (AuthorNotFoundException)
+        {
+            ModelState.AddModelError(nameof(model.Authors), $"Author does not exist. Create it first.");
+        }
+        return View(model);
+    }
     
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
