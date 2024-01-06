@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookHub.Controllers;
 
 [Route("[controller]/[action]")]
-public class SharedController : Controller
+public class SharedController : BaseController
 {
     // GET
     private readonly ILogger<SharedController> _logger;
@@ -18,11 +18,5 @@ public class SharedController : Controller
     public IActionResult Privacy()
     {
         return View();
-    }
-    
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error(string message)
-    {
-        return View(new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

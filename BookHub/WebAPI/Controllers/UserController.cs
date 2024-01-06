@@ -102,8 +102,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var user = await _userService.DeleteUserAsync(id);
-                return user.Match<ActionResult>(
+                var res = await _userService.DeleteUserAsync(id);
+                return res.Match<ActionResult>(
                     _ => Ok(),
                     NotFound
                 );
@@ -116,13 +116,7 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleUserException(Exception e)
         {
-            return e switch
-            {
-                OrderNotFoundException or UserNotFoundException
-                    or BookNotFoundException => NotFound(e.Message),
-                UserAlreadyExistsException => Conflict(e.Message),
-                _ => Problem($"{e}Unknown problem occured")
-            };
+            return Problem($"{e}Unknown problem occured");
         }
     }
 }

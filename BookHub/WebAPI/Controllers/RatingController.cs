@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
     public class RatingController : ControllerBase
     {
         private readonly IRatingService _ratingService;
-        
+
 
         public RatingController(IRatingService ratingService)
         {
@@ -41,7 +41,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _ratingService.GetRatingByIdAsync(id));
+                var rating = await _ratingService.GetRatingByIdAsync(id);
+                return rating.Match<ActionResult<RatingDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -57,26 +61,36 @@ namespace WebAPI.Controllers
             {
                 return BadRequest("Model is not valid!");
             }
+
             try
             {
-                return Ok(await _ratingService.CreateRatingAsync(ratingCreate));
+                var rating = await _ratingService.CreateRatingAsync(ratingCreate);
+                return rating.Match<ActionResult<RatingDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
                 return HandleRatingException(e);
             }
         }
-        
+
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateRating(int id, RatingUpdate ratingDetail)
+        public async Task<ActionResult<RatingDetail>> UpdateRating(int id, RatingUpdate ratingDetail)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Model is not valid!");
             }
+
             try
             {
-                return Ok(await _ratingService.UpdateRatingAsync(id, ratingDetail));
+                var rating = await _ratingService.UpdateRatingAsync(id, ratingDetail);
+                return rating.Match<ActionResult<RatingDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -89,22 +103,21 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _ratingService.DeleteRatingAsync(id);
-                return Ok();
-                
+                var res = await _ratingService.DeleteRatingAsync(id);
+                return res.Match<ActionResult>(
+                    g => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
                 return HandleRatingException(e);
             }
         }
-        
+
         private ActionResult HandleRatingException(Exception e)
         {
-            return e is ContextNotFoundException or UserNotFoundException
-                or BookNotFoundException or RatingNotFoundException or BooksEmptyException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }

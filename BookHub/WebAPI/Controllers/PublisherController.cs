@@ -93,8 +93,8 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var publisher = await _publisherService.DeletePublisherAsync(id);
-                return publisher.Match<ActionResult>(
+                var res = await _publisherService.DeletePublisherAsync(id);
+                return res.Match<ActionResult>(
                     g => Ok(),
                     NotFound
                 );

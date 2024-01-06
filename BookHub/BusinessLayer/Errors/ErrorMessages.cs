@@ -1,3 +1,5 @@
+using BusinessLayer.Models;
+
 namespace BusinessLayer.Errors;
 
 public static class ErrorMessages
@@ -16,7 +18,7 @@ public static class ErrorMessages
     {
         return $"Author with 'ID={id}' could not be found";
     }
-    
+
     public static string AuthorNotFound()
     {
         return "One or more authors could not be found";
@@ -26,11 +28,12 @@ public static class ErrorMessages
     {
         return "Author field cannot be empty";
     }
-    
+
     public static string BooksEmpty()
     {
         return "Book field cannot be empty";
     }
+
     public static string GenreNotFound(int id)
     {
         return $"Genre with 'ID={id}' could not be found";
@@ -50,12 +53,12 @@ public static class ErrorMessages
     {
         return $"Publisher 'Name={name}' <OR> 'ID={id}' could not be found";
     }
-    
+
     public static string GenreNotFound(int id, string name)
     {
         return $"Genre 'Name={name}' <OR> 'ID={id}' could not be found";
     }
-    
+
     public static string UserNotFound(int id, string name)
     {
         return $"User 'Name={name}' <OR> 'ID={id}' could not be found";
@@ -65,7 +68,7 @@ public static class ErrorMessages
     {
         return $"User 'Name={name}' already exists";
     }
-    
+
     public static string RatingNotFound(int id)
     {
         return $"Rating with 'ID={id}' could not be found";
@@ -79,5 +82,10 @@ public static class ErrorMessages
     public static string BookNotFound()
     {
         return "One or more books could not be found";
+    }
+
+    public static string BookNotFound(int id, string name)
+    {
+        return $"Book 'Name={name}' <OR> 'ID={id}' could not be found";
     }
 }

@@ -8,14 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookHub.Controllers;
 
 [Route("[controller]/[action]")]
-public class RatingController : Controller
+public class RatingController : BaseController
 {
     private readonly ILogger<RatingController> _logger;
     private readonly IRatingService _ratingService;
     private readonly IUserService _userService;
     private readonly IBookService _bookService;
 
-    public RatingController(ILogger<RatingController> logger, IRatingService ratingService, IUserService userService, IBookService bookService)
+    public RatingController(ILogger<RatingController> logger, IRatingService ratingService, IUserService userService,
+        IBookService bookService)
     {
         _logger = logger;
         _ratingService = ratingService;
@@ -28,26 +29,23 @@ public class RatingController : Controller
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int userId);
         var ratings = await _ratingService.GetRatingsAsync(userId, null, null, null);
-        return View(ratings);    
+        return View(ratings);
     }
-    
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-    
+
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
         try
         {
             var rating = await _ratingService.GetRatingByIdAsync(id);
-            return View(new RatingUpdate
-            {
-                Value = rating.Value,
-                Comment = rating.Comment
-            });
+            return rating.Match(
+                r => View(new RatingUpdate
+                {
+                    Value = r.Value,
+                    Comment = r.Comment
+                }),
+                Error);
         }
         catch (Exception ex)
         {
@@ -63,6 +61,7 @@ public class RatingController : Controller
         {
             return View(model);
         }
+
         try
         {
             await _ratingService.UpdateRatingAsync(id, model);
@@ -77,18 +76,20 @@ public class RatingController : Controller
         return RedirectToAction("Index");
     }
 
-    
+
     public async Task<ActionResult> Delete(int id)
     {
         await _ratingService.DeleteRatingAsync(id);
         return RedirectToAction("Index");
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
         var rating = await _ratingService.GetRatingByIdAsync(id);
-        return View(rating);
+        return rating.Match(
+            View,
+            Error);
+        ;
     }
-    
 }

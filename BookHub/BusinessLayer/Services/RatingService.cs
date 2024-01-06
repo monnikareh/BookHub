@@ -1,3 +1,4 @@
+using BusinessLayer.Errors;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
@@ -44,7 +45,7 @@ public class RatingService : IRatingService
         return filteredRatings.Select(EntityMapper.MapRatingToRatingDetail);
     }
 
-    public async Task<RatingDetail> GetRatingByIdAsync(int id)
+    public async Task<Result<RatingDetail, string>> GetRatingByIdAsync(int id)
     {
         var key = $"RatingById_{id}";
         if (_memoryCache.TryGetValue(key, out RatingDetail? cached) && cached is not null)
@@ -59,7 +60,7 @@ public class RatingService : IRatingService
             .FirstOrDefaultAsync(r => r.Id == id);
         if (rating == null)
         {
-            throw new RatingNotFoundException($"Rating 'ID={id}' could not be found");
+            return ErrorMessages.RatingNotFound(id);
         }
 
         var mapped = EntityMapper.MapRatingToRatingDetail(rating);
@@ -70,7 +71,7 @@ public class RatingService : IRatingService
     }
 
 
-    public async Task<RatingDetail> CreateRatingAsync(RatingCreate ratingCreate)
+    public async Task<Result<RatingDetail, string>> CreateRatingAsync(RatingCreate ratingCreate)
     {
         if (_context.Books == null)
         {
@@ -81,16 +82,14 @@ public class RatingService : IRatingService
                                                                  || u.Id == ratingCreate.User.Id);
         if (user == null)
         {
-            throw new UserNotFoundException(
-                $"User Name={ratingCreate.User.Name}' <OR> 'ID={ratingCreate.User.Id}' could not be found");
+            return ErrorMessages.UserNotFound(ratingCreate.User.Id, ratingCreate.User.Name);
         }
 
         var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == ratingCreate.Book.Name
                                                                  || b.Id == ratingCreate.Book.Id);
         if (book == null)
         {
-            throw new BookNotFoundException(
-                $"Book 'Name={ratingCreate.Book.Name}' <OR> 'ID={ratingCreate.Book.Id}' could not be found");
+            return ErrorMessages.BookNotFound(ratingCreate.Book.Id, ratingCreate.Book.Name);
         }
 
         var rating = new Rating
@@ -111,12 +110,12 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task<RatingDetail> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
+    public async Task<Result<RatingDetail, string>> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
     {
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)
         {
-            throw new RatingNotFoundException($"Rating with ID {id} not found");
+            return ErrorMessages.RatingNotFound(id);
         }
 
         rating.Value = ratingUpdate.Value;
@@ -130,16 +129,17 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task DeleteRatingAsync(int id)
+    public async Task<Result<bool, string>> DeleteRatingAsync(int id)
     {
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)
         {
-            throw new RatingNotFoundException($"Rating with ID {id} not found");
+            return ErrorMessages.RatingNotFound(id);
         }
 
         _context.Ratings.Remove(rating);
         await _context.SaveChangesAsync();
+        return true;
     }
     
     public async Task<bool> ExistRatingForUser(int userId, int bookId)
