@@ -11,6 +11,23 @@ public static class ErrorMessages
     {
         return $"Order with 'ID={id}' could not be found";
     }
+    public static string AuthorNotFound(int id)
+    {
+        return $"Author with 'ID={id}' could not be found";
+    }
+    public static string GenreNotFound(int id)
+    {
+        return $"Genre with 'ID={id}' could not be found";
+    }
+    public static string PublisherNotFound(int id)
+    {
+        return $"Publisher with 'ID={id}' could not be found";
+    }
+    public static string RatingNotFound(int id)
+    {
+        return $"Rating with 'ID={id}' could not be found";
+    }
+    
     public static string BookNotFound(int id)
     {
         return $"Book with 'ID={id}' could not be found";
