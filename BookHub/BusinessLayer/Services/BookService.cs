@@ -1,3 +1,4 @@
+using BusinessLayer.Errors;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -66,7 +67,7 @@ public class BookService : IBookService
         return filteredBooks.Select(EntityMapper.MapBookToBookDetail);
     }
 
-    public async Task<BookDetail> GetBookByIdAsync(int id)
+    public async Task<Result<BookDetail, string>> GetBookByIdAsync(int id)
     {
         var key = $"BookById_{id}";
         if (_memoryCache.TryGetValue(key, out BookDetail? cached) && cached is not null)
@@ -83,7 +84,7 @@ public class BookService : IBookService
             .FirstOrDefaultAsync(b => b.Id == id);
         if (book == null)
         {
-            throw new BookNotFoundException($"Book 'ID={id}' could not be found");
+            return ErrorMessages.BookNotFound(id);
         }
 
         var mapped = EntityMapper.MapBookToBookDetail(book);
@@ -94,19 +95,19 @@ public class BookService : IBookService
     }
 
 
-    public async Task<BookDetail> CreateBookAsync(BookCreate bookCreate)
+    public async Task<Result<BookDetail, string>> CreateBookAsync(BookCreate bookCreate)
     {
         if (bookCreate.Authors.IsNullOrEmpty())
         {
-            throw new AuthorsEmptyException("Collection Authors is empty");
+            return ErrorMessages.AuthorsEmpty();
         }
 
         var publisher = await _context.Publishers.FirstOrDefaultAsync(p => p.Name == bookCreate.Publisher.Name
                                                                            || p.Id == bookCreate.Publisher.Id);
         if (publisher == null)
         {
-            throw new PublisherNotFoundException(
-                $"Publisher 'Name={bookCreate.Publisher.Name}' <OR> 'ID={bookCreate.Publisher.Id}' could not be found");
+            return ErrorMessages.PublisherNotFound(bookCreate.Publisher.Id, bookCreate.Publisher.Name);
+
         }
 
         var primaryGenre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == bookCreate.PrimaryGenre.Name
@@ -114,8 +115,7 @@ public class BookService : IBookService
 
         if (primaryGenre == null)
         {
-            throw new GenreNotFoundException(
-                $"PrimaryGenre 'Name={bookCreate.PrimaryGenre.Name}' <OR> 'ID={bookCreate.PrimaryGenre.Id}' could not be found");
+            return ErrorMessages.GenreNotFound(bookCreate.PrimaryGenre.Id, bookCreate.PrimaryGenre.Name);
         }
 
         var genreNames = bookCreate.Genres.Select(g => g.Name).ToHashSet();
@@ -125,12 +125,12 @@ public class BookService : IBookService
 
         if (genres.Count != bookCreate.Genres.Count)
         {
-            throw new GenreNotFoundException("One or more genres could not be found");
+            return ErrorMessages.GenreNotFound();
         }
 
         if (bookCreate.Authors == null)
         {
-            throw new AuthorsEmptyException("One or more author could not be found");
+            return ErrorMessages.AuthorNotFound();
         }
 
         var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
@@ -140,7 +140,7 @@ public class BookService : IBookService
 
         if (authors.Count != bookCreate.Authors.Count)
         {
-            throw new AuthorNotFoundException("One or more authors could not be found");
+            return ErrorMessages.AuthorNotFound();
         }
 
         var book = new Book
@@ -161,7 +161,7 @@ public class BookService : IBookService
         return EntityMapper.MapBookToBookDetail(book);
     }
 
-    public async Task<BookDetail> UpdateBookAsync(int id, BookCreate bookUpdate)
+    public async Task<Result<BookDetail, string>> UpdateBookAsync(int id, BookCreate bookUpdate)
     {
         var book = await _context.Books
             .Include(pg => pg.PrimaryGenre)
@@ -172,7 +172,7 @@ public class BookService : IBookService
 
         if (book == null)
         {
-            throw new BookNotFoundException($"Book 'ID={id}' could not be found");
+            return ErrorMessages.BookNotFound(id);
         }
 
         book.Name = bookUpdate.Name;
@@ -188,8 +188,9 @@ public class BookService : IBookService
 
             if (genres.Count != bookUpdate.Genres.Count)
             {
-                throw new GenreNotFoundException("One or more genres could not be found");
+                return ErrorMessages.GenreNotFound();
             }
+
             book.Genres.Clear();
             book.Genres.AddRange(genres);
         }
@@ -200,22 +201,21 @@ public class BookService : IBookService
                 p.Name == bookUpdate.Publisher.Name || p.Id == bookUpdate.Publisher.Id);
             if (publisher == null)
             {
-                throw new PublisherNotFoundException(
-                    $"Publisher 'Name={bookUpdate.Publisher.Name}' <OR> 'ID={bookUpdate.Publisher.Id}' could not be found");
+                return ErrorMessages.PublisherNotFound(bookUpdate.Publisher.Id, bookUpdate.Publisher.Name);
             }
 
             book.Publisher = publisher;
             book.PublisherId = publisher.Id;
         }
-        
+
         if (bookUpdate.PrimaryGenre.Name != "string")
         {
             var genre = await _context.Genres.FirstOrDefaultAsync(p =>
                 p.Name == bookUpdate.PrimaryGenre.Name || p.Id == bookUpdate.PrimaryGenre.Id);
             if (genre == null)
             {
-                throw new GenreNotFoundException(
-                    $"PrimaryGenre 'Name={bookUpdate.PrimaryGenre.Name}' <OR> 'ID={bookUpdate.PrimaryGenre.Id}' could not be found");
+                return ErrorMessages.GenreNotFound(bookUpdate.PrimaryGenre.Id, bookUpdate.PrimaryGenre.Name);
+
             }
 
             book.PrimaryGenre = genre;
@@ -238,8 +238,9 @@ public class BookService : IBookService
 
             if (authors.Count != bookUpdate.Authors.Count)
             {
-                throw new AuthorNotFoundException("One or more authors could not be found");
+                return ErrorMessages.AuthorNotFound();
             }
+
             book.Authors.Clear();
             book.Authors.AddRange(authors);
         }
@@ -248,16 +249,17 @@ public class BookService : IBookService
         return EntityMapper.MapBookToBookDetail(book);
     }
 
-    public async Task DeleteBookAsync(int id)
+    public async Task<Result<bool, string>> DeleteBookAsync(int id)
     {
         var book = await _context.Books.FindAsync(id);
         if (book == null)
         {
-            throw new BookNotFoundException($"Book 'ID={id}' could not be found");
+            return ErrorMessages.BookNotFound(id);
         }
 
         _context.Books.Remove(book);
         await _context.SaveChangesAsync();
+        return true;
     }
 
     private bool BookExists(int id)

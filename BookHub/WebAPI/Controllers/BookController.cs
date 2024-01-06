@@ -40,7 +40,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _bookService.GetBookByIdAsync(id));
+                var book = await _bookService.GetBookByIdAsync(id);
+                return book.Match<ActionResult<BookDetail>>(
+                    a => Ok(a),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -59,7 +63,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _bookService.CreateBookAsync(bookCreate));
+                var book = await _bookService.CreateBookAsync(bookCreate);
+                return book.Match<ActionResult<BookDetail>>(
+                    a => Ok(a),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -77,7 +85,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _bookService.UpdateBookAsync(id, bookUpdate));
+                var book = await _bookService.UpdateBookAsync(id, bookUpdate);
+                return book.Match<ActionResult>(
+                    a => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -91,8 +103,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _bookService.DeleteBookAsync(id);
-                return Ok();
+                var res = await _bookService.DeleteBookAsync(id);
+                return res.Match<ActionResult>(
+                    a => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {

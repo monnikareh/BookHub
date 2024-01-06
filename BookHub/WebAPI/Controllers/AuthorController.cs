@@ -37,7 +37,11 @@ namespace WebAPI.Controllers
         {
            try
            {
-               return Ok(await _authorService.GetAuthorByIdAsync(id));
+               var author = await _authorService.GetAuthorByIdAsync(id);
+               return author.Match<ActionResult<AuthorDetail>>(
+                   a => Ok(a),
+                   e => NotFound(e)
+               );
            }
            catch (Exception e)
            {
@@ -72,7 +76,11 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _authorService.UpdateAuthorAsync(id, authorUpdate));
+                var author = await _authorService.UpdateAuthorAsync(id, authorUpdate);
+                return author.Match<ActionResult>(
+                    a => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -85,8 +93,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _authorService.DeleteAuthorAsync(id);
-                return Ok();
+                var res = await _authorService.DeleteAuthorAsync(id);
+                return res.Match<ActionResult>(
+                    a => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
