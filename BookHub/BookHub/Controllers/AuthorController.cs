@@ -12,7 +12,7 @@ public class AuthorController : Controller
 {
     private readonly ILogger<AuthorController> _logger;
     private readonly IAuthorService _authorService;
-    
+
     public AuthorController(ILogger<AuthorController> logger, IAuthorService authorService)
     {
         _logger = logger;
@@ -22,10 +22,10 @@ public class AuthorController : Controller
     public async Task<IActionResult> Index()
     {
         var authors = await _authorService.GetAuthorsAsync(null, null, null);
-        return View(authors);    
+        return View(authors);
     }
-    
-    
+
+
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
@@ -41,16 +41,19 @@ public class AuthorController : Controller
         await _authorService.CreateAuthorAsync(model);
         return RedirectToAction("Index");
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
         var author = await _authorService.GetAuthorByIdAsync(id);
-        return View(new AuthorUpdate
-        {
-            Name = author.Name,
-        });
+        return author.Match(
+            a => View(new AuthorUpdate
+            {
+                Name = a.Name
+            }),
+            _ => View("Error")
+        );
     }
 
     [Authorize(Roles = "Admin")]
@@ -61,26 +64,30 @@ public class AuthorController : Controller
         {
             return View(model);
         }
+
         await _authorService.UpdateAuthorAsync(id, model);
         return RedirectToAction("Index");
     }
-    
+
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(int id)
     {
         await _authorService.DeleteAuthorAsync(id);
         return RedirectToAction("Index");
     }
-    
+
     [AllowAnonymous]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
         var author = await _authorService.GetAuthorByIdAsync(id);
-        return View(author);
+        return author.Match(
+            View,
+            _ => View("Error")
+        );
     }
-    
-    
+
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

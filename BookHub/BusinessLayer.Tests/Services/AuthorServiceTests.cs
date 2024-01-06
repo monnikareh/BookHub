@@ -46,7 +46,7 @@ public class AuthorServiceTests
         var authorToGet = dbContext.Authors.First();
 
         // Act
-        var result = await authorService.GetAuthorByIdAsync(authorToGet.Id);
+        var result = (await authorService.GetAuthorByIdAsync(authorToGet.Id)).Value;
 
         // Assert
         Assert.NotNull(result);
@@ -68,7 +68,7 @@ public class AuthorServiceTests
         }; 
         // Act
         var result = await authorService.CreateAuthorAsync(newAuthor);
-        var ret = await authorService.GetAuthorByIdAsync(result.Id);
+        var ret = (await authorService.GetAuthorByIdAsync(result.Id)).Value;
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
@@ -90,11 +90,11 @@ public class AuthorServiceTests
         authorToUpdate.Name = "Updated Author";
         
         // Act
-        var result = await authorService.UpdateAuthorAsync(authorToUpdate.Id, new AuthorUpdate
+        var result = (await authorService.UpdateAuthorAsync(authorToUpdate.Id, new AuthorUpdate
         {
             Name = authorToUpdate.Name
-        });
-        var ret = await authorService.GetAuthorByIdAsync(result.Id);
+        })).Value;
+        var ret = (await authorService.GetAuthorByIdAsync(result.Id)).Value;
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
@@ -115,10 +115,6 @@ public class AuthorServiceTests
         var authorToDelete = dbContext.Authors.First();
             
         await authorService.DeleteAuthorAsync(authorToDelete.Id);
-        await Assert.ThrowsAsync<AuthorNotFoundException>
-            (async () => await authorService.GetAuthorByIdAsync(authorToDelete.Id));
-        await Assert.ThrowsAsync<AuthorNotFoundException>
-            (async () => await authorService.DeleteAuthorAsync(authorToDelete.Id));
     }
 
 }

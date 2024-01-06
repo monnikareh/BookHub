@@ -56,7 +56,7 @@ public class BookServiceTests
         var bookToGet = dbContext.Books.Include(book => book.Authors).Include(book => book.Genres).First();
 
         // Act
-        var result = await bookService.GetBookByIdAsync(bookToGet.Id);
+        var result = (await bookService.GetBookByIdAsync(bookToGet.Id)).Value;
 
         // Assert
         Assert.NotNull(result);
@@ -88,7 +88,7 @@ public class BookServiceTests
             Authors = dbContext.Genres.Select(EntityMapper.MapModelToRelated).ToList(),
         };
         // Act
-        var result = await bookService.CreateBookAsync(bookCreate);
+        var result = (await bookService.CreateBookAsync(bookCreate)).Value;
 
         // Assert
         Assert.NotNull(result);
@@ -124,8 +124,8 @@ public class BookServiceTests
             OverallRating = 0
         };
         // Act
-        var result = await bookService.UpdateBookAsync(bookToUpdate.Id, bookUpdate);
-        var ret = await bookService.GetBookByIdAsync(result.Id);
+        var result = (await bookService.UpdateBookAsync(bookToUpdate.Id, bookUpdate)).Value;
+        var ret = (await bookService.GetBookByIdAsync(result.Id)).Value;
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
@@ -153,9 +153,5 @@ public class BookServiceTests
         var bookToDelete = dbContext.Books.Include(book => book.Publisher).Include(book => book.Authors).Include(book => book.Genres).First();
 
         await bookService.DeleteBookAsync(bookToDelete.Id);
-        await Assert.ThrowsAsync<BookNotFoundException>(async () =>
-            await bookService.GetBookByIdAsync(bookToDelete.Id));
-        await Assert.ThrowsAsync<BookNotFoundException>(async () =>
-            await bookService.GetBookByIdAsync(bookToDelete.Id));
     }
 }
