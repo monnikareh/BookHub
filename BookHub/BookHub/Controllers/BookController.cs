@@ -127,9 +127,13 @@ public class BookController : BaseController
             return RedirectToAction("Login", "Account");
         } */
 
-        var user = (await _userService.GetUserByIdAsync(userId)).Value;
-        var result = (await _userService.AddBookToWishlist(user.Id, id)).Value;
-        if (result)
+        var user = await _userService.GetUserByIdAsync(userId);
+        if (!user.IsOk)
+        {
+            return Error(user.Error);
+        }
+        var result = await _userService.AddBookToWishlist(user.Value.Id, id);
+        if (result is { IsOk: true, Value: true })
         {
             TempData["WishlistMessage"] = "Book added to Wishlist";
         }
