@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security.Claims;
 using BookHub.Models;
+using BusinessLayer.Facades;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
@@ -17,18 +18,20 @@ public class BookController : Controller
     private readonly IBookService _bookService;
     private readonly IRatingService _ratingService;
     private readonly IUserService _userService;
+    private readonly BookFacade _bookFacade;
 
-    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService, IUserService userService)
+    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService, IUserService userService, BookFacade bookFacade)
     {
         _logger = logger;
         _bookService = bookService;
         _ratingService = ratingService;
         _userService = userService;
+        _bookFacade = bookFacade;
     }
 
     public async Task<IActionResult> Index()
     {
-        var books = await _bookService.GetBooksAsync(null, null, null, null, null, null, null);
+        var books = await _bookFacade.GetAllBooks();
         return View(books);    
     }
     
