@@ -6,6 +6,7 @@ using DataAccessLayer;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Entities;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace BusinessLayer.Services;
@@ -73,11 +74,6 @@ public class RatingService : IRatingService
 
     public async Task<Result<RatingDetail, (Error err, string message)>> CreateRatingAsync(RatingCreate ratingCreate)
     {
-        if (_context.Books == null)
-        {
-            throw new ContextNotFoundException("Entity set 'BookHubDbContext.Books'  is null.");
-        }
-
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == ratingCreate.User.Name
                                                                  || u.Id == ratingCreate.User.Id);
         if (user == null)
@@ -101,10 +97,13 @@ public class RatingService : IRatingService
             Value = ratingCreate.Value,
             Comment = ratingCreate.Comment
         };
-        var bookRatings = _context.Ratings
-            .Where(r => r.Book.Id == book.Id);
-        book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value)
-                             / (bookRatings.Count() + 1);
+        var bookRatings = await _context.Ratings
+            .Where(r => r.Book.Id == book.Id).ToListAsync();
+        if (!bookRatings.IsNullOrEmpty())
+        {
+            book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingCreate.Value) / bookRatings.Count;    
+        }
+        
         _context.Ratings.Add(rating);
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
