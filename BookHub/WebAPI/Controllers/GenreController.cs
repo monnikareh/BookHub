@@ -37,7 +37,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _genreService.GetGenreByIdAsync(id));
+                var genre = await _genreService.GetGenreByIdAsync(id);
+                return genre.Match<ActionResult<GenreDetail>>(
+                    g => Ok(g),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -74,7 +78,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _genreService.UpdateGenreAsync(id, genreDetail));
+                var genre = await _genreService.UpdateGenreAsync(id, genreDetail);
+                return genre.Match<IActionResult>(
+                    _ => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -87,8 +95,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                await _genreService.DeleteGenreAsync(id);
-                return Ok();
+                var res = await _genreService.DeleteGenreAsync(id);
+                return res.Match<IActionResult>(
+                    _ => Ok(),
+                    NotFound
+                );
             }
             catch (Exception e)
             {
@@ -98,9 +109,7 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleGenresException(Exception e)
         {
-            return e is GenreNotFoundException or BookNotFoundException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }

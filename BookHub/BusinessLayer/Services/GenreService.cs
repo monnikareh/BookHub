@@ -1,3 +1,4 @@
+using BusinessLayer.Errors;
 using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
@@ -34,7 +35,7 @@ public class GenreService : IGenreService
         return filteredGenres.Select(EntityMapper.MapGenreToGenreDetail);
     }
 
-    public async Task<GenreDetail> GetGenreByIdAsync(int id)
+    public async Task<Result<GenreDetail, string>> GetGenreByIdAsync(int id)
     {
         var key = $"GenreById_{id}";
         if (_memoryCache.TryGetValue(key, out GenreDetail? cached) && cached is not null)
@@ -49,7 +50,7 @@ public class GenreService : IGenreService
 
         if (genre == null)
         {
-            throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
+            return ErrorMessages.GenreNotFound(id);
         }
 
         var mapped = EntityMapper.MapGenreToGenreDetail(genre);
@@ -71,13 +72,13 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task<GenreDetail> UpdateGenreAsync(int id, GenreCreate genreUpdate)
+    public async Task<Result<GenreDetail, string>> UpdateGenreAsync(int id, GenreCreate genreUpdate)
     {
         var genre = await _context.Genres.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
         if (genre == null)
         {
-            throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
+            return ErrorMessages.GenreNotFound(id);
         }
 
         genre.Name = genreUpdate.Name;
@@ -86,15 +87,16 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task DeleteGenreAsync(int id)
+    public async Task<Result<bool, string>> DeleteGenreAsync(int id)
     {
         var genre = await _context.Genres.FindAsync(id);
         if (genre == null)
         {
-            throw new GenreNotFoundException($"Genre 'ID={id}' could not be found");
+            return ErrorMessages.GenreNotFound(id);
         }
 
         _context.Genres.Remove(genre);
         await _context.SaveChangesAsync();
+        return true;
     }
 }

@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
             {
                 var book = await _bookService.GetBookByIdAsync(id);
                 return book.Match<ActionResult<BookDetail>>(
-                    a => Ok(a),
+                    b => Ok(b),
                     e => NotFound(e)
                 );
             }
@@ -117,10 +117,7 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleBookException(Exception e)
         {
-            return e is PublisherNotFoundException or GenreNotFoundException or AuthorNotFoundException
-                or BookNotFoundException or AuthorsEmptyException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }
