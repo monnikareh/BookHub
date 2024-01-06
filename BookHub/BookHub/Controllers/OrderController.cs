@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using BookHub.Models;
+using BusinessLayer.Exceptions;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,7 +56,14 @@ public class OrderController : Controller
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Unpaid(int id)
     {
-        var order = await _orderService.GetUnpaidOrder(id);
-        return View(order);
+        try
+        {
+            var order = await _orderService.GetUnpaidOrder(id);
+            return View(order);
+        }
+        catch (OrderNotFoundException e)
+        {
+            return View("Empty");
+        }
     }
 }
