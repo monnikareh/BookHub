@@ -26,10 +26,15 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="publisher-container">
                 <label asp-for="Publisher" class="control-label">Publisher</label>
-                <input asp-for="Publisher.Name" class="form-control" />
-                <span asp-validation-for="Publisher.Name" class="text-danger"></span>
+                <div id="publisher">
+                    <div class="form-group">
+                        <input asp-for="Publisher.Name" class="form-control" placeholder="Publisher Name" />
+                        <input asp-for="Publisher.Id" class="form-control" placeholder="Publisher Id" />
+                        <span asp-validation-for="Publisher.Name" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -45,10 +50,8 @@
             </div>
             
             <div class="form-group" id="authors-container">
-                <label asp-for="Authors" class="control-label">Authors (comma-separated)</label>
+                <label asp-for="Authors" class="control-label">Authors</label>
                 <div id="authors-list" class="input-group">
-                    <input asp-for="Authors" class="form-control" placeholder="e.g., Author1, Author2" />
-                    <span asp-validation-for="Authors" class="text-danger"></span>
                     <div class="input-group-append">
                         <button type="button" id="add-author-btn" class="btn btn-success">Add Author</button>
                     </div>
@@ -56,10 +59,8 @@
             </div>
            
             <div class="form-group" id="genres-container">
-               <label asp-for="Genres" class="control-label">Other Genres (comma-separated)</label>
+               <label asp-for="Genres" class="control-label">Other Genres</label>
                <div id="genres-list" class="input-group">
-                   <input asp-for="Genres" class="form-control" placeholder="e.g., Fiction, Mystery, Sci-Fi" />
-                   <span asp-validation-for="Genres" class="text-danger"></span>
                    <div class="input-group-append">
                        <button type="button" id="add-genre-btn" class="btn btn-success">Add Genre</button>
                    </div>
@@ -112,5 +113,18 @@
                 genreCounter++;
             });
         });
+        $(document).ready(function () {
+                var publisherEditMode = false;
+        
+                $("#edit-publisher-btn").click(function () {
+                    publisherEditMode = !publisherEditMode;
+        
+                    if (publisherEditMode) {
+                        $("#publisher-container input").prop("readonly", false);
+                    } else {
+                        $("#publisher-container input").prop("readonly", true);
+                    }
+                });
+            });
     </script>
 }
