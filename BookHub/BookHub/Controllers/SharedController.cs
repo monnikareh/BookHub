@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using BookHub.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
@@ -16,5 +18,11 @@ public class SharedController : Controller
     public IActionResult Privacy()
     {
         return View();
+    }
+    
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error(string message)
+    {
+        return View(new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

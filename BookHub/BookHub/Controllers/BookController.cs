@@ -96,8 +96,7 @@ public class BookController : Controller
                 Price = book.Price,
                 Authors = book.Authors
             }),
-            _ => View("Error")
-        );
+            Error);
     }
 
 
@@ -127,8 +126,7 @@ public class BookController : Controller
         var book = await _bookService.GetBookByIdAsync(id);
         return book.Match(
             View,
-            _ => View("Error")
-        );
+            Error);
     }
     
     [HttpGet("{id:int}")]
@@ -201,5 +199,10 @@ public class BookController : Controller
         var book = (await _bookService.GetBookByIdAsync(id)).Value;
         book.OverallRating += value;
         await _bookService.UpdateBookAsync(id, EntityMapper.MapBookDetailToCreate(book));
+    }
+    
+    public IActionResult Error(string message)
+    {
+        return View(new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
