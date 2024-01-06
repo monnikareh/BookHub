@@ -1,5 +1,9 @@
 @model BusinessLayer.Models.RatingDetail
 
+@{
+    ViewData["Title"] = "Detail";
+}
+
 <div class="col-12">
     <h2>@Model.Book.Name</h2>
 </div>
@@ -9,7 +13,7 @@
  
     <div class="border-bottom mb-2">
         <p><strong>ID:</strong> @Model.Id</p>
-        <p><strong>Book:</strong> @Model.Book.Name</p>
+        <p><strong>Book:</strong><a href="@Url.Action("Detail", "Book", new {id = Model.Book.Id})"><p>@Model.Book.Name</p></a></p>
         <p><strong>Value:</strong> @Model.Value</p>
         @if (!string.IsNullOrEmpty(Model.Comment))
         {
