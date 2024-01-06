@@ -1,3 +1,5 @@
+@using BusinessLayer.Models
+@using Azure.Core
 @model BusinessLayer.Models.BookCreate
 
 @{
@@ -6,113 +8,88 @@
 
 <h1>Create</h1>
 
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@using (Html.BeginForm("Create", "Book", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Book Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PrimaryGenre" class="control-label">Primary Genre</label>
-                <div id="primary-genre">
-                    <input asp-for="PrimaryGenre.Name" class="form-control" placeholder="Genre Name" />
-                    <input asp-for="PrimaryGenre.Id" class="form-control" placeholder="Genre Id" />
-                    <span asp-validation-for="PrimaryGenre.Name" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group" id="publisher-container">
-                <label asp-for="Publisher" class="control-label">Publisher</label>
-                <div id="publisher">
-                    <div class="form-group">
-                        <input asp-for="Publisher.Name" class="form-control" placeholder="Publisher Name" />
-                        <input asp-for="Publisher.Id" class="form-control" placeholder="Publisher Id" />
-                        <span asp-validation-for="Publisher.Name" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="StockInStorage" class="control-label">Stock in Storage</label>
-                <input asp-for="StockInStorage" class="form-control" />
-                <span asp-validation-for="StockInStorage" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Price" class="control-label">Price</label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group" id="authors-container">
-                <label asp-for="Authors" class="control-label">Authors</label>
-                <div id="authors-list" class="input-group">
-                    <div class="input-group-append">
-                        <button type="button" id="add-author-btn" class="btn btn-success">Add Author</button>
-                    </div>
-                </div>
-            </div>
-           
-            <div class="form-group" id="genres-container">
-               <label asp-for="Genres" class="control-label">Other Genres</label>
-               <div id="genres-list" class="input-group">
-                   <div class="input-group-append">
-                       <button type="button" id="add-genre-btn" class="btn btn-success">Add Genre</button>
-                   </div>
-               </div>
-           </div>
-
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name)
+        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="form-group">
+        <label asp-for="PrimaryGenre" class="control-label">Primary Genre</label>
+        <div id="primary-genre">
+            <input asp-for="PrimaryGenre.Name" class="form-control" placeholder="Genre Name" />
+            <input asp-for="PrimaryGenre.Id" class="form-control" placeholder="Genre Id" />
+            <span asp-validation-for="PrimaryGenre.Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group" id="publisher-container">
+        <label asp-for="Publisher" class="control-label">Publisher</label>
+        <div id="publisher">
+            <div class="form-group">
+                <input asp-for="Publisher.Name" class="form-control" placeholder="Publisher Name" />
+                <input asp-for="Publisher.Id" class="form-control" placeholder="Publisher Id" />
+                <span asp-validation-for="Publisher.Name" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StockInStorage" class="control-label">Stock in Storage</label>
+        <input asp-for="StockInStorage" class="form-control" />
+        <span asp-validation-for="StockInStorage" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label">Price</label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+            
+    <div class="form-group">
+        <label for="Authors">Authors</label>
+        <button type="button" id="addAuthor" class="btn btn-primary">Add Author</button>
+        <div id="authorContainer">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="Genres">Genres</label>
+        <button type="button" id="addGenre" class="btn btn-primary">Add Genre</button>
+        <div id="genreContainer">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $(document).ready(function () {
-            var authorCounter = 1;
-
-            $("#add-author-btn").click(function () {
-                var newAuthorInput = `
-                    <div class="form-group">
-                        <input name="AuthorsInput[${authorCounter}].AuthorName" class="form-control" placeholder="Author Name" />
-                        <input name="AuthorsInput[${authorCounter}].AuthorId" class="form-control" value="${authorCounter}" />
-                        <span asp-validation-for="AuthorsInput[${authorCounter}].AuthorName" class="text-danger"></span>
-                    </div>
-                `;
-
-                $("#authors-list").append(newAuthorInput);
-                authorCounter++;
-            });
-
-            var genreCounter = 1;
-
-            $("#add-genre-btn").click(function () {
-                var newGenreInput = `
-                    <div class="form-group">
-                        <input name="GenresInput[${genreCounter}].GenreName" class="form-control" placeholder="Genre Name" />
-                        <input name="GenresInput[${genreCounter}].GenreId" class="form-control" placeholder="Genre Id" />
-                        <span asp-validation-for="GenresInput[${genreCounter}].GenreName" class="text-danger"></span>
-                    </div>
-                `;
-
-                $("#genres-list").append(newGenreInput);
-                genreCounter++;
-            });
-        });
+          $(document).ready(function () {
+              var authorIndex = 0;
+              var genreIndex = 0;
+  
+              $("#addAuthor").click(function () {
+                  var authorInput = '<input type="text" name="Authors[' + authorIndex + '].Id" placeholder="Author ID" class="form-control" />';
+                  authorInput += '<input type="text" name="Authors[' + authorIndex + '].Name" placeholder="Author Name" class="form-control" />';
+                  $("#authorContainer").append(authorInput);
+                  authorIndex++;
+              });
+  
+              $("#addGenre").click(function () {
+                  var genreInput = '<input type="text" name="Genres[' + genreIndex + '].Id" placeholder="Genre ID" class="form-control" />';
+                  genreInput += '<input type="text" name="Genres[' + genreIndex + '].Name" placeholder="Genre Name" class="form-control" />';
+                  $("#genreContainer").append(genreInput);
+                  genreIndex++;
+              });
+          });
         $(document).ready(function () {
                 var publisherEditMode = false;
         
