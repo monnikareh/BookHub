@@ -9,7 +9,7 @@
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <p>
-        @Html.ActionLink("Create", "Create", new { }, new { @class = "btn btn-sm btn-success" })
+        @Html.ActionLink("Create Publisher", "Create", new { }, new { @class = "btn btn-sm btn-success" })
     </p>
 }
 
