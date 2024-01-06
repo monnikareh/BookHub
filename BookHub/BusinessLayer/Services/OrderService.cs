@@ -1,7 +1,6 @@
 using BusinessLayer.Errors;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;

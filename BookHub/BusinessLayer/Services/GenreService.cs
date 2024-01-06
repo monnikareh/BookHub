@@ -1,5 +1,4 @@
 using BusinessLayer.Errors;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using DataAccessLayer;

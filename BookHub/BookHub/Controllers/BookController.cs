@@ -1,14 +1,10 @@
-﻿using System.Diagnostics;
-using System.Security.Claims;
-using BookHub.Models;
-using BusinessLayer.Exceptions;
+﻿using System.Security.Claims;
 using BusinessLayer.Facades;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 
 namespace BookHub.Controllers;
 
@@ -21,7 +17,8 @@ public class BookController : BaseController
     private readonly IUserService _userService;
     private readonly BookFacade _bookFacade;
 
-    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService, IUserService userService, BookFacade bookFacade)
+    public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService,
+        IUserService userService, BookFacade bookFacade)
     {
         _logger = logger;
         _bookService = bookService;
@@ -33,10 +30,10 @@ public class BookController : BaseController
     public async Task<IActionResult> Index()
     {
         var books = await _bookFacade.GetAllBooks();
-        return View(books);    
+        return View(books);
     }
-    
-    
+
+
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
@@ -53,26 +50,12 @@ public class BookController : BaseController
             return View(model);
         }
 
-        try
-        {
-            await _bookFacade.AddNewBook(model);
-            return RedirectToAction("Index");
-        }
-        catch (GenreNotFoundException)
-        {
-            ModelState.AddModelError(nameof(model.PrimaryGenre.Name), "Primary genre does not exist. Create it first.");
-        }
-        catch (PublisherNotFoundException)
-        {
-            ModelState.AddModelError(nameof(model.Publisher.Name), "Publisher does not exist. Create it first.");
-        }
-        catch (AuthorNotFoundException)
-        {
-            ModelState.AddModelError(nameof(model.Authors), $"Author does not exist. Create it first.");
-        }
-        return View(model);
+        var book = await _bookFacade.AddNewBook(model);
+        return book.Match(
+            _ => RedirectToAction("Index"),
+            Error);
     }
-    
+
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
@@ -102,17 +85,18 @@ public class BookController : BaseController
         {
             return View(model);
         }
+
         await _bookService.UpdateBookAsync(id, model);
         return RedirectToAction("Index");
     }
-    
+
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(int id)
     {
         await _bookService.DeleteBookAsync(id);
         return RedirectToAction("Index");
     }
-    
+
     [AllowAnonymous]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
@@ -122,14 +106,14 @@ public class BookController : BaseController
             View,
             Error);
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> ShowRatings(int id)
     {
         var reviews = await _ratingService.GetRatingsAsync(null, null, id, null);
         return PartialView("_RatingsPartial", reviews);
     }
-    
+
     [Authorize]
     [HttpPost("{id:int}")]
     public async Task<IActionResult> AddToWishlist(int id)
@@ -153,9 +137,10 @@ public class BookController : BaseController
         {
             TempData["WishlistMessage"] = "Book already in Wishlist";
         }
+
         return RedirectToAction("Detail", new { id = id });
     }
-    
+
     [Authorize]
     [HttpPost("{id:int}")]
     public async Task<IActionResult> AddRating(int id, int value)
@@ -173,7 +158,7 @@ public class BookController : BaseController
         var book = (await _bookService.GetBookByIdAsync(id)).Value;
         //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
         //{
-       //     return _PartialView;
+        //     return _PartialView;
         //}
         var newRating = new RatingCreate
         {
@@ -182,11 +167,11 @@ public class BookController : BaseController
             Value = value,
             Comment = null,
         };
-        var result =  await _ratingService.CreateRatingAsync(newRating);
+        var result = await _ratingService.CreateRatingAsync(newRating);
         await UpdateRating(id, value);
         return RedirectToAction("Detail", new { id = id });
     }
-    
+
     [HttpPost("{id:int}")]
     public async Task UpdateRating(int id, int value)
     {

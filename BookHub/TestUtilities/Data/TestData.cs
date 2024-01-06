@@ -1,4 +1,3 @@
-using Azure.Core;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 

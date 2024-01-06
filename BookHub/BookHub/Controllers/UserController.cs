@@ -1,15 +1,10 @@
-using System.Diagnostics;
 using System.Text.Encodings.Web;
-using BookHub.Models;
-using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace BookHub.Controllers;
 

@@ -1,3 +1,4 @@
+using BusinessLayer.Errors;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.Extensions.Logging;
@@ -25,8 +26,8 @@ public class BookFacade
         return books;
     }
     
-    public async Task AddNewBook(BookCreate model)
+    public async Task<Result<BookDetail, string>> AddNewBook(BookCreate model)
     {
-        await _bookService.CreateBookAsync(model);
+        return await _bookService.CreateBookAsync(model);
     }
 }

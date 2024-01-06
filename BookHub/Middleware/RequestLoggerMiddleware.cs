@@ -1,4 +1,3 @@
-using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 

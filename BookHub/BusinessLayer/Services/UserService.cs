@@ -1,6 +1,5 @@
 using System.Text;
 using BusinessLayer.Errors;
-using BusinessLayer.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;

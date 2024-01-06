@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using BookHub.Models;
-using BusinessLayer.Models;
+﻿using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
