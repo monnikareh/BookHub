@@ -10,4 +10,6 @@ public class OrderDetail
     public decimal TotalPrice { get; set; }
     public DateTime Date { get; set; } 
     public ICollection<ModelRelated> Books { get; set; } = new List<ModelRelated>();
+    
+    public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

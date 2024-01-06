@@ -39,11 +39,11 @@
         </p>
     }
     <p>Date: @Model.Date</p>
-    
+
     <h3>Order items</h3>
     @foreach (var book in Model.Books)
     {
-        <a href="@Url.Action("Detail", "Book", new {id = book.Id})"><p>@book.Name</p></a>
+        <p>@Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id)?.Count x <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p>
     }
 </div>
 

@@ -75,11 +75,11 @@ namespace BusinessLayer.Services
 
         public async Task<OrderDetail> GetOrderByIdAsync(int id)
         {
-            var key = $"OrderById_{id}";
-            if (_memoryCache.TryGetValue(key, out OrderDetail? cached) && cached is not null)
-            {
-                return cached;
-            }
+            // var key = $"OrderById_{id}";
+            // if (_memoryCache.TryGetValue(key, out OrderDetail? cached) && cached is not null)
+            // {
+            //     return cached;
+            // }
 
             var order = await _context.Orders
                 .Include(o => o.User)
@@ -92,9 +92,9 @@ namespace BusinessLayer.Services
             }
 
             var mapped = EntityMapper.MapOrderToOrderDetail(order);
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
-            _memoryCache.Set(key, mapped, cacheEntryOptions);
+            // var cacheEntryOptions = new MemoryCacheEntryOptions()
+                // .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
+            // _memoryCache.Set(key, mapped, cacheEntryOptions);
             return mapped;
         }
 
@@ -187,7 +187,7 @@ namespace BusinessLayer.Services
             await _context.SaveChangesAsync();
         }
         
-        public async Task<bool> AppendBook(int userId, int bookId)
+        public async Task AppendBook(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
@@ -199,33 +199,46 @@ namespace BusinessLayer.Services
             {
                 throw new BookNotFoundException($"Book 'ID={bookId}' could not be found");
             }
-            var order = await _context.Orders.Include(order => order.Books).FirstOrDefaultAsync(o =>
+            var order = await _context
+                .Orders
+                .Include(order => order.Books)
+                .FirstOrDefaultAsync(o =>
                 o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
             
             if (order == null)
             {
-                var o = new Order
+                order = new Order
                 {
                     UserId = userId,
                     User = user,
                     TotalPrice = book.Price,
                     PaymentStatus = PaymentStatus.Unpaid,
                     Date = DateTime.Now,
-                    Books = new List<Book> { book }
                 };
-                await _context.Orders.AddAsync(o);
+                _context.Orders.Add(order);
             }
             else
             {
-                if (order.Books.Contains(book))
-                {
-                    return false;
-                }
                 order.TotalPrice += book.Price;
-                order.Books.Add(book);
+            }
+            var orderItem = await _context.BookOrders.FirstOrDefaultAsync(bo => bo.BookId == book.Id && bo.OrderId == order.Id);
+            if (orderItem != null)
+            {
+                orderItem.Count += 1;
+            }
+            else
+            {
+                _context.BookOrders.Add(new BookOrder
+                {
+                    OrderId = order.Id,
+                    Order = order,
+                    BookId = book.Id,
+                    Book = book,
+                    Count = 1
+                });
             }
             await _context.SaveChangesAsync();
-            return true;
         }
     }
+
 }

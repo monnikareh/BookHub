@@ -11,5 +11,5 @@ public interface IOrderService
     Task<OrderDetail> CreateOrderAsync(OrderCreate orderCreate);
     Task<OrderDetail> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
     Task DeleteOrderAsync(int id);
-    Task<bool> AppendBook(int userId, int bookId);
+    Task AppendBook(int userId, int bookId);
 }

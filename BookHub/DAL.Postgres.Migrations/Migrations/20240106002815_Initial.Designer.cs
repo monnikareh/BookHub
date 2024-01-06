@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Postgres.Migrations.Migrations
 {
     [DbContext(typeof(BookHubDbContext))]
-    [Migration("20240105141841_Initial")]
+    [Migration("20240106002815_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -484,258 +484,6 @@ namespace DAL.Postgres.Migrations.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookOrder", b =>
-                {
-                    b.Property<int>("BooksId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("BooksId", "OrdersId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("BookOrder");
-
-                    b.HasData(
-                        new
-                        {
-                            BooksId = 1,
-                            OrdersId = 1
-                        },
-                        new
-                        {
-                            BooksId = 2,
-                            OrdersId = 2
-                        },
-                        new
-                        {
-                            BooksId = 3,
-                            OrdersId = 3
-                        },
-                        new
-                        {
-                            BooksId = 3,
-                            OrdersId = 8
-                        },
-                        new
-                        {
-                            BooksId = 3,
-                            OrdersId = 13
-                        },
-                        new
-                        {
-                            BooksId = 4,
-                            OrdersId = 3
-                        },
-                        new
-                        {
-                            BooksId = 5,
-                            OrdersId = 4
-                        },
-                        new
-                        {
-                            BooksId = 5,
-                            OrdersId = 30
-                        },
-                        new
-                        {
-                            BooksId = 6,
-                            OrdersId = 5
-                        },
-                        new
-                        {
-                            BooksId = 7,
-                            OrdersId = 6
-                        },
-                        new
-                        {
-                            BooksId = 7,
-                            OrdersId = 29
-                        },
-                        new
-                        {
-                            BooksId = 8,
-                            OrdersId = 7
-                        },
-                        new
-                        {
-                            BooksId = 9,
-                            OrdersId = 28
-                        },
-                        new
-                        {
-                            BooksId = 10,
-                            OrdersId = 27
-                        },
-                        new
-                        {
-                            BooksId = 12,
-                            OrdersId = 9
-                        },
-                        new
-                        {
-                            BooksId = 11,
-                            OrdersId = 10
-                        },
-                        new
-                        {
-                            BooksId = 12,
-                            OrdersId = 11
-                        },
-                        new
-                        {
-                            BooksId = 13,
-                            OrdersId = 26
-                        },
-                        new
-                        {
-                            BooksId = 14,
-                            OrdersId = 25
-                        },
-                        new
-                        {
-                            BooksId = 15,
-                            OrdersId = 12
-                        },
-                        new
-                        {
-                            BooksId = 16,
-                            OrdersId = 24
-                        },
-                        new
-                        {
-                            BooksId = 17,
-                            OrdersId = 23
-                        },
-                        new
-                        {
-                            BooksId = 18,
-                            OrdersId = 14
-                        },
-                        new
-                        {
-                            BooksId = 19,
-                            OrdersId = 15
-                        },
-                        new
-                        {
-                            BooksId = 19,
-                            OrdersId = 12
-                        },
-                        new
-                        {
-                            BooksId = 19,
-                            OrdersId = 22
-                        },
-                        new
-                        {
-                            BooksId = 20,
-                            OrdersId = 21
-                        },
-                        new
-                        {
-                            BooksId = 20,
-                            OrdersId = 20
-                        },
-                        new
-                        {
-                            BooksId = 21,
-                            OrdersId = 9
-                        },
-                        new
-                        {
-                            BooksId = 22,
-                            OrdersId = 10
-                        },
-                        new
-                        {
-                            BooksId = 23,
-                            OrdersId = 11
-                        },
-                        new
-                        {
-                            BooksId = 23,
-                            OrdersId = 3
-                        },
-                        new
-                        {
-                            BooksId = 24,
-                            OrdersId = 2
-                        },
-                        new
-                        {
-                            BooksId = 25,
-                            OrdersId = 1
-                        },
-                        new
-                        {
-                            BooksId = 26,
-                            OrdersId = 5
-                        },
-                        new
-                        {
-                            BooksId = 27,
-                            OrdersId = 6
-                        },
-                        new
-                        {
-                            BooksId = 28,
-                            OrdersId = 7
-                        },
-                        new
-                        {
-                            BooksId = 29,
-                            OrdersId = 13
-                        },
-                        new
-                        {
-                            BooksId = 30,
-                            OrdersId = 15
-                        },
-                        new
-                        {
-                            BooksId = 31,
-                            OrdersId = 7
-                        },
-                        new
-                        {
-                            BooksId = 32,
-                            OrdersId = 16
-                        },
-                        new
-                        {
-                            BooksId = 33,
-                            OrdersId = 16
-                        },
-                        new
-                        {
-                            BooksId = 33,
-                            OrdersId = 17
-                        },
-                        new
-                        {
-                            BooksId = 34,
-                            OrdersId = 18
-                        },
-                        new
-                        {
-                            BooksId = 35,
-                            OrdersId = 3
-                        },
-                        new
-                        {
-                            BooksId = 35,
-                            OrdersId = 8
-                        },
-                        new
-                        {
-                            BooksId = 35,
-                            OrdersId = 19
-                        });
-                });
-
             modelBuilder.Entity("BookUser", b =>
                 {
                     b.Property<int>("BooksId")
@@ -1117,361 +865,591 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 1,
                             Name = "To Kill a Mockingbird",
-                            OverallRating = 61,
-                            Price = 10.35m,
-                            PrimaryGenreId = 3,
-                            PublisherId = 9,
+                            OverallRating = 51,
+                            Price = 21.54m,
+                            PrimaryGenreId = 7,
+                            PublisherId = 11,
                             StockInStorage = 32
                         },
                         new
                         {
                             Id = 2,
                             Name = "1984",
-                            OverallRating = 34,
-                            Price = 5.12m,
-                            PrimaryGenreId = 3,
-                            PublisherId = 14,
-                            StockInStorage = 3
+                            OverallRating = 56,
+                            Price = 18.59m,
+                            PrimaryGenreId = 12,
+                            PublisherId = 1,
+                            StockInStorage = 40
                         },
                         new
                         {
                             Id = 3,
                             Name = "James Bond",
-                            OverallRating = 85,
-                            Price = 5.58m,
-                            PrimaryGenreId = 16,
-                            PublisherId = 12,
-                            StockInStorage = 36
+                            OverallRating = 30,
+                            Price = 8.31m,
+                            PrimaryGenreId = 8,
+                            PublisherId = 1,
+                            StockInStorage = 45
                         },
                         new
                         {
                             Id = 4,
                             Name = "The Great Gatsby",
-                            OverallRating = 32,
-                            Price = 20.52m,
-                            PrimaryGenreId = 5,
-                            PublisherId = 6,
-                            StockInStorage = 20
+                            OverallRating = 56,
+                            Price = 14.81m,
+                            PrimaryGenreId = 4,
+                            PublisherId = 13,
+                            StockInStorage = 45
                         },
                         new
                         {
                             Id = 5,
                             Name = "One Hundred Years of Solitude",
-                            OverallRating = 35,
-                            Price = 10.33m,
-                            PrimaryGenreId = 15,
-                            PublisherId = 4,
-                            StockInStorage = 44
+                            OverallRating = 42,
+                            Price = 18.2m,
+                            PrimaryGenreId = 3,
+                            PublisherId = 9,
+                            StockInStorage = 9
                         },
                         new
                         {
                             Id = 6,
                             Name = "The Catcher in the Rye",
-                            OverallRating = 87,
-                            Price = 23.35m,
-                            PrimaryGenreId = 9,
-                            PublisherId = 7,
-                            StockInStorage = 36
+                            OverallRating = 82,
+                            Price = 5.12m,
+                            PrimaryGenreId = 11,
+                            PublisherId = 1,
+                            StockInStorage = 16
                         },
                         new
                         {
                             Id = 7,
                             Name = "Brave New World",
-                            OverallRating = 74,
-                            Price = 22.31m,
-                            PrimaryGenreId = 18,
-                            PublisherId = 6,
-                            StockInStorage = 27
+                            OverallRating = 51,
+                            Price = 22.17m,
+                            PrimaryGenreId = 11,
+                            PublisherId = 8,
+                            StockInStorage = 44
                         },
                         new
                         {
                             Id = 8,
                             Name = "The Hobbit",
-                            OverallRating = 44,
-                            Price = 18.81m,
-                            PrimaryGenreId = 7,
-                            PublisherId = 6,
-                            StockInStorage = 27
+                            OverallRating = 98,
+                            Price = 17.3m,
+                            PrimaryGenreId = 8,
+                            PublisherId = 3,
+                            StockInStorage = 4
                         },
                         new
                         {
                             Id = 9,
                             Name = "Love and Basketball",
-                            OverallRating = 75,
-                            Price = 7.64m,
-                            PrimaryGenreId = 6,
-                            PublisherId = 12,
-                            StockInStorage = 20
+                            OverallRating = 52,
+                            Price = 11.24m,
+                            PrimaryGenreId = 11,
+                            PublisherId = 9,
+                            StockInStorage = 9
                         },
                         new
                         {
                             Id = 10,
                             Name = "Pride and Prejudice",
-                            OverallRating = 89,
-                            Price = 11.45m,
-                            PrimaryGenreId = 7,
-                            PublisherId = 8,
-                            StockInStorage = 48
+                            OverallRating = 70,
+                            Price = 10.59m,
+                            PrimaryGenreId = 8,
+                            PublisherId = 7,
+                            StockInStorage = 46
                         },
                         new
                         {
                             Id = 11,
                             Name = "The Lord of the Rings: The Fellowship of the Ring",
-                            OverallRating = 38,
-                            Price = 12.11m,
-                            PrimaryGenreId = 18,
-                            PublisherId = 2,
-                            StockInStorage = 41
+                            OverallRating = 77,
+                            Price = 9.22m,
+                            PrimaryGenreId = 15,
+                            PublisherId = 14,
+                            StockInStorage = 21
                         },
                         new
                         {
                             Id = 12,
                             Name = "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
-                            OverallRating = 68,
-                            Price = 12.83m,
-                            PrimaryGenreId = 3,
-                            PublisherId = 13,
-                            StockInStorage = 39
+                            OverallRating = 76,
+                            Price = 24.21m,
+                            PrimaryGenreId = 6,
+                            PublisherId = 11,
+                            StockInStorage = 25
                         },
                         new
                         {
                             Id = 13,
                             Name = "Harry Potter and the Philosopher's Stone",
-                            OverallRating = 71,
-                            Price = 22.84m,
-                            PrimaryGenreId = 16,
-                            PublisherId = 14,
-                            StockInStorage = 2
+                            OverallRating = 41,
+                            Price = 15.65m,
+                            PrimaryGenreId = 14,
+                            PublisherId = 13,
+                            StockInStorage = 8
                         },
                         new
                         {
                             Id = 14,
                             Name = "The Hunger Games",
-                            OverallRating = 37,
-                            Price = 19.81m,
-                            PrimaryGenreId = 2,
-                            PublisherId = 2,
-                            StockInStorage = 29
+                            OverallRating = 78,
+                            Price = 18.31m,
+                            PrimaryGenreId = 1,
+                            PublisherId = 8,
+                            StockInStorage = 6
                         },
                         new
                         {
                             Id = 15,
                             Name = "The Da Vinci Code",
-                            OverallRating = 98,
-                            Price = 23.75m,
-                            PrimaryGenreId = 16,
-                            PublisherId = 11,
-                            StockInStorage = 22
+                            OverallRating = 57,
+                            Price = 8.06m,
+                            PrimaryGenreId = 6,
+                            PublisherId = 4,
+                            StockInStorage = 4
                         },
                         new
                         {
                             Id = 16,
                             Name = "A Game of Thrones",
-                            OverallRating = 44,
-                            Price = 24.93m,
-                            PrimaryGenreId = 8,
-                            PublisherId = 10,
-                            StockInStorage = 11
+                            OverallRating = 59,
+                            Price = 18.96m,
+                            PrimaryGenreId = 4,
+                            PublisherId = 11,
+                            StockInStorage = 22
                         },
                         new
                         {
                             Id = 17,
                             Name = "The Shining",
-                            OverallRating = 46,
-                            Price = 16.47m,
-                            PrimaryGenreId = 15,
-                            PublisherId = 14,
-                            StockInStorage = 30
+                            OverallRating = 74,
+                            Price = 9.49m,
+                            PrimaryGenreId = 13,
+                            PublisherId = 1,
+                            StockInStorage = 6
                         },
                         new
                         {
                             Id = 18,
                             Name = "The Hitchhiker's Guide to the Galaxy",
-                            OverallRating = 49,
-                            Price = 5.78m,
-                            PrimaryGenreId = 1,
-                            PublisherId = 7,
-                            StockInStorage = 12
+                            OverallRating = 54,
+                            Price = 6.83m,
+                            PrimaryGenreId = 13,
+                            PublisherId = 13,
+                            StockInStorage = 6
                         },
                         new
                         {
                             Id = 19,
                             Name = "The Alchemist",
-                            OverallRating = 41,
-                            Price = 10.78m,
-                            PrimaryGenreId = 18,
-                            PublisherId = 12,
-                            StockInStorage = 13
+                            OverallRating = 70,
+                            Price = 7.93m,
+                            PrimaryGenreId = 16,
+                            PublisherId = 7,
+                            StockInStorage = 33
                         },
                         new
                         {
                             Id = 20,
                             Name = "War and Peace",
-                            OverallRating = 61,
-                            Price = 11.74m,
-                            PrimaryGenreId = 18,
-                            PublisherId = 3,
-                            StockInStorage = 5
+                            OverallRating = 98,
+                            Price = 7.15m,
+                            PrimaryGenreId = 14,
+                            PublisherId = 7,
+                            StockInStorage = 35
                         },
                         new
                         {
                             Id = 21,
                             Name = "Crime and Punishment",
-                            OverallRating = 59,
-                            Price = 9.57m,
-                            PrimaryGenreId = 19,
-                            PublisherId = 10,
-                            StockInStorage = 20
+                            OverallRating = 75,
+                            Price = 8.67m,
+                            PrimaryGenreId = 8,
+                            PublisherId = 3,
+                            StockInStorage = 7
                         },
                         new
                         {
                             Id = 22,
                             Name = "The Catch-22",
-                            OverallRating = 57,
-                            Price = 22.48m,
-                            PrimaryGenreId = 8,
-                            PublisherId = 11,
-                            StockInStorage = 42
+                            OverallRating = 89,
+                            Price = 5.34m,
+                            PrimaryGenreId = 16,
+                            PublisherId = 5,
+                            StockInStorage = 23
                         },
                         new
                         {
                             Id = 23,
                             Name = "The Grapes of Wrath",
-                            OverallRating = 34,
-                            Price = 21.64m,
-                            PrimaryGenreId = 6,
-                            PublisherId = 14,
-                            StockInStorage = 23
+                            OverallRating = 67,
+                            Price = 17.01m,
+                            PrimaryGenreId = 16,
+                            PublisherId = 8,
+                            StockInStorage = 45
                         },
                         new
                         {
                             Id = 24,
                             Name = "Fahrenheit 451",
-                            OverallRating = 81,
-                            Price = 17.29m,
-                            PrimaryGenreId = 19,
-                            PublisherId = 4,
-                            StockInStorage = 48
+                            OverallRating = 66,
+                            Price = 9.76m,
+                            PrimaryGenreId = 18,
+                            PublisherId = 2,
+                            StockInStorage = 10
                         },
                         new
                         {
                             Id = 25,
                             Name = "Lord of the Flies",
-                            OverallRating = 79,
-                            Price = 7.47m,
+                            OverallRating = 46,
+                            Price = 15.03m,
                             PrimaryGenreId = 16,
-                            PublisherId = 1,
-                            StockInStorage = 46
+                            PublisherId = 4,
+                            StockInStorage = 35
                         },
                         new
                         {
                             Id = 26,
                             Name = "Moby-Dick",
-                            OverallRating = 68,
-                            Price = 23.1m,
+                            OverallRating = 45,
+                            Price = 18.46m,
                             PrimaryGenreId = 14,
-                            PublisherId = 10,
-                            StockInStorage = 18
+                            PublisherId = 9,
+                            StockInStorage = 39
                         },
                         new
                         {
                             Id = 27,
                             Name = "Frankenstein",
-                            OverallRating = 44,
-                            Price = 12.32m,
-                            PrimaryGenreId = 8,
-                            PublisherId = 3,
-                            StockInStorage = 22
+                            OverallRating = 35,
+                            Price = 12.91m,
+                            PrimaryGenreId = 7,
+                            PublisherId = 5,
+                            StockInStorage = 10
                         },
                         new
                         {
                             Id = 28,
                             Name = "Alice's Adventures in Wonderland",
-                            OverallRating = 58,
-                            Price = 20.31m,
-                            PrimaryGenreId = 9,
-                            PublisherId = 5,
-                            StockInStorage = 7
+                            OverallRating = 35,
+                            Price = 7.69m,
+                            PrimaryGenreId = 3,
+                            PublisherId = 11,
+                            StockInStorage = 19
                         },
                         new
                         {
                             Id = 29,
                             Name = "Dracula",
-                            OverallRating = 92,
-                            Price = 6.83m,
-                            PrimaryGenreId = 9,
-                            PublisherId = 3,
-                            StockInStorage = 6
+                            OverallRating = 63,
+                            Price = 19.42m,
+                            PrimaryGenreId = 18,
+                            PublisherId = 6,
+                            StockInStorage = 1
                         },
                         new
                         {
                             Id = 30,
                             Name = "The Odyssey",
-                            OverallRating = 97,
-                            Price = 10.7m,
-                            PrimaryGenreId = 7,
+                            OverallRating = 82,
+                            Price = 19.28m,
+                            PrimaryGenreId = 17,
                             PublisherId = 9,
-                            StockInStorage = 25
+                            StockInStorage = 11
                         },
                         new
                         {
                             Id = 31,
                             Name = "Romeo and Juliet",
-                            OverallRating = 30,
-                            Price = 23.03m,
-                            PrimaryGenreId = 8,
-                            PublisherId = 7,
-                            StockInStorage = 1
+                            OverallRating = 64,
+                            Price = 14.54m,
+                            PrimaryGenreId = 6,
+                            PublisherId = 9,
+                            StockInStorage = 9
                         },
                         new
                         {
                             Id = 32,
                             Name = "Hamlet",
-                            OverallRating = 74,
-                            Price = 8.64m,
-                            PrimaryGenreId = 19,
-                            PublisherId = 4,
-                            StockInStorage = 42
+                            OverallRating = 82,
+                            Price = 16.59m,
+                            PrimaryGenreId = 2,
+                            PublisherId = 13,
+                            StockInStorage = 16
                         },
                         new
                         {
                             Id = 33,
                             Name = "Macbeth",
-                            OverallRating = 60,
-                            Price = 16.13m,
-                            PrimaryGenreId = 2,
-                            PublisherId = 5,
-                            StockInStorage = 33
+                            OverallRating = 98,
+                            Price = 11.32m,
+                            PrimaryGenreId = 14,
+                            PublisherId = 1,
+                            StockInStorage = 43
                         },
                         new
                         {
                             Id = 34,
                             Name = "Othello",
-                            OverallRating = 38,
-                            Price = 17.92m,
-                            PrimaryGenreId = 19,
-                            PublisherId = 10,
-                            StockInStorage = 18
+                            OverallRating = 59,
+                            Price = 14.04m,
+                            PrimaryGenreId = 17,
+                            PublisherId = 7,
+                            StockInStorage = 23
                         },
                         new
                         {
                             Id = 35,
                             Name = "The Divine Comedy",
-                            OverallRating = 51,
-                            Price = 13.26m,
-                            PrimaryGenreId = 17,
-                            PublisherId = 1,
-                            StockInStorage = 36
+                            OverallRating = 32,
+                            Price = 13.95m,
+                            PrimaryGenreId = 3,
+                            PublisherId = 4,
+                            StockInStorage = 23
                         },
                         new
                         {
                             Id = 36,
                             Name = "Don Quixote",
-                            OverallRating = 96,
-                            Price = 6.85m,
-                            PrimaryGenreId = 18,
-                            PublisherId = 10,
+                            OverallRating = 35,
+                            Price = 7.3m,
+                            PrimaryGenreId = 15,
+                            PublisherId = 7,
                             StockInStorage = 5
+                        });
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.BookOrder", b =>
+                {
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BookId", "OrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("BookOrders");
+
+                    b.HasData(
+                        new
+                        {
+                            BookId = 3,
+                            OrderId = 1,
+                            Count = 2
+                        },
+                        new
+                        {
+                            BookId = 18,
+                            OrderId = 2,
+                            Count = 4
+                        },
+                        new
+                        {
+                            BookId = 18,
+                            OrderId = 3,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 20,
+                            OrderId = 4,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 11,
+                            OrderId = 5,
+                            Count = 5
+                        },
+                        new
+                        {
+                            BookId = 7,
+                            OrderId = 6,
+                            Count = 1
+                        },
+                        new
+                        {
+                            BookId = 34,
+                            OrderId = 7,
+                            Count = 5
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            OrderId = 8,
+                            Count = 5
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            OrderId = 9,
+                            Count = 1
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            OrderId = 10,
+                            Count = 2
+                        },
+                        new
+                        {
+                            BookId = 32,
+                            OrderId = 11,
+                            Count = 7
+                        },
+                        new
+                        {
+                            BookId = 13,
+                            OrderId = 12,
+                            Count = 6
+                        },
+                        new
+                        {
+                            BookId = 21,
+                            OrderId = 13,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 26,
+                            OrderId = 14,
+                            Count = 3
+                        },
+                        new
+                        {
+                            BookId = 6,
+                            OrderId = 15,
+                            Count = 7
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            OrderId = 16,
+                            Count = 5
+                        },
+                        new
+                        {
+                            BookId = 25,
+                            OrderId = 17,
+                            Count = 2
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            OrderId = 18,
+                            Count = 4
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            OrderId = 19,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 30,
+                            OrderId = 20,
+                            Count = 8
+                        },
+                        new
+                        {
+                            BookId = 19,
+                            OrderId = 21,
+                            Count = 5
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            OrderId = 22,
+                            Count = 3
+                        },
+                        new
+                        {
+                            BookId = 10,
+                            OrderId = 23,
+                            Count = 2
+                        },
+                        new
+                        {
+                            BookId = 25,
+                            OrderId = 24,
+                            Count = 8
+                        },
+                        new
+                        {
+                            BookId = 2,
+                            OrderId = 25,
+                            Count = 6
+                        },
+                        new
+                        {
+                            BookId = 3,
+                            OrderId = 26,
+                            Count = 8
+                        },
+                        new
+                        {
+                            BookId = 28,
+                            OrderId = 27,
+                            Count = 7
+                        },
+                        new
+                        {
+                            BookId = 5,
+                            OrderId = 28,
+                            Count = 3
+                        },
+                        new
+                        {
+                            BookId = 11,
+                            OrderId = 29,
+                            Count = 3
+                        },
+                        new
+                        {
+                            BookId = 29,
+                            OrderId = 30,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 8,
+                            OrderId = 31,
+                            Count = 8
+                        },
+                        new
+                        {
+                            BookId = 8,
+                            OrderId = 32,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 22,
+                            OrderId = 33,
+                            Count = 4
+                        },
+                        new
+                        {
+                            BookId = 32,
+                            OrderId = 34,
+                            Count = 9
+                        },
+                        new
+                        {
+                            BookId = 9,
+                            OrderId = 35,
+                            Count = 5
                         });
                 });
 
@@ -1624,242 +1602,282 @@ namespace DAL.Postgres.Migrations.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7449),
-                            PaymentStatus = 2,
-                            TotalPrice = 49.64m,
-                            UserId = 1
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8648),
+                            PaymentStatus = 1,
+                            TotalPrice = 24.84m,
+                            UserId = 3
                         },
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7539),
-                            PaymentStatus = 0,
-                            TotalPrice = 22.91m,
-                            UserId = 2
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8783),
+                            PaymentStatus = 3,
+                            TotalPrice = 42.77m,
+                            UserId = 1
                         },
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7543),
-                            PaymentStatus = 2,
-                            TotalPrice = 26.14m,
-                            UserId = 4
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8788),
+                            PaymentStatus = 3,
+                            TotalPrice = 53.64m,
+                            UserId = 2
                         },
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7546),
-                            PaymentStatus = 1,
-                            TotalPrice = 9.47m,
-                            UserId = 4
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8791),
+                            PaymentStatus = 4,
+                            TotalPrice = 51.77m,
+                            UserId = 3
                         },
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7556),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8805),
                             PaymentStatus = 1,
-                            TotalPrice = 28.22m,
+                            TotalPrice = 39.03m,
                             UserId = 2
                         },
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7559),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8809),
                             PaymentStatus = 0,
-                            TotalPrice = 49.51m,
-                            UserId = 1
+                            TotalPrice = 33.91m,
+                            UserId = 2
                         },
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7561),
-                            PaymentStatus = 1,
-                            TotalPrice = 38.15m,
-                            UserId = 3
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8811),
+                            PaymentStatus = 4,
+                            TotalPrice = 37.08m,
+                            UserId = 2
                         },
                         new
                         {
                             Id = 8,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7563),
-                            PaymentStatus = 3,
-                            TotalPrice = 46.02m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8813),
+                            PaymentStatus = 1,
+                            TotalPrice = 17.17m,
                             UserId = 1
                         },
                         new
                         {
                             Id = 9,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7566),
-                            PaymentStatus = 1,
-                            TotalPrice = 52.08m,
-                            UserId = 4
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8815),
+                            PaymentStatus = 2,
+                            TotalPrice = 29.27m,
+                            UserId = 1
                         },
                         new
                         {
                             Id = 10,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7568),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8818),
                             PaymentStatus = 1,
-                            TotalPrice = 38.19m,
-                            UserId = 3
+                            TotalPrice = 37.47m,
+                            UserId = 1
                         },
                         new
                         {
                             Id = 11,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7570),
-                            PaymentStatus = 4,
-                            TotalPrice = 53.29m,
-                            UserId = 4
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7572),
-                            PaymentStatus = 2,
-                            TotalPrice = 50.5m,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7574),
-                            PaymentStatus = 3,
-                            TotalPrice = 35.92m,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7577),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8820),
                             PaymentStatus = 0,
-                            TotalPrice = 7.2m,
+                            TotalPrice = 6.98m,
                             UserId = 3
                         },
                         new
                         {
-                            Id = 15,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7579),
-                            PaymentStatus = 3,
-                            TotalPrice = 41.47m,
+                            Id = 12,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8822),
+                            PaymentStatus = 2,
+                            TotalPrice = 14.26m,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8825),
+                            PaymentStatus = 2,
+                            TotalPrice = 52.4m,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8827),
+                            PaymentStatus = 0,
+                            TotalPrice = 41.88m,
                             UserId = 4
                         },
                         new
                         {
+                            Id = 15,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8829),
+                            PaymentStatus = 3,
+                            TotalPrice = 11.79m,
+                            UserId = 3
+                        },
+                        new
+                        {
                             Id = 16,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7611),
-                            PaymentStatus = 4,
-                            TotalPrice = 17.06m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8853),
+                            PaymentStatus = 1,
+                            TotalPrice = 10.58m,
                             UserId = 3
                         },
                         new
                         {
                             Id = 17,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7613),
-                            PaymentStatus = 1,
-                            TotalPrice = 21.38m,
-                            UserId = 2
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8855),
+                            PaymentStatus = 0,
+                            TotalPrice = 51.46m,
+                            UserId = 1
                         },
                         new
                         {
                             Id = 18,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7616),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8858),
                             PaymentStatus = 3,
-                            TotalPrice = 29.36m,
-                            UserId = 3
+                            TotalPrice = 48.72m,
+                            UserId = 4
                         },
                         new
                         {
                             Id = 19,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7618),
-                            PaymentStatus = 1,
-                            TotalPrice = 6.69m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8860),
+                            PaymentStatus = 0,
+                            TotalPrice = 13.14m,
                             UserId = 2
                         },
                         new
                         {
                             Id = 20,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7620),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8863),
                             PaymentStatus = 1,
-                            TotalPrice = 44.27m,
-                            UserId = 3
+                            TotalPrice = 19.3m,
+                            UserId = 2
                         },
                         new
                         {
                             Id = 21,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7622),
-                            PaymentStatus = 3,
-                            TotalPrice = 15.56m,
-                            UserId = 4
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8865),
+                            PaymentStatus = 0,
+                            TotalPrice = 17.69m,
+                            UserId = 3
                         },
                         new
                         {
                             Id = 22,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7624),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8867),
                             PaymentStatus = 0,
-                            TotalPrice = 16.08m,
-                            UserId = 3
+                            TotalPrice = 6.56m,
+                            UserId = 2
                         },
                         new
                         {
                             Id = 23,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7626),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8869),
                             PaymentStatus = 3,
-                            TotalPrice = 25.58m,
-                            UserId = 3
+                            TotalPrice = 32.72m,
+                            UserId = 4
                         },
                         new
                         {
                             Id = 24,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7628),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8914),
                             PaymentStatus = 2,
-                            TotalPrice = 13.48m,
-                            UserId = 1
+                            TotalPrice = 36.49m,
+                            UserId = 3
                         },
                         new
                         {
                             Id = 25,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7630),
-                            PaymentStatus = 4,
-                            TotalPrice = 7.24m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8918),
+                            PaymentStatus = 2,
+                            TotalPrice = 15.62m,
                             UserId = 3
                         },
                         new
                         {
                             Id = 26,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7632),
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8920),
                             PaymentStatus = 3,
-                            TotalPrice = 16.66m,
-                            UserId = 2
+                            TotalPrice = 39.04m,
+                            UserId = 3
                         },
                         new
                         {
                             Id = 27,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7634),
-                            PaymentStatus = 0,
-                            TotalPrice = 19.51m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8922),
+                            PaymentStatus = 1,
+                            TotalPrice = 19.99m,
                             UserId = 4
                         },
                         new
                         {
                             Id = 28,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7636),
-                            PaymentStatus = 2,
-                            TotalPrice = 11.07m,
-                            UserId = 3
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8924),
+                            PaymentStatus = 4,
+                            TotalPrice = 30.27m,
+                            UserId = 1
                         },
                         new
                         {
                             Id = 29,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7677),
-                            PaymentStatus = 3,
-                            TotalPrice = 22.32m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8926),
+                            PaymentStatus = 2,
+                            TotalPrice = 6.59m,
                             UserId = 1
                         },
                         new
                         {
                             Id = 30,
-                            Date = new DateTime(2024, 1, 5, 15, 18, 41, 478, DateTimeKind.Local).AddTicks(7683),
-                            PaymentStatus = 0,
-                            TotalPrice = 21.51m,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8932),
+                            PaymentStatus = 4,
+                            TotalPrice = 28.37m,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8975),
+                            PaymentStatus = 1,
+                            TotalPrice = 8.04m,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8978),
+                            PaymentStatus = 2,
+                            TotalPrice = 40.11m,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8980),
+                            PaymentStatus = 4,
+                            TotalPrice = 12.59m,
+                            UserId = 4
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8983),
+                            PaymentStatus = 2,
+                            TotalPrice = 17.71m,
                             UserId = 3
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Date = new DateTime(2024, 1, 6, 1, 28, 14, 962, DateTimeKind.Local).AddTicks(8985),
+                            PaymentStatus = 3,
+                            TotalPrice = 44.07m,
+                            UserId = 4
                         });
                 });
 
@@ -1989,402 +2007,402 @@ namespace DAL.Postgres.Migrations.Migrations
                         new
                         {
                             Id = 1,
-                            BookId = 29,
+                            BookId = 18,
                             Comment = "Great book but it gave me an existential crisis bigger than I had before",
-                            UserId = 10,
-                            Value = 25
+                            UserId = 12,
+                            Value = 52
                         },
                         new
                         {
                             Id = 2,
-                            BookId = 26,
+                            BookId = 24,
                             Comment = "Couldn't put it down, finished it in one sitting!",
-                            UserId = 5,
-                            Value = 14
+                            UserId = 3,
+                            Value = 31
                         },
                         new
                         {
                             Id = 3,
-                            BookId = 19,
+                            BookId = 22,
                             Comment = "The plot twists in this book are mind-blowing",
-                            UserId = 7,
-                            Value = 21
+                            UserId = 1,
+                            Value = 10
                         },
                         new
                         {
                             Id = 4,
-                            BookId = 1,
+                            BookId = 5,
                             Comment = "A classic that everyone should read",
-                            UserId = 12,
-                            Value = 76
+                            UserId = 2,
+                            Value = 71
                         },
                         new
                         {
                             Id = 5,
-                            BookId = 19,
+                            BookId = 28,
                             Comment = "The characters are so well-developed, felt like they were real people",
-                            UserId = 9,
-                            Value = 29
+                            UserId = 7,
+                            Value = 58
                         },
                         new
                         {
                             Id = 6,
-                            BookId = 9,
+                            BookId = 25,
                             Comment = "This book made me laugh and cry, a roller coaster of emotions",
-                            UserId = 12,
-                            Value = 44
+                            UserId = 5,
+                            Value = 75
                         },
                         new
                         {
                             Id = 7,
-                            BookId = 23,
+                            BookId = 9,
                             Comment = "The writing style is beautiful, every sentence is a work of art",
-                            UserId = 5,
-                            Value = 73
-                        },
-                        new
-                        {
-                            Id = 8,
-                            BookId = 31,
-                            Comment = "I couldn't guess the ending, kept me guessing until the last page",
-                            UserId = 3,
-                            Value = 49
-                        },
-                        new
-                        {
-                            Id = 9,
-                            BookId = 34,
-                            Comment = "I wish there was a sequel, I'm not ready to say goodbye to these characters",
-                            UserId = 3,
-                            Value = 60
-                        },
-                        new
-                        {
-                            Id = 10,
-                            BookId = 24,
-                            Comment = "The themes explored in this book are thought-provoking",
                             UserId = 9,
-                            Value = 66
-                        },
-                        new
-                        {
-                            Id = 11,
-                            BookId = 3,
-                            Comment = "The pacing is perfect, kept me engaged from start to finish",
-                            UserId = 6,
-                            Value = 28
-                        },
-                        new
-                        {
-                            Id = 12,
-                            BookId = 16,
-                            Comment = "This book challenged my perspective on life",
-                            UserId = 12,
-                            Value = 83
-                        },
-                        new
-                        {
-                            Id = 13,
-                            BookId = 4,
-                            Comment = "The world-building is exceptional, I felt like I was there",
-                            UserId = 2,
-                            Value = 96
-                        },
-                        new
-                        {
-                            Id = 14,
-                            BookId = 15,
-                            Comment = "A must-read for book lovers",
-                            UserId = 2,
-                            Value = 87
-                        },
-                        new
-                        {
-                            Id = 15,
-                            BookId = 19,
-                            Comment = "The author's storytelling is captivating",
-                            UserId = 5,
-                            Value = 20
-                        },
-                        new
-                        {
-                            Id = 16,
-                            BookId = 30,
-                            Comment = "This book is a page-turner, couldn't stop reading",
-                            UserId = 2,
-                            Value = 50
-                        },
-                        new
-                        {
-                            Id = 17,
-                            BookId = 28,
-                            Comment = "The dialogue between characters is witty and realistic",
-                            UserId = 12,
-                            Value = 25
-                        },
-                        new
-                        {
-                            Id = 18,
-                            BookId = 2,
-                            Comment = "I've recommended this book to all my friends",
-                            UserId = 10,
-                            Value = 15
-                        },
-                        new
-                        {
-                            Id = 19,
-                            BookId = 20,
-                            Comment = "It left me with a book hangover, couldn't stop thinking about it",
-                            UserId = 12,
-                            Value = 80
-                        },
-                        new
-                        {
-                            Id = 20,
-                            BookId = 2,
-                            Comment = "",
-                            UserId = 5,
-                            Value = 40
-                        },
-                        new
-                        {
-                            Id = 21,
-                            BookId = 21,
-                            Comment = "Couldn't get into the story, found it boring from the start",
-                            UserId = 11,
-                            Value = 85
-                        },
-                        new
-                        {
-                            Id = 22,
-                            BookId = 24,
-                            Comment = "The characters felt one-dimensional and uninteresting",
-                            UserId = 3,
-                            Value = 67
-                        },
-                        new
-                        {
-                            Id = 23,
-                            BookId = 8,
-                            Comment = "The plot was predictable, I expected more twists",
-                            UserId = 14,
-                            Value = 45
-                        },
-                        new
-                        {
-                            Id = 24,
-                            BookId = 31,
-                            Comment = "I didn't connect with the protagonist, lacked depth",
-                            UserId = 7,
-                            Value = 64
-                        },
-                        new
-                        {
-                            Id = 25,
-                            BookId = 22,
-                            Comment = "The writing style was confusing and hard to follow",
-                            UserId = 5,
-                            Value = 37
-                        },
-                        new
-                        {
-                            Id = 26,
-                            BookId = 1,
-                            Comment = "This book didn't live up to the hype, very disappointing",
-                            UserId = 10,
-                            Value = 65
-                        },
-                        new
-                        {
-                            Id = 27,
-                            BookId = 33,
-                            Comment = "The ending felt rushed and unresolved",
-                            UserId = 6,
-                            Value = 80
-                        },
-                        new
-                        {
-                            Id = 28,
-                            BookId = 15,
-                            Comment = "Too much exposition, not enough action",
-                            UserId = 6,
-                            Value = 55
-                        },
-                        new
-                        {
-                            Id = 29,
-                            BookId = 1,
-                            Comment = "I found the dialogue unrealistic and forced",
-                            UserId = 1,
                             Value = 38
                         },
                         new
                         {
-                            Id = 30,
-                            BookId = 31,
-                            Comment = "The author tried too hard to be profound, came off as pretentious",
+                            Id = 8,
+                            BookId = 26,
+                            Comment = "I couldn't guess the ending, kept me guessing until the last page",
+                            UserId = 1,
+                            Value = 12
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BookId = 12,
+                            Comment = "I wish there was a sequel, I'm not ready to say goodbye to these characters",
                             UserId = 8,
                             Value = 68
                         },
                         new
                         {
-                            Id = 31,
-                            BookId = 3,
-                            Comment = "The pacing was off, some parts dragged on while others felt rushed",
+                            Id = 10,
+                            BookId = 22,
+                            Comment = "The themes explored in this book are thought-provoking",
+                            UserId = 7,
+                            Value = 69
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BookId = 9,
+                            Comment = "The pacing is perfect, kept me engaged from start to finish",
                             UserId = 8,
-                            Value = 80
+                            Value = 83
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BookId = 7,
+                            Comment = "This book challenged my perspective on life",
+                            UserId = 6,
+                            Value = 47
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BookId = 2,
+                            Comment = "The world-building is exceptional, I felt like I was there",
+                            UserId = 11,
+                            Value = 32
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BookId = 30,
+                            Comment = "A must-read for book lovers",
+                            UserId = 4,
+                            Value = 35
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BookId = 27,
+                            Comment = "The author's storytelling is captivating",
+                            UserId = 11,
+                            Value = 23
+                        },
+                        new
+                        {
+                            Id = 16,
+                            BookId = 10,
+                            Comment = "This book is a page-turner, couldn't stop reading",
+                            UserId = 11,
+                            Value = 63
+                        },
+                        new
+                        {
+                            Id = 17,
+                            BookId = 18,
+                            Comment = "The dialogue between characters is witty and realistic",
+                            UserId = 2,
+                            Value = 23
+                        },
+                        new
+                        {
+                            Id = 18,
+                            BookId = 21,
+                            Comment = "I've recommended this book to all my friends",
+                            UserId = 5,
+                            Value = 48
+                        },
+                        new
+                        {
+                            Id = 19,
+                            BookId = 23,
+                            Comment = "It left me with a book hangover, couldn't stop thinking about it",
+                            UserId = 10,
+                            Value = 83
+                        },
+                        new
+                        {
+                            Id = 20,
+                            BookId = 29,
+                            Comment = "",
+                            UserId = 7,
+                            Value = 15
+                        },
+                        new
+                        {
+                            Id = 21,
+                            BookId = 3,
+                            Comment = "Couldn't get into the story, found it boring from the start",
+                            UserId = 4,
+                            Value = 68
+                        },
+                        new
+                        {
+                            Id = 22,
+                            BookId = 12,
+                            Comment = "The characters felt one-dimensional and uninteresting",
+                            UserId = 6,
+                            Value = 96
+                        },
+                        new
+                        {
+                            Id = 23,
+                            BookId = 30,
+                            Comment = "The plot was predictable, I expected more twists",
+                            UserId = 13,
+                            Value = 89
+                        },
+                        new
+                        {
+                            Id = 24,
+                            BookId = 17,
+                            Comment = "I didn't connect with the protagonist, lacked depth",
+                            UserId = 9,
+                            Value = 29
+                        },
+                        new
+                        {
+                            Id = 25,
+                            BookId = 6,
+                            Comment = "The writing style was confusing and hard to follow",
+                            UserId = 11,
+                            Value = 42
+                        },
+                        new
+                        {
+                            Id = 26,
+                            BookId = 10,
+                            Comment = "This book didn't live up to the hype, very disappointing",
+                            UserId = 6,
+                            Value = 25
+                        },
+                        new
+                        {
+                            Id = 27,
+                            BookId = 34,
+                            Comment = "The ending felt rushed and unresolved",
+                            UserId = 3,
+                            Value = 69
+                        },
+                        new
+                        {
+                            Id = 28,
+                            BookId = 11,
+                            Comment = "Too much exposition, not enough action",
+                            UserId = 10,
+                            Value = 96
+                        },
+                        new
+                        {
+                            Id = 29,
+                            BookId = 13,
+                            Comment = "I found the dialogue unrealistic and forced",
+                            UserId = 7,
+                            Value = 86
+                        },
+                        new
+                        {
+                            Id = 30,
+                            BookId = 14,
+                            Comment = "The author tried too hard to be profound, came off as pretentious",
+                            UserId = 14,
+                            Value = 84
+                        },
+                        new
+                        {
+                            Id = 31,
+                            BookId = 27,
+                            Comment = "The pacing was off, some parts dragged on while others felt rushed",
+                            UserId = 1,
+                            Value = 94
                         },
                         new
                         {
                             Id = 32,
-                            BookId = 30,
+                            BookId = 21,
                             Comment = "The world-building was weak and inconsistent",
-                            UserId = 11,
-                            Value = 73
+                            UserId = 6,
+                            Value = 71
                         },
                         new
                         {
                             Id = 33,
-                            BookId = 20,
+                            BookId = 1,
                             Comment = "I couldn't sympathize with any of the characters",
-                            UserId = 7,
-                            Value = 37
+                            UserId = 9,
+                            Value = 58
                         },
                         new
                         {
                             Id = 34,
-                            BookId = 11,
+                            BookId = 1,
                             Comment = "The themes explored were cliché and overdone",
-                            UserId = 5,
-                            Value = 85
+                            UserId = 14,
+                            Value = 14
                         },
                         new
                         {
                             Id = 35,
-                            BookId = 8,
+                            BookId = 26,
                             Comment = "The book didn't live up to the reviews, a letdown",
-                            UserId = 7,
-                            Value = 17
+                            UserId = 3,
+                            Value = 56
                         },
                         new
                         {
                             Id = 36,
-                            BookId = 15,
+                            BookId = 34,
                             Comment = "The grammar and editing were poor, distracting from the story",
-                            UserId = 2,
-                            Value = 19
+                            UserId = 3,
+                            Value = 66
                         },
                         new
                         {
                             Id = 37,
-                            BookId = 20,
+                            BookId = 31,
                             Comment = "The book felt like a rip-off of [another popular book]",
-                            UserId = 2,
-                            Value = 75
+                            UserId = 6,
+                            Value = 31
                         },
                         new
                         {
                             Id = 38,
-                            BookId = 2,
+                            BookId = 3,
                             Comment = "The author relied too heavily on stereotypes",
-                            UserId = 3,
-                            Value = 74
+                            UserId = 2,
+                            Value = 62
                         },
                         new
                         {
                             Id = 39,
-                            BookId = 4,
+                            BookId = 3,
                             Comment = "I regret spending time on this book, wish I chose something else",
-                            UserId = 5,
-                            Value = 93
+                            UserId = 10,
+                            Value = 33
                         },
                         new
                         {
                             Id = 40,
-                            BookId = 25,
+                            BookId = 31,
                             Comment = "The climax was anticlimactic, left me unsatisfied",
-                            UserId = 7,
-                            Value = 97
+                            UserId = 12,
+                            Value = 61
                         },
                         new
                         {
                             Id = 41,
-                            BookId = 16,
+                            BookId = 34,
                             Comment = "Great book but it gave me an existential crisis bigger than I had before",
-                            UserId = 1,
-                            Value = 82
+                            UserId = 5,
+                            Value = 74
                         },
                         new
                         {
                             Id = 42,
-                            BookId = 18,
+                            BookId = 33,
                             Comment = "Couldn't put it down, finished it in one sitting!",
-                            UserId = 6,
-                            Value = 88
+                            UserId = 2,
+                            Value = 20
                         },
                         new
                         {
                             Id = 43,
-                            BookId = 26,
+                            BookId = 24,
                             Comment = "The plot twists in this book are mind-blowing",
-                            UserId = 14,
+                            UserId = 12,
                             Value = 47
                         },
                         new
                         {
                             Id = 44,
-                            BookId = 6,
+                            BookId = 28,
                             Comment = "A classic that everyone should read",
-                            UserId = 12,
-                            Value = 15
+                            UserId = 6,
+                            Value = 27
                         },
                         new
                         {
                             Id = 45,
-                            BookId = 23,
+                            BookId = 16,
                             Comment = "The characters are so well-developed, felt like they were real people",
-                            UserId = 4,
-                            Value = 44
+                            UserId = 6,
+                            Value = 56
                         },
                         new
                         {
                             Id = 46,
-                            BookId = 14,
+                            BookId = 3,
                             Comment = "This book made me laugh and cry, a roller coaster of emotions",
-                            UserId = 8,
-                            Value = 40
+                            UserId = 11,
+                            Value = 39
                         },
                         new
                         {
                             Id = 47,
-                            BookId = 21,
+                            BookId = 23,
                             Comment = "The writing style is beautiful, every sentence is a work of art",
-                            UserId = 7,
-                            Value = 94
+                            UserId = 8,
+                            Value = 65
                         },
                         new
                         {
                             Id = 48,
-                            BookId = 30,
+                            BookId = 15,
                             Comment = "I couldn't guess the ending, kept me guessing until the last page",
-                            UserId = 2,
-                            Value = 68
+                            UserId = 6,
+                            Value = 49
                         },
                         new
                         {
                             Id = 49,
-                            BookId = 20,
+                            BookId = 23,
                             Comment = "I wish there was a sequel, I'm not ready to say goodbye to these characters",
-                            UserId = 5,
-                            Value = 29
+                            UserId = 1,
+                            Value = 26
                         },
                         new
                         {
                             Id = 50,
-                            BookId = 17,
+                            BookId = 28,
                             Comment = "The themes explored in this book are thought-provoking",
-                            UserId = 11,
-                            Value = 62
+                            UserId = 7,
+                            Value = 70
                         });
                 });
 
@@ -2463,16 +2481,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "812d899e-d834-4d03-9e67-4ed1983c7ca0",
+                            ConcurrencyStamp = "b3ab738b-1ba0-4e19-81c5-3a3f85dbc6ca",
                             Email = "Roman@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Roman Mario",
                             NormalizedEmail = "ROMAN@GMAIL.COM",
                             NormalizedUserName = "ROMAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKPty1+cxXkhKsydbVteJrfkd3P3GolZ9pRHIUntkLBvscW1BR5Tqhq2fkv+3v8mXQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN5iGBwDFL6sK6CmEWOCmUV8/Zv+O6BeJO90ml4sYfTHGWFFL3Eknon/6HvUSOjpSw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e0111e96-8696-4474-af59-67b89ed4d972",
+                            SecurityStamp = "9029ef24-307c-4086-aa5c-f10eae2dad10",
                             TwoFactorEnabled = false,
                             UserName = "roman"
                         },
@@ -2480,16 +2498,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "900d3fac-4595-4fac-b9ba-92c5d6701106",
+                            ConcurrencyStamp = "c1277305-03bf-4a05-9911-f70639337c1c",
                             Email = "Beth@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Beth Story",
                             NormalizedEmail = "BETH@GMAIL.COM",
                             NormalizedUserName = "BETH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOc4VkD8PChFbpIOFXZDq/kJm7hY4PhF+/j9oVzbcq34melvhCeMtqFSwMvYvljhag==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGkDFlpY7Hku6W0mO3AYga3CZZYIkbEoEFAoqH8ZdxuJUKnUo2S/ApIOFUA4IMK/Tg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b43cd6aa-5164-4717-8f3d-e73223cb9d26",
+                            SecurityStamp = "c5f3c4fe-4639-40fd-9abf-9beeaf89b2f1",
                             TwoFactorEnabled = false,
                             UserName = "beth"
                         },
@@ -2497,16 +2515,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c798ae13-6048-4eb6-ab50-f1930f1b639d",
+                            ConcurrencyStamp = "92b7321a-0a47-4fe2-a4f1-0f85ecae8080",
                             Email = "Monika@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Monika Reha",
                             NormalizedEmail = "MONIKA@GMAIL.COM",
                             NormalizedUserName = "MONIKA",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKi0nzenPcuZsGT835VfFOalrBze82p4Ya/wzf33HtCi6KTt5j+MZI1UUk8wWkyUOg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKSIUW+za8R5GnKbOv4ENyG4crUxVPCQxQPP2t2OCYIis4LPkOLSH30nJpomXZLVaw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cdeee2d1-dfe4-4d57-b40e-40c7745bb3e6",
+                            SecurityStamp = "21f76505-c31a-4bb7-b332-68d54d80705c",
                             TwoFactorEnabled = false,
                             UserName = "monika"
                         },
@@ -2514,16 +2532,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "afd37b9d-178b-4412-9400-9bc7f520134f",
+                            ConcurrencyStamp = "06ea01b6-3e58-4984-91f4-c915c30064f3",
                             Email = "John@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "John Smith",
                             NormalizedEmail = "JOHN@GMAIL.COM",
                             NormalizedUserName = "JOHN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIW40sB8nqIRw9u5iNRYcdaOfG+I60yfrDA3Dyy/9+dYL1AJhomoRzmD3451C+ftAw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKqwq8AbjUzMQxuZDjSz2gcGcE1BMb1L1Y5ZckbFH0mYRTGhIjkkkOYespy5R9BU2g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "bc4c9d49-d889-4362-a000-a187170abbf2",
+                            SecurityStamp = "8869d7e5-a5a3-45db-b550-4febccba6e6f",
                             TwoFactorEnabled = false,
                             UserName = "john"
                         },
@@ -2531,16 +2549,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 5,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6c6b768d-26a3-49ef-b6eb-1760fdb5c570",
+                            ConcurrencyStamp = "3e698194-32ff-438a-afe0-9f45b57110fa",
                             Email = "James@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "James Bond",
                             NormalizedEmail = "JAMES@GMAIL.COM",
                             NormalizedUserName = "JAMES",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMoiU77NGF9wli6yQGZWONslBQqPpoYzgBigiQdpj2957Vh/X6Lfr1WhAFtQkuAZqA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHoFqzPy31Sc6PdptCGJfudYvFKpY7CqwEEs8yDEt1yMJHoJh7qJWPzaucSYZvD27Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d7ef3eec-95dd-4ac9-9f21-cc243783c70e",
+                            SecurityStamp = "45d5014e-4cec-48a1-bf0c-70ab6283df78",
                             TwoFactorEnabled = false,
                             UserName = "james"
                         },
@@ -2548,16 +2566,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 6,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "43020190-48ba-4b14-88b3-095f0df992a9",
+                            ConcurrencyStamp = "d5bd603f-8648-43bd-8f6f-c5964f7b41b8",
                             Email = "Filip@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Filip Strong",
                             NormalizedEmail = "FILIP@GMAIL.COM",
                             NormalizedUserName = "FILIP",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEiOryiHmZlsaBV9NjeOTvSCYueRV+0vnwThXD7yav9hlOBNKTGaunlu6ao+JqTikA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELoKEms2osTUlhaChPTPV4BPLjRwu76qJbnLcq8WhKhPqEHbVg89pb2j7v++dA+kyg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2461f876-aab9-4c82-853e-07b353da1464",
+                            SecurityStamp = "f3d4b675-b854-4ab9-bd62-1b9a6c0071b8",
                             TwoFactorEnabled = false,
                             UserName = "filip"
                         },
@@ -2565,16 +2583,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 7,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ed6a9c5a-5ec9-4f71-9eb7-3d9468cc1e7f",
+                            ConcurrencyStamp = "0dd28b65-780b-4dd3-9a38-3c415a2738b7",
                             Email = "Random@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Random Guy",
                             NormalizedEmail = "RANDOM@GMAIL.COM",
                             NormalizedUserName = "RANDOM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG86G7iwLSr0AcRU00OvNEtaWm1vzs1O1BOGsemwXgApHCAgCEyBrChXvyYm8WG6SQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKUAqHHTvnC+TIGxjKRqhXEs1sGvv/I4kDVZm/4gZhMgAPQQz80iFXje3iJ7xasu9A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "cd1042ed-e1a1-460d-85a0-d34fab3f891f",
+                            SecurityStamp = "2ac818a9-d76d-47fb-8878-218689a29e2c",
                             TwoFactorEnabled = false,
                             UserName = "random"
                         },
@@ -2582,16 +2600,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 8,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d733958c-81c1-45ab-bc52-60af9c933017",
+                            ConcurrencyStamp = "cfdf2ef8-3fb8-4f91-9c97-28dbec1f5ef6",
                             Email = "Jack@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Jack Black",
                             NormalizedEmail = "JACK@GMAIL.COM",
                             NormalizedUserName = "JACK",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPiHt5piupx8oWpnQc8ErFeK2svjhHNuZoOP3rLYcj1iLVmC2L41bzRTmc/vkQU1fw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDRV1okO27uAK9SJjrDBASb5064agnd9ZtERGBZHsQTdxa8yms59ENty6DkdavFNiw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2453ea0a-3932-4367-8ee2-8f0aa35f10b0",
+                            SecurityStamp = "329724d6-bf2e-4495-9f7d-9d75b721712e",
                             TwoFactorEnabled = false,
                             UserName = "jack"
                         },
@@ -2599,16 +2617,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 9,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f34a8b5f-58b3-4da2-bad0-065bc9ce7925",
+                            ConcurrencyStamp = "99035666-b790-457f-8439-a8b3fcf36790",
                             Email = "Tom@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Tom Smart",
                             NormalizedEmail = "TOM@GMAIL.COM",
                             NormalizedUserName = "TOM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBHmOAZAeEq0kcAqM9mWcvidbTZTpoMalHBr1QYZdFkhWum27N6+V9+GaASlI1luDQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJR8OQz7YjoP4yuEa67iO7pPvEWNSAhxFtomEiDq+BE2CI4LeGHguloISDflkh+90Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f30eea0d-a25b-4c53-8bd9-55d8831cbfeb",
+                            SecurityStamp = "51ae49a1-9c91-46c2-82d0-5eb2817c77a2",
                             TwoFactorEnabled = false,
                             UserName = "tom"
                         },
@@ -2616,16 +2634,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 10,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2daf342b-d7c7-4f22-9bd3-cc72426f22a6",
+                            ConcurrencyStamp = "6327e3fd-f88f-4523-af1d-c8bfafa7462f",
                             Email = "Ali@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Ali Willy",
                             NormalizedEmail = "ALI@GMAIL.COM",
                             NormalizedUserName = "ALI",
-                            PasswordHash = "AQAAAAIAAYagAAAAELH6fzqTxtW2sukhtojzAhdY7kdU2Qv/41cEraWcBZ043ArGIcYUa9g8cLd31PjsTA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM+LtzEGe/dWm2gKhApqNEmR21MH6+w+TXxIY3ix4zE+wLfBDJLITkecF0VTxop6rQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e39cb4c8-68e5-4fe8-b68a-fc608c902d40",
+                            SecurityStamp = "0fe83b07-aa72-4950-9b32-a0ec059b8cc7",
                             TwoFactorEnabled = false,
                             UserName = "ali"
                         },
@@ -2633,16 +2651,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 11,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fde263f7-dfcd-481e-bdba-3c69378a4bb6",
+                            ConcurrencyStamp = "dae1af43-4388-49f1-a651-5d177f42ba56",
                             Email = "Rubber@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Rubber Duck",
                             NormalizedEmail = "RUBBER@GMAIL.COM",
                             NormalizedUserName = "RUBBER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM3R9O9HNL0wEo74UaTcqmA7LmzeBZGWngTEN2pw2wqAgT2KgQbx6ZMCLQqYrQxQQw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOTiFNBouY576qJZqAYLr66KAoWWNcC+WErx9W+yeXL+qGNEPMOiLnOIMTy7oqaMJw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "213d16b0-0f4e-4957-a75c-ad4446208bd2",
+                            SecurityStamp = "af6c60ca-8c94-4988-8144-bdd24ea40af2",
                             TwoFactorEnabled = false,
                             UserName = "rubber"
                         },
@@ -2650,16 +2668,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 12,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "53f0bb99-ce3e-4aea-ad1a-513962fc2a89",
+                            ConcurrencyStamp = "5f7bf594-9644-426e-9d2f-2f255d160c87",
                             Email = "Olaf@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Olaf Snow",
                             NormalizedEmail = "OLAF@GMAIL.COM",
                             NormalizedUserName = "OLAF",
-                            PasswordHash = "AQAAAAIAAYagAAAAEObNcL+vgzh8woz2pv+pF3t+hHz/5hBOuJPKyBaEMgQNJ5oTlFV3bh0fWRo+eH/B8g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFKksxSmJiDt8uLJy6LQpY/9nXkxG6Yw1njsZC2udzr+IkAK2JKdCUYGn5TGiS0e9g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1176e823-a72a-4dc2-94c0-135484b305fe",
+                            SecurityStamp = "b0a9208e-f836-43dc-b3c7-10ba8b0b0452",
                             TwoFactorEnabled = false,
                             UserName = "olaf"
                         },
@@ -2667,16 +2685,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 13,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2eece890-8470-4e9d-9c75-5d429472cc21",
+                            ConcurrencyStamp = "69612f1b-bba4-4b23-874b-885e0a885107",
                             Email = "Good@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Good Programmer",
                             NormalizedEmail = "GOOD@GMAIL.COM",
                             NormalizedUserName = "GOOD",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ/yapvx4cHWrMikd9Sue5FF17mAlcsjwNKrOb0gzwyJxkJx48Cmmd0K39zJOVtRGQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEUgTd6EGbNizDX/M70NBUHgYTtN8oN2GWr1Ln9MiiczSv0atoGq656+tKSA+hlYJA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "379b34a2-6ece-4ff6-8654-e774e1b03637",
+                            SecurityStamp = "d79a32ab-3c11-4da5-8130-0ccca7bd36af",
                             TwoFactorEnabled = false,
                             UserName = "good"
                         },
@@ -2684,16 +2702,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 14,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "db1962ef-8137-4e25-bd8d-b2294f08a628",
+                            ConcurrencyStamp = "cda6e988-d51d-49ad-88aa-de9ed24021e3",
                             Email = "Tim@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Tim King",
                             NormalizedEmail = "TIM@GMAIL.COM",
                             NormalizedUserName = "TIM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJNg5MeJtATn4LU3jpVxBJI3b7ju/EmY6kqu7AXLJ5g26V+UHcpz7K7bUPmbTgAJTQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELnDJvI31NSexE9ZmCRxK6cKzyfYWFpsbXPn2HAqerglthNXxgIgA+yaOzw2/L3Dog==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5b2a0ab8-803e-4c2b-8e2f-36e650366707",
+                            SecurityStamp = "692c8792-44c4-4a3a-976e-ab0ebdb24d82",
                             TwoFactorEnabled = false,
                             UserName = "tim"
                         },
@@ -2701,16 +2719,16 @@ namespace DAL.Postgres.Migrations.Migrations
                         {
                             Id = 15,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "01e1205d-40cf-467b-8e6d-ae351b697a7b",
+                            ConcurrencyStamp = "6916b278-9868-4426-9938-0d6cb69122ff",
                             Email = "Adam@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             Name = "Adam Queen",
                             NormalizedEmail = "ADAM@GMAIL.COM",
                             NormalizedUserName = "ADAM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHxZKa8cdOou5zxRi2zuHorhQ8jrkj6ibZwdmjpBLqYq7sCkpiumww5Z0rGXfesLpg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELhWEvp7FqhQQIxRA6dtc0nFnbmj4AUbozVRNiw0JoSdIaNggKZ4Ff2hH35hg6E0yw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "78f71dc5-7e66-4147-acc8-f6a8879b563e",
+                            SecurityStamp = "a68aa38f-0237-4ac6-be1a-aeb94d1792f7",
                             TwoFactorEnabled = false,
                             UserName = "adam"
                         });
@@ -2969,21 +2987,6 @@ namespace DAL.Postgres.Migrations.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BookOrder", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DataAccessLayer.Entities.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BookUser", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.Book", null)
@@ -3016,6 +3019,25 @@ namespace DAL.Postgres.Migrations.Migrations
                     b.Navigation("PrimaryGenre");
 
                     b.Navigation("Publisher");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.BookOrder", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Book", "Book")
+                        .WithMany("BookOrders")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entities.Order", "Order")
+                        .WithMany("BookOrders")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Order", b =>
@@ -3101,12 +3123,19 @@ namespace DAL.Postgres.Migrations.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Book", b =>
                 {
+                    b.Navigation("BookOrders");
+
                     b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Genre", b =>
                 {
                     b.Navigation("PrimaryGenreBooks");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Order", b =>
+                {
+                    b.Navigation("BookOrders");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Publisher", b =>

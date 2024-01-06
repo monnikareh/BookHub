@@ -11,5 +11,6 @@ public class Order : BaseEntity
     public PaymentStatus PaymentStatus { get; set; }
     public DateTime Date { get; set; } = DateTime.Now;
     public ICollection<Book> Books { get; set; } = new List<Book>();
+    public ICollection<BookOrder> BookOrders { get; } = new List<BookOrder>();
     
 }

@@ -14,6 +14,15 @@ public static class EntityMapper
             Name = model.Name
         };
     }
+
+    public static OrderItem MapBookOrderToOrderItem(BookOrder bookOrder)
+    {
+        return new OrderItem
+        {
+            BookId = bookOrder.BookId,
+            Count = bookOrder.Count
+        };
+    }
     
     public static AuthorDetail MapAuthorToAuthorDetail(Author author)
     {
@@ -79,7 +88,8 @@ public static class EntityMapper
             TotalPrice = order.TotalPrice,
             PaymentStatus = order.PaymentStatus,
             Date = order.Date,
-            Books = order.Books.Select(MapModelToRelated).ToList()
+            Books = order.Books.Select(MapModelToRelated).ToList(),
+            OrderItems = order.BookOrders.Where(bo => bo.OrderId == order.Id).Select(MapBookOrderToOrderItem).ToList()
         };
     }
     

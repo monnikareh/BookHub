@@ -1,3 +1,4 @@
+using System.Collections;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ public static class DataSeeder
         modelBuilder.Entity<Book>().HasData(PrepareBooks());
         modelBuilder.Entity<Rating>().HasData(PrepareRatings());
         modelBuilder.Entity<Order>().HasData(PrepareOrders());
+        modelBuilder.Entity<BookOrder>().HasData(PrepareBookOrders());
         modelBuilder.Entity("AuthorBook").HasData(
             new { AuthorsId = 15, BooksId = 1 },
             new { AuthorsId = 14, BooksId = 10 },
@@ -155,54 +157,6 @@ public static class DataSeeder
             new { BooksId = 35, UsersId = 3 },
             new { BooksId = 35, UsersId = 8 },
             new { BooksId = 35, UsersId = 5 });
-        modelBuilder.Entity("BookOrder").HasData(
-            new { BooksId = 1, OrdersId = 1 },
-            new { BooksId = 2, OrdersId = 2 },
-            new { BooksId = 3, OrdersId = 3 },
-            new { BooksId = 3, OrdersId = 8 },
-            new { BooksId = 3, OrdersId = 13 },
-            new { BooksId = 4, OrdersId = 3 },
-            new { BooksId = 5, OrdersId = 4 },
-            new { BooksId = 5, OrdersId = 30 },
-            new { BooksId = 6, OrdersId = 5 },
-            new { BooksId = 7, OrdersId = 6 },
-            new { BooksId = 7, OrdersId = 29 },
-            new { BooksId = 8, OrdersId = 7 },
-            new { BooksId = 9, OrdersId = 28 },
-            new { BooksId = 10, OrdersId = 27 },
-            new { BooksId = 12, OrdersId = 9 },
-            new { BooksId = 11, OrdersId = 10 },
-            new { BooksId = 12, OrdersId = 11 },
-            new { BooksId = 13, OrdersId = 26 },
-            new { BooksId = 14, OrdersId = 25 },
-            new { BooksId = 15, OrdersId = 12 },
-            new { BooksId = 16, OrdersId = 24 },
-            new { BooksId = 17, OrdersId = 23 },
-            new { BooksId = 18, OrdersId = 14 },
-            new { BooksId = 19, OrdersId = 15 },
-            new { BooksId = 19, OrdersId = 12 },
-            new { BooksId = 19, OrdersId = 22 },
-            new { BooksId = 20, OrdersId = 21 },
-            new { BooksId = 20, OrdersId = 20 },
-            new { BooksId = 21, OrdersId = 9 },
-            new { BooksId = 22, OrdersId = 10 },
-            new { BooksId = 23, OrdersId = 11 },
-            new { BooksId = 23, OrdersId = 3 },
-            new { BooksId = 24, OrdersId = 2 },
-            new { BooksId = 25, OrdersId = 1 },
-            new { BooksId = 26, OrdersId = 5 },
-            new { BooksId = 27, OrdersId = 6 },
-            new { BooksId = 28, OrdersId = 7 },
-            new { BooksId = 29, OrdersId = 13 },
-            new { BooksId = 30, OrdersId = 15 },
-            new { BooksId = 31, OrdersId = 7 },
-            new { BooksId = 32, OrdersId = 16 },
-            new { BooksId = 33, OrdersId = 16 },
-            new { BooksId = 33, OrdersId = 17 },
-            new { BooksId = 34, OrdersId = 18 },
-            new { BooksId = 35, OrdersId = 3 },
-            new { BooksId = 35, OrdersId = 8 },
-            new { BooksId = 35, OrdersId = 19 });
         modelBuilder.Entity<IdentityUserRole<int>>().HasData(
             new { UserId = 1, RoleId = 1 },
             new { UserId = 2, RoleId = 1 },
@@ -605,7 +559,7 @@ public static class DataSeeder
         };
         var random = new Random();
         var orders = new List<Order>();
-        for (var i = 1; i <= 30; i++)
+        for (var i = 1; i <= 35; i++)
         {
             var randomPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2);
             orders.Add(new Order
@@ -618,6 +572,23 @@ public static class DataSeeder
         }
 
         return orders;
+    }
+
+    private static IEnumerable<BookOrder> PrepareBookOrders()
+    {
+        var bookOrders = new List<BookOrder>();
+        var random = new Random();
+        for (var i = 1; i <= 35; i++)
+        {
+            bookOrders.Add(new BookOrder
+            {
+                OrderId = i,
+                BookId = random.Next(1,35),
+                Count = random.Next(1,10)
+            });
+        }
+
+        return bookOrders;
     }
 
     private static IEnumerable<IdentityRole<int>> PrepareRoles()
