@@ -13,7 +13,7 @@ using Microsoft.Identity.Client;
 namespace BookHub.Controllers;
 
 [Route("[controller]/[action]")]
-public class BookController : Controller
+public class BookController : BaseController
 {
     private readonly ILogger<BookController> _logger;
     private readonly IBookService _bookService;
@@ -199,10 +199,5 @@ public class BookController : Controller
         var book = (await _bookService.GetBookByIdAsync(id)).Value;
         book.OverallRating += value;
         await _bookService.UpdateBookAsync(id, EntityMapper.MapBookDetailToCreate(book));
-    }
-    
-    public IActionResult Error(string message)
-    {
-        return View(new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookHub.Controllers;
 
 [Route("[controller]/[action]")]
-public class AuthorController : Controller
+public class AuthorController : BaseController
 {
     private readonly ILogger<AuthorController> _logger;
     private readonly IAuthorService _authorService;
@@ -52,7 +52,7 @@ public class AuthorController : Controller
             {
                 Name = a.Name
             }),
-            _ => View("Error")
+            Error
         );
     }
 
@@ -83,7 +83,7 @@ public class AuthorController : Controller
         var author = await _authorService.GetAuthorByIdAsync(id);
         return author.Match(
             View,
-            _ => View("Error")
+            Error
         );
     }
     
