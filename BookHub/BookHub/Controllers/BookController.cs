@@ -61,13 +61,13 @@ public class BookController : BaseController
         switch (book.Error.err)
         {
             case Error.GenreNotFound or Error.MultipleGenresNotFound:
-                ModelState.AddModelError(nameof(model.PrimaryGenre.Name), book.Error.message);
+                ModelState.AddModelError(nameof(model.PrimaryGenre.Name), "Genre does not exist, you must create it first");
                 break;
             case Error.PublisherNotFound:
-                ModelState.AddModelError(nameof(model.Publisher.Name), book.Error.message);
+                ModelState.AddModelError(nameof(model.Publisher.Name), "Publisher does not exist, you must create it first");
                 break;
             case Error.AuthorNotFound or Error.MultipleAuthorsNotFound or Error.AuthorFieldEmpty:
-                ModelState.AddModelError(nameof(model.Authors), book.Error.message);
+                ModelState.AddModelError(nameof(model.Authors), "Author does not exist, you must create it first");
                 break;
         }
         
