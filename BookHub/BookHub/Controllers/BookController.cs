@@ -158,16 +158,25 @@ public class BookController : BaseController
             return RedirectToAction("Login", "Account");
         } */
 
-        var user = (await _userService.GetUserByIdAsync(userId)).Value;
-        var book = (await _bookService.GetBookByIdAsync(id)).Value;
+        var user = (await _userService.GetUserByIdAsync(userId));
+        var book = (await _bookService.GetBookByIdAsync(id));
+        if (!user.IsOk)
+        {
+            return Error(user.Error);
+        }
+
+        if (!book.IsOk)
+        {
+            return Error(book.Error);
+        }
         //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
         //{
         //     return _PartialView;
         //}
         var newRating = new RatingCreate
         {
-            User = EntityMapper.MapUserDetailToRelated(user),
-            Book = EntityMapper.MapBookDetailToRelated(book),
+            User = EntityMapper.MapUserDetailToRelated(user.Value),
+            Book = EntityMapper.MapBookDetailToRelated(book.Value),
             Value = value,
             Comment = null,
         };
