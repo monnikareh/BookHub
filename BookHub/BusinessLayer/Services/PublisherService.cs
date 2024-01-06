@@ -35,7 +35,7 @@ public class PublisherService : IPublisherService
         return filteredPublishers.Select(EntityMapper.MapPublisherToPublisherDetail);
     }
 
-    public async Task<Result<PublisherDetail, string>> GetPublisherByIdAsync(int id)
+    public async Task<Result<PublisherDetail, (Error err, string message)>> GetPublisherByIdAsync(int id)
     {
         var key = $"BookById_{id}";
         if (_memoryCache.TryGetValue(key, out PublisherDetail? cached) && cached is not null)
@@ -71,7 +71,7 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
 
-    public async Task<Result<PublisherDetail, string>> UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
+    public async Task<Result<PublisherDetail, (Error err, string message)>> UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
     {
         var publisher = await _context.Publishers.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
@@ -105,7 +105,7 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
 
-    public async Task<Result<bool, string>> DeletePublisherAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeletePublisherAsync(int id)
     {
         var publisher = await _context.Publishers.FindAsync(id);
         if (publisher == null)

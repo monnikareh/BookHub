@@ -106,7 +106,7 @@ namespace WebAPI.Controllers
                 var res = await _ratingService.DeleteRatingAsync(id);
                 return res.Match<ActionResult>(
                     g => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)

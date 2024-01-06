@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
                 var genre = await _genreService.UpdateGenreAsync(id, genreDetail);
                 return genre.Match<IActionResult>(
                     _ => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)
@@ -97,7 +97,7 @@ namespace WebAPI.Controllers
                 var res = await _genreService.DeleteGenreAsync(id);
                 return res.Match<IActionResult>(
                     _ => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)

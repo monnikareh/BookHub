@@ -6,8 +6,8 @@ namespace BusinessLayer.Services;
 public interface IAuthorService
 {
     Task<IEnumerable<AuthorDetail>> GetAuthorsAsync(string? name, int? bookId, string? bookName);
-    Task<Result<AuthorDetail, string>> GetAuthorByIdAsync(int id);
+    Task<Result<AuthorDetail, (Error err, string message)>> GetAuthorByIdAsync(int id);
     Task<AuthorDetail> CreateAuthorAsync(AuthorCreate authorCreate);
-    Task<Result<AuthorDetail, string>> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate);
-    Task<Result<bool, string>> DeleteAuthorAsync(int id);
+    Task<Result<AuthorDetail, (Error err, string message)>> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate);
+    Task<Result<bool, (Error err, string message)>> DeleteAuthorAsync(int id);
 }

@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
                 var author = await _authorService.UpdateAuthorAsync(id, authorUpdate);
                 return author.Match<ActionResult>(
                     a => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)
@@ -95,7 +95,7 @@ namespace WebAPI.Controllers
                 var res = await _authorService.DeleteAuthorAsync(id);
                 return res.Match<ActionResult>(
                     a => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)

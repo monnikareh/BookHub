@@ -66,7 +66,7 @@ public class BookService : IBookService
         return filteredBooks.Select(EntityMapper.MapBookToBookDetail);
     }
 
-    public async Task<Result<BookDetail, string>> GetBookByIdAsync(int id)
+    public async Task<Result<BookDetail, (Error err, string message)>> GetBookByIdAsync(int id)
     {
         var key = $"BookById_{id}";
         if (_memoryCache.TryGetValue(key, out BookDetail? cached) && cached is not null)
@@ -94,7 +94,7 @@ public class BookService : IBookService
     }
 
 
-    public async Task<Result<BookDetail, string>> CreateBookAsync(BookCreate bookCreate)
+    public async Task<Result<BookDetail, (Error err, string message)>> CreateBookAsync(BookCreate bookCreate)
     {
         if (bookCreate.Authors.IsNullOrEmpty())
         {
@@ -160,7 +160,7 @@ public class BookService : IBookService
         return EntityMapper.MapBookToBookDetail(book);
     }
 
-    public async Task<Result<BookDetail, string>> UpdateBookAsync(int id, BookCreate bookUpdate)
+    public async Task<Result<BookDetail, (Error err, string message)>> UpdateBookAsync(int id, BookCreate bookUpdate)
     {
         var book = await _context.Books
             .Include(pg => pg.PrimaryGenre)
@@ -248,7 +248,7 @@ public class BookService : IBookService
         return EntityMapper.MapBookToBookDetail(book);
     }
 
-    public async Task<Result<bool, string>> DeleteBookAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteBookAsync(int id)
     {
         var book = await _context.Books.FindAsync(id);
         if (book == null)

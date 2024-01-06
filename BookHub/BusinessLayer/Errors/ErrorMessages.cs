@@ -2,90 +2,91 @@ using BusinessLayer.Models;
 
 namespace BusinessLayer.Errors;
 
+
 public static class ErrorMessages
 {
-    public static string UserNotFound(int id)
+    public static (Error err, string message) UserNotFound(int id)
     {
-        return $"User with 'ID={id}' has no unpaid orders";
+        return (Error.UserNotFound,$"User with 'ID={id}' has no unpaid orders");
     }
 
-    public static string OrderNotFound(int id)
+    public static (Error err, string message) OrderNotFound(int id)
     {
-        return $"Order with 'ID={id}' could not be found";
+        return (Error.OrderNotFound, $"Order with 'ID={id}' could not be found");
     }
 
-    public static string AuthorNotFound(int id)
+    public static (Error err, string message) AuthorNotFound(int id)
     {
-        return $"Author with 'ID={id}' could not be found";
+        return (Error.AuthorNotFound,$"Author with 'ID={id}' could not be found");
     }
 
-    public static string AuthorNotFound()
+    public static (Error err, string message) AuthorNotFound()
     {
-        return "One or more authors could not be found";
+        return (Error.MultipleAuthorsNotFound,"One or more authors could not be found");
     }
 
-    public static string AuthorsEmpty()
+    public static (Error err, string message) AuthorsEmpty()
     {
-        return "Author field cannot be empty";
+        return (Error.AuthorFieldEmpty,"Author field cannot be empty");
     }
 
-    public static string BooksEmpty()
+    public static (Error err, string message) BooksEmpty()
     {
-        return "Book field cannot be empty";
+        return (Error.BookFieldEmpty ,"Book field cannot be empty");
     }
 
-    public static string GenreNotFound(int id)
+    public static (Error err, string message) GenreNotFound(int id)
     {
-        return $"Genre with 'ID={id}' could not be found";
+        return (Error.GenreNotFound ,$"Genre with 'ID={id}' could not be found");
     }
 
-    public static string GenreNotFound()
+    public static (Error err, string message) GenreNotFound()
     {
-        return "One or more genre could not be found";
+        return (Error.MultipleGenresNotFound ,"One or more genre could not be found");
     }
 
-    public static string PublisherNotFound(int id)
+    public static (Error err, string message) PublisherNotFound(int id)
     {
-        return $"Publisher with 'ID={id}' could not be found";
+        return (Error.PublisherNotFound , $"Publisher with 'ID={id}' could not be found");
     }
 
-    public static string PublisherNotFound(int id, string name)
+    public static (Error err, string message) PublisherNotFound(int id, string name)
     {
-        return $"Publisher 'Name={name}' <OR> 'ID={id}' could not be found";
+        return  (Error.PublisherNotFound, $"Publisher 'Name={name}' <OR> 'ID={id}' could not be found");
     }
 
-    public static string GenreNotFound(int id, string name)
+    public static (Error err, string message) GenreNotFound(int id, string name)
     {
-        return $"Genre 'Name={name}' <OR> 'ID={id}' could not be found";
+        return (Error.GenreNotFound, $"Genre 'Name={name}' <OR> 'ID={id}' could not be found");
     }
 
-    public static string UserNotFound(int id, string name)
+    public static (Error err, string message) UserNotFound(int id, string name)
     {
-        return $"User 'Name={name}' <OR> 'ID={id}' could not be found";
+        return (Error.UserNotFound, $"User 'Name={name}' <OR> 'ID={id}' could not be found");
     }
 
-    public static string UserAlreadyExists(string name)
+    public static (Error err, string message) UserAlreadyExists(string name)
     {
-        return $"User 'Name={name}' already exists";
+        return (Error.UserAlreadyExists, $"User 'Name={name}' already exists");
     }
 
-    public static string RatingNotFound(int id)
+    public static (Error err, string message) RatingNotFound(int id)
     {
-        return $"Rating with 'ID={id}' could not be found";
+        return (Error.RatingNotFound, $"Rating with 'ID={id}' could not be found");
     }
 
-    public static string BookNotFound(int id)
+    public static (Error err, string message) BookNotFound(int id)
     {
-        return $"Book with 'ID={id}' could not be found";
+        return (Error.BookNotFound, $"Book with 'ID={id}' could not be found");
     }
 
-    public static string BookNotFound()
+    public static (Error err, string message) BookNotFound()
     {
-        return "One or more books could not be found";
+        return (Error.MultipleBooksNotFound,"One or more books could not be found");
     }
 
-    public static string BookNotFound(int id, string name)
+    public static (Error err, string message) BookNotFound(int id, string name)
     {
-        return $"Book 'Name={name}' <OR> 'ID={id}' could not be found";
+        return  (Error.BookNotFound, $"Book 'Name={name}' <OR> 'ID={id}' could not be found");
     }
 }

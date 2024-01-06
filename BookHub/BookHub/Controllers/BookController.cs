@@ -51,9 +51,10 @@ public class BookController : BaseController
         }
 
         var book = await _bookFacade.AddNewBook(model);
+        // ModelState.AddModelError(nameof(model.PrimaryGenre.Name), "Primary genre does not exist. Create it first.");
         return book.Match(
             _ => RedirectToAction("Index"),
-            Error);
+            e => Error(e));
     }
 
     [Authorize(Roles = "Admin")]

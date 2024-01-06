@@ -26,7 +26,7 @@ public class BookFacade
         return books;
     }
     
-    public async Task<Result<BookDetail, string>> AddNewBook(BookCreate model)
+    public async Task<Result<BookDetail, (Error err, string message)>> AddNewBook(BookCreate model)
     {
         return await _bookService.CreateBookAsync(model);
     }

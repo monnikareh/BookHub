@@ -51,7 +51,7 @@ public class UserService : IUserService
         return users.Select(EntityMapper.MapUserToUserDetail);
     }
 
-    public async Task<Result<UserDetail, string>> GetUserByIdAsync(int id)
+    public async Task<Result<UserDetail, (Error err, string message)>> GetUserByIdAsync(int id)
     {
         var key = $"BookById_{id}";
         if (_memoryCache.TryGetValue(key, out UserDetail? cached) && cached is not null)
@@ -72,7 +72,7 @@ public class UserService : IUserService
         return mapped;
     }
 
-    public async Task<Result<UserDetail, string>> CreateUserAsync(UserCreate userCreate)
+    public async Task<Result<UserDetail, (Error err, string message)>> CreateUserAsync(UserCreate userCreate)
     {
         User user;
         try
@@ -120,7 +120,7 @@ public class UserService : IUserService
         return EntityMapper.MapUserToUserDetail(user);
     }
 
-    public async Task<Result<UserDetail, string>> UpdateUserAsync(int id, UserUpdate userUpdate)
+    public async Task<Result<UserDetail, (Error err, string message)>> UpdateUserAsync(int id, UserUpdate userUpdate)
     {
         var user = await _context.Users
             .Include(b => b.Books)
@@ -158,7 +158,7 @@ public class UserService : IUserService
         return EntityMapper.MapUserToUserDetail(user);
     }
 
-    public async Task<Result<bool, string>> DeleteUserAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)
@@ -170,7 +170,7 @@ public class UserService : IUserService
         return true;
     }
 
-    public async Task<Result<(string, User user), string>> GetUserAsync(int id)
+    public async Task<Result<(string, User user), (Error err, string message)>> GetUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)
@@ -181,7 +181,7 @@ public class UserService : IUserService
         return (await _userManager.GeneratePasswordResetTokenAsync(user), user);
     }
 
-    public async Task<Result<bool, string>> AddBookToWishlist(int id, int bookId)
+    public async Task<Result<bool, (Error err, string message)>> AddBookToWishlist(int id, int bookId)
     {
         var user = await _context.Users
             .Include(b => b.Books)
@@ -209,7 +209,7 @@ public class UserService : IUserService
         return true;
     }
 
-    public async Task<Result<IEnumerable<BookDetail>, string>> GetBooksInWishlist(int id)
+    public async Task<Result<IEnumerable<BookDetail>, (Error err, string message)>> GetBooksInWishlist(int id)
     {
         var user = await _context
             .Users
@@ -230,7 +230,7 @@ public class UserService : IUserService
         return user.Books.Select(EntityMapper.MapBookToBookDetail).ToList();
     }
 
-    public async Task<Result<bool, string>> DeleteBookFromWishlist(int userId, int bookId)
+    public async Task<Result<bool, (Error err, string message)>> DeleteBookFromWishlist(int userId, int bookId)
     {
         var user = await _context
             .Users

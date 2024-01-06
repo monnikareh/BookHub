@@ -34,7 +34,7 @@ public class GenreService : IGenreService
         return filteredGenres.Select(EntityMapper.MapGenreToGenreDetail);
     }
 
-    public async Task<Result<GenreDetail, string>> GetGenreByIdAsync(int id)
+    public async Task<Result<GenreDetail, (Error err, string message)>> GetGenreByIdAsync(int id)
     {
         var key = $"GenreById_{id}";
         if (_memoryCache.TryGetValue(key, out GenreDetail? cached) && cached is not null)
@@ -71,7 +71,7 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task<Result<GenreDetail, string>> UpdateGenreAsync(int id, GenreCreate genreUpdate)
+    public async Task<Result<GenreDetail, (Error err, string message)>> UpdateGenreAsync(int id, GenreCreate genreUpdate)
     {
         var genre = await _context.Genres.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
@@ -86,7 +86,7 @@ public class GenreService : IGenreService
         return EntityMapper.MapGenreToGenreDetail(genre);
     }
 
-    public async Task<Result<bool, string>> DeleteGenreAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteGenreAsync(int id)
     {
         var genre = await _context.Genres.FindAsync(id);
         if (genre == null)

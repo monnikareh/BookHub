@@ -45,7 +45,7 @@ public class RatingService : IRatingService
         return filteredRatings.Select(EntityMapper.MapRatingToRatingDetail);
     }
 
-    public async Task<Result<RatingDetail, string>> GetRatingByIdAsync(int id)
+    public async Task<Result<RatingDetail, (Error err, string message)>> GetRatingByIdAsync(int id)
     {
         var key = $"RatingById_{id}";
         if (_memoryCache.TryGetValue(key, out RatingDetail? cached) && cached is not null)
@@ -71,7 +71,7 @@ public class RatingService : IRatingService
     }
 
 
-    public async Task<Result<RatingDetail, string>> CreateRatingAsync(RatingCreate ratingCreate)
+    public async Task<Result<RatingDetail, (Error err, string message)>> CreateRatingAsync(RatingCreate ratingCreate)
     {
         if (_context.Books == null)
         {
@@ -110,7 +110,7 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task<Result<RatingDetail, string>> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
+    public async Task<Result<RatingDetail, (Error err, string message)>> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
     {
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)
@@ -129,7 +129,7 @@ public class RatingService : IRatingService
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task<Result<bool, string>> DeleteRatingAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteRatingAsync(int id)
     {
         var rating = await _context.Ratings.FindAsync(id);
         if (rating == null)

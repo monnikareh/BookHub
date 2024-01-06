@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
                 var book = await _bookService.UpdateBookAsync(id, bookUpdate);
                 return book.Match<ActionResult>(
                     a => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)
@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
                 var res = await _bookService.DeleteBookAsync(id);
                 return res.Match<ActionResult>(
                     a => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)

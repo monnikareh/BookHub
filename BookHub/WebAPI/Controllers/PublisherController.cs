@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
                 var publisher = await _publisherService.UpdatePublisherAsync(id, publisherUpdate);
                 return publisher.Match<ActionResult>(
                     g => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)
@@ -96,7 +96,7 @@ namespace WebAPI.Controllers
                 var res = await _publisherService.DeletePublisherAsync(id);
                 return res.Match<ActionResult>(
                     g => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)

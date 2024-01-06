@@ -74,7 +74,7 @@ namespace BusinessLayer.Services
             return filteredOrders.Select(EntityMapper.MapOrderToOrderDetail);
         }
 
-        public async Task<Result<OrderDetail, string>> GetOrderByIdAsync(int id)
+        public async Task<Result<OrderDetail, (Error err, string message)>> GetOrderByIdAsync(int id)
         {
             var order = await _context.Orders
                 .Include(o => o.User)
@@ -90,7 +90,7 @@ namespace BusinessLayer.Services
             return mapped;
         }
 
-        public async Task<Result<OrderDetail, string>> CreateOrderAsync(OrderCreate orderCreate)
+        public async Task<Result<OrderDetail, (Error err, string message)>> CreateOrderAsync(OrderCreate orderCreate)
         {
             if (orderCreate.Books.IsNullOrEmpty())
             {
@@ -129,7 +129,7 @@ namespace BusinessLayer.Services
             return EntityMapper.MapOrderToOrderDetail(order);
         }
 
-        public async Task<Result<OrderDetail, string>> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
+        public async Task<Result<OrderDetail, (Error err, string message)>> UpdateOrderAsync(int id, OrderUpdate orderUpdate)
         {
             var order = await _context.Orders
                 .Include(o => o.Books)
@@ -164,7 +164,7 @@ namespace BusinessLayer.Services
             return EntityMapper.MapOrderToOrderDetail(order);
         }
 
-        public async Task<Result<bool, string>> DeleteOrderAsync(int id)
+        public async Task<Result<bool, (Error err, string message)>> DeleteOrderAsync(int id)
         {
             var order = await _context.Orders
                 .Include(o => o.Books)
@@ -190,7 +190,7 @@ namespace BusinessLayer.Services
         }
 
 
-        public async Task<Result<OrderDetail, string>> GetUnpaidOrder(int userId)
+        public async Task<Result<OrderDetail, (Error err, string message)>> GetUnpaidOrder(int userId)
         {
             var res = await GetUnpaid(userId);
             if (res is null)
@@ -202,7 +202,7 @@ namespace BusinessLayer.Services
         }
 
 
-        public async Task<Result<bool, string>> PayOrderAsync(int id)
+        public async Task<Result<bool, (Error err, string message)>> PayOrderAsync(int id)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
@@ -215,7 +215,7 @@ namespace BusinessLayer.Services
             return true;
         }
 
-        public async Task<Result<bool, string>> AppendBook(int userId, int bookId)
+        public async Task<Result<bool, (Error err, string message)>> AppendBook(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);

@@ -105,7 +105,7 @@ namespace WebAPI.Controllers
                 var res = await _userService.DeleteUserAsync(id);
                 return res.Match<ActionResult>(
                     _ => Ok(),
-                    NotFound
+                    e => NotFound(e)
                 );
             }
             catch (Exception e)

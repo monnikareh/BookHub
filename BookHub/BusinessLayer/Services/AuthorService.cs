@@ -41,7 +41,7 @@ public class AuthorService : IAuthorService
         return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
 
-    public async Task<Result<AuthorDetail, string>> GetAuthorByIdAsync(int id)
+    public async Task<Result<AuthorDetail, (Error err, string message)>> GetAuthorByIdAsync(int id)
     {
         var key = $"AuthorById_{id}";
         if (_memoryCache.TryGetValue(key, out AuthorDetail? cached) && cached is not null)
@@ -80,7 +80,7 @@ public class AuthorService : IAuthorService
         return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
-    public async Task<Result<AuthorDetail, string>> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate)
+    public async Task<Result<AuthorDetail, (Error err, string message)>> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate)
     {
         var author = await _context.Authors.Include(o => o.Books)
             .FirstOrDefaultAsync(a => a.Id == id);
@@ -114,7 +114,7 @@ public class AuthorService : IAuthorService
         return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
-    public async Task<Result<bool, string>> DeleteAuthorAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteAuthorAsync(int id)
     {
         var author = await _context.Authors.FindAsync(id);
         if (author == null)
