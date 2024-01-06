@@ -25,4 +25,5 @@ public class Book : BaseEntity, IModelRelated
     public ICollection<Author> Authors { get; set; } = new List<Author>();
     public ICollection<Genre> Genres { get; set; } = new List<Genre>();
     public ICollection<User> Users { get; set;} = new List<User>();
+    public ICollection<BookOrder> BookOrders { get; } = new List<BookOrder>();
 }
