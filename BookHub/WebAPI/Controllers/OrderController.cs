@@ -95,6 +95,20 @@ namespace WebAPI.Controllers
             }
         } 
         
+        [HttpGet("{userId:int}/{bookId:int}")]
+        public async Task<IActionResult> Append(int userId, int bookId)
+        {
+            try
+            {
+                await _orderService.AppendBook(userId, bookId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return HandleOrderException(e);
+            }
+        }
+        
         private ActionResult HandleOrderException(Exception e)
         {
             return e is OrderNotFoundException or UserNotFoundException
@@ -102,5 +116,7 @@ namespace WebAPI.Controllers
                 ? NotFound(e.Message)
                 : Problem("Unknown problem occured");
         }
+        
+        
     } 
 }
