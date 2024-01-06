@@ -36,22 +36,18 @@ public class RatingController : BaseController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
-        try
-        {
-            var rating = await _ratingService.GetRatingByIdAsync(id);
-            return rating.Match(
-                r => View(new RatingUpdate
-                {
-                    Value = r.Value,
-                    Comment = r.Comment
-                }),
-                ErrorView);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Error retrieving rating with ID {id}: {ex.Message}");
-            return RedirectToAction("ErrorView");
-        }
+        var rating = await _ratingService.GetRatingByIdAsync(id);
+        return rating.Match(
+            r => View(new RatingUpdate
+            {
+                Value = r.Value,
+                Comment = r.Comment
+            }),
+            e =>
+            {
+                _logger.LogError($"Error retrieving rating with ID {id}: {e.message}");
+                return ErrorView(e);
+            });
     }
 
     [HttpPost("{id:int}")]
@@ -62,18 +58,19 @@ public class RatingController : BaseController
             return View(model);
         }
 
-        try
-        {
-            await _ratingService.UpdateRatingAsync(id, model);
-            _logger.LogInformation($"Rating with ID {id} updated successfully.");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Error updating rating with ID {id}: {ex.Message}");
-            return RedirectToAction("ErrorView");
-        }
-
-        return RedirectToAction("Index");
+        var rating = await _ratingService.UpdateRatingAsync(id, model);
+        return rating.Match(
+            r =>
+            {
+                _logger.LogInformation($"Rating with ID {id} updated successfully.");
+                return RedirectToAction("Index");
+            },
+            e =>
+            {
+                _logger.LogError($"Error updating rating with ID {id}: {e.message}");
+                return ErrorView(e);
+            }
+        );
     }
 
 
