@@ -53,12 +53,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Rating" asp-action="Index">Ratings</a>
                         </li>
                     }
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Cart" asp-route-id="@User.FindFirstValue(ClaimTypes.NameIdentifier)">Basket</a>
-                        </li>
-                    }
                 </ul>
                 <partial name="_LoginPartial"/>
 
