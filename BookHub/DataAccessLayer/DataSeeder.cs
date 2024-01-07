@@ -558,13 +558,13 @@ public static class DataSeeder
         };
         var random = new Random();
         var orders = new List<Order>();
-        for (var i = 1; i <= 35; i++)
+        for (var i = 1; i <= 149; i++)
         {
             var randomPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2);
             orders.Add(new Order
             {
                 Id = i,
-                UserId = random.Next(1, 4),
+                UserId = i / 10 + 1,
                 TotalPrice = randomPrice,
                 PaymentStatus = paymentStatuses[random.Next(1, 5)]
             });
@@ -577,14 +577,17 @@ public static class DataSeeder
     {
         var bookOrders = new List<BookOrder>();
         var random = new Random();
-        for (var i = 1; i <= 35; i++)
+        for (var i = 1; i <= 149; i++)
         {
-            bookOrders.Add(new BookOrder
+            for (var j = 0; j <= random.Next(1, 5); j++)
             {
-                OrderId = i,
-                BookId = random.Next(1,35),
-                Count = random.Next(1,10)
-            });
+                bookOrders.Add(new BookOrder
+                {
+                    OrderId = i,
+                    BookId = j == 0 ? j + 1 : j * 5,
+                    Count = random.Next(1, 3)
+                });
+            }
         }
 
         return bookOrders;

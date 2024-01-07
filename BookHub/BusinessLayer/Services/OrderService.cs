@@ -314,5 +314,15 @@ namespace BusinessLayer.Services
                 .FirstOrDefaultAsync(o => o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
             return order;
         }
+
+        private void FixPrices()
+        {
+            foreach (var order in _context.Orders.Include(order => order.Books))
+            {
+                order.TotalPrice = order.BookOrders.Sum(bk => bk.Book.Price * bk.Count);
+            }
+
+            _context.SaveChanges();
+        }
     }
 }

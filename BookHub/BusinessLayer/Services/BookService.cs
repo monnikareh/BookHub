@@ -288,5 +288,14 @@ public class BookService : IBookService
     {
         return $"{entity} 'Name={name}' <OR> 'ID={id}' could not be found";
     }
+
+    private void FixOverallRating()
+    {
+        foreach (var book in _context.Books.Include(book => book.Ratings))
+        {
+            if (!book.Ratings.IsNullOrEmpty()) book.OverallRating = (int)book.Ratings.Average(r => r.Value);
+        }
+        _context.SaveChanges();
+    }
     
 }
