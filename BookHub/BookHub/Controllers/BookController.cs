@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using BusinessLayer.Facades;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;

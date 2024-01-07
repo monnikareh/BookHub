@@ -1,7 +1,6 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -43,7 +42,7 @@ namespace WebAPI.Controllers
             {
                 var rating = await _ratingService.GetRatingByIdAsync(id);
                 return rating.Match<ActionResult<RatingDetail>>(
-                    g => Ok(g),
+                    r => Ok(r),
                     e => NotFound(e)
                 );
             }
@@ -66,7 +65,7 @@ namespace WebAPI.Controllers
             {
                 var rating = await _ratingService.CreateRatingAsync(ratingCreate);
                 return rating.Match<ActionResult<RatingDetail>>(
-                    g => Ok(g),
+                    r => Ok(r),
                     e => NotFound(e)
                 );
             }
@@ -88,7 +87,7 @@ namespace WebAPI.Controllers
             {
                 var rating = await _ratingService.UpdateRatingAsync(id, ratingDetail);
                 return rating.Match<ActionResult<RatingDetail>>(
-                    g => Ok(g),
+                    r => Ok(r),
                     e => NotFound(e)
                 );
             }
@@ -99,13 +98,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRating(int id)
+        public async Task<ActionResult<RatingDetail>> DeleteRating(int id)
         {
             try
             {
                 var res = await _ratingService.DeleteRatingAsync(id);
-                return res.Match<ActionResult>(
-                    g => Ok(),
+                return res.Match<ActionResult<RatingDetail>>(
+                    r => Ok(r),
                     e => NotFound(e)
                 );
             }

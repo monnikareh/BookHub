@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, AuthorUpdate authorUpdate)
+        public async Task<ActionResult<AuthorDetail>> UpdateAuthor(int id, AuthorUpdate authorUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -76,8 +76,8 @@ namespace WebAPI.Controllers
             try
             {
                 var author = await _authorService.UpdateAuthorAsync(id, authorUpdate);
-                return author.Match<ActionResult>(
-                    a => Ok(),
+                return author.Match<ActionResult<AuthorDetail>> (
+                    a => Ok(a),
                     e => NotFound(e)
                 );
             }
@@ -88,13 +88,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor(int id)
+        public async Task<ActionResult<AuthorDetail>>DeleteAuthor(int id)
         {
             try
             {
                 var res = await _authorService.DeleteAuthorAsync(id);
-                return res.Match<ActionResult>(
-                    a => Ok(),
+                return res.Match<ActionResult<AuthorDetail>>(
+                    a => Ok(a),
                     e => NotFound(e)
                 );
             }
