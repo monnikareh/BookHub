@@ -41,10 +41,30 @@
     <p>Date: @Model.Date</p>
 
     <h3>Order items</h3>
-    @foreach (var book in Model.Books)
-    {
-        <p>@Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id)?.Count x <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p>
-    }
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Book</th>
+            <th>Amount</th>
+            @* <th>Unit price</th> *@
+            @* <th>Total price per item</th> *@
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var book in Model.Books)
+        {
+            var orderItem = Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id);
+            <tr>
+                <td>
+                    <p>
+                        <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a>
+                    </p>
+                </td>
+                <td>@orderItem?.Count</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>
 
 @section Scripts {
