@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using BusinessLayer.Errors;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,11 @@ public class RatingController : BaseController
 
     public async Task<IActionResult> Index()
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        TryParse(userIdClaim, out var userId);
+        var ret = TryParseId(out var userId);
+        if (!ret)
+        {
+            return ErrorView((Error.UserNotFound, "User not found"));
+        }
         var ratings = await _ratingService.GetRatingsAsync(userId, null, null, null);
         return View(ratings);
     }
@@ -34,7 +38,8 @@ public class RatingController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
-        return View(ratings);
+        var ret = TryParseId(out var userId);
+        return !ret ? ErrorView((Error.UserNotFound, "User not found")) : View(ratings.Where(r => r.User.Id == userId));
     }
 
 
