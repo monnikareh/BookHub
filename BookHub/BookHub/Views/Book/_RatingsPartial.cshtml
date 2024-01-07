@@ -5,7 +5,14 @@
     foreach (var review in Model)
     {
         <div class="border-bottom mb-2">
-            <p>@review.User.Name: @review.Comment</p>
+            <p>@review.User.Name </p>
+            <p>Rating: @review.Value</p>
+            
+            @if (review.Comment != null)
+            {
+                <p>Comment: @review.Comment</p>
+            }
+            
         </div>
     }
 }
