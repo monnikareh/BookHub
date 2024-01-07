@@ -61,7 +61,7 @@ public class RatingController : BaseController
             r =>
             {
                 _logger.LogInformation($"Rating with ID {id} updated successfully.");
-                return RedirectToAction("Index");
+                return RedirectToAction("Detail", "Book", new {id = r.Book.Id});
             },
             e =>
             {
