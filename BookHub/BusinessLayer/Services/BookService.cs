@@ -294,6 +294,7 @@ public class BookService : IBookService
         foreach (var book in _context.Books.Include(book => book.Ratings))
         {
             if (!book.Ratings.IsNullOrEmpty()) book.OverallRating = (int)book.Ratings.Average(r => r.Value);
+            else book.OverallRating = 0;
         }
         _context.SaveChanges();
     }
