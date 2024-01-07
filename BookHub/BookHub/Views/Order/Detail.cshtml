@@ -4,6 +4,11 @@
     <h2>Order @Model.Id created at @Model.Date</h2>
 </div>
 
+@{
+    ViewData["Title"] = "Detail";
+}
+
+
 <div class="col-6">
     <p>ID: @Model.Id</p>
     <p>Total Price: @Model.TotalPrice</p>
