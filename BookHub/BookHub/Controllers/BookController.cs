@@ -190,10 +190,7 @@ public class BookController : BaseController
         {
             return ErrorView(book.Error);
         }
-        //if (await _ratingService.ExistRatingForUser(user.Id, book.Id))
-        //{
-        //     return _PartialView;
-        //}
+        
         var newRating = new RatingCreate
         {
             User = EntityMapper.MapUserDetailToRelated(user.Value),

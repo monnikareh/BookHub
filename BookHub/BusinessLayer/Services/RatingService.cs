@@ -145,10 +145,10 @@ public class RatingService : IRatingService
         return true;
     }
     
-    public async Task<bool> ExistRatingForUser(int userId, int bookId)
+    public async Task<RatingDetail?> ExistRatingForUser(int userId, int bookId)
     {
         var ratings = await GetRatingsAsync(userId, null, bookId, null);
-        return ratings.Any();
+        return ratings.FirstOrDefault();
     }
 
     private void UpdateOverallRatingValue(Book book, int ratingValue)
