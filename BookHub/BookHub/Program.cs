@@ -55,14 +55,10 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-
-// WE WANT SWAGGER IN PRODUCTION AS WELL
-app.UseMiddleware<RequestLoggerMiddleware>("BookHubWeb");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
