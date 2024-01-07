@@ -191,6 +191,13 @@ public class BookController : BaseController
             return ErrorView(book.Error);
         }
         
+        var rating = await _ratingService.ExistRatingForUser(user.Value.Id, book.Value.Id);
+        if (rating != null)
+        {
+            ViewBag.ModifyRatingConfirmation = true;
+            ViewBag.ExistingRatingId = rating.Id;
+            return RedirectToAction("Detail", new { id = id });
+        }
         var newRating = new RatingCreate
         {
             User = EntityMapper.MapUserDetailToRelated(user.Value),
@@ -200,5 +207,39 @@ public class BookController : BaseController
         };
         var result = await _ratingService.CreateRatingAsync(newRating);
         return RedirectToAction("Detail", new { id = id });
+    }
+
+
+    public async Task<IActionResult> CheckRatingExists(int id)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        int.TryParse(userIdClaim, out int userId);
+
+        /*
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        } */
+
+        var user = (await _userService.GetUserByIdAsync(userId));
+        var book = (await _bookService.GetBookByIdAsync(id));
+        if (!user.IsOk)
+        {
+            return ErrorView(user.Error);
+        }
+
+        if (!book.IsOk)
+        {
+            return ErrorView(book.Error);
+        }
+        
+        var rating = await _ratingService.ExistRatingForUser(user.Value.Id, book.Value.Id);
+       
+        if (rating != null)
+        {
+            var editUrl = Url.Action("Edit", "Rating", new { id = rating.Id });
+            return Json(new { ratingExists = true, editUrl });
+        }
+        return Json(new { ratingExists = false });
     }
 }

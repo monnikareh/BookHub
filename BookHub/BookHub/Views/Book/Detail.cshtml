@@ -199,7 +199,21 @@
             });
             
             $('#addRatingBtn').on('click', function () {
-                $('#addRatingModal').modal('show');
+                $.ajax({
+                    url: '@Url.Action("CheckRatingExists", "Book", new { id = Model.Id })',
+                    type: 'GET',
+                    success: function (result) {
+                        if (result.ratingExists) {
+                            alert('Rating already exists.');
+                            window.location.href = result.editUrl;
+                        } else {
+                            $('#addRatingModal').modal('show');
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error checking rating: ', error);
+                    }
+                });
             });
             
             $('#addRatingModal').on('shown.bs.modal', function () { 
@@ -217,12 +231,12 @@
             $('#addRatingForm').submit(function (e) {
                 e.preventDefault();
                 var ratingValue = $('#ratingValue').val();
-                var commentValue = $('#comment').val(); // Get the comment value
+                var commentValue = $('#comment').val();
                 
                 $.ajax({
                     url: '@Url.Action("AddRating", "Book", new { id = Model.Id})',
                     type: 'POST',
-                    data: { value: ratingValue, comment: commentValue }, // Include the comment in the data
+                    data: { value: ratingValue, comment: commentValue },
                     success: function (result) {
                         $('#addRatingModal').modal('hide');
                         window.location.href = '@Url.Action("Detail", "Book", new { id = Model.Id })';
