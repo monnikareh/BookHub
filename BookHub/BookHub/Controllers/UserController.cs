@@ -33,6 +33,11 @@ public class UserController : BaseController
         return View(users);    
     }
     
+    public async Task<IActionResult> Search(string query)
+    {
+        var users = await _userService.GetSearchUsersAsync(query);
+        return View(users);
+    }
     
     [Authorize(Roles = "Admin")]
     [HttpGet("{id:int}")]

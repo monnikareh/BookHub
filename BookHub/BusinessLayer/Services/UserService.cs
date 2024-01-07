@@ -50,6 +50,23 @@ public class UserService : IUserService
             .ToListAsync();
         return users.Select(EntityMapper.MapUserToUserDetail);
     }
+    
+    public async Task<IEnumerable<UserDetail>> GetSearchUsersAsync(string? query)
+    {
+        var users = _context.Users
+            .Include(u => u.Orders)
+            .Include(u => u.Books)
+            .AsQueryable();
+
+        if (query != null)
+        {
+            users = users.Where(user => user.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await users.ToListAsync();
+        return result.Select(EntityMapper.MapUserToUserDetail);
+    }
+
 
     public async Task<Result<UserDetail, (Error err, string message)>> GetUserByIdAsync(int id)
     {

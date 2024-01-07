@@ -7,6 +7,7 @@ namespace BusinessLayer.Services;
 public interface IUserService
 {
     Task<IEnumerable<UserDetail>> GetUsersAsync();
+    Task<IEnumerable<UserDetail>> GetSearchUsersAsync(string? query);
     Task<Result<UserDetail, (Error err, string message)>> GetUserByIdAsync(int id);
     Task<Result<UserDetail, (Error err, string message)>> CreateUserAsync(UserCreate userCreate);
     Task<Result<UserDetail, (Error err, string message)>> UpdateUserAsync(int id, UserUpdate userUpdate);
