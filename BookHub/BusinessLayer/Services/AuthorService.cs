@@ -40,6 +40,22 @@ public class AuthorService : IAuthorService
         var authorsList = await authors.ToListAsync();
         return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
+    
+    public async Task<IEnumerable<AuthorDetail>> GetSearchAuthorsAsync(string? query)
+    {
+        var authors = _context.Authors
+            .Include(a => a.Books)
+            .AsQueryable();
+
+        if (query != null)
+        {
+            authors = authors.Where(author => author.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var authorsList = await authors.ToListAsync();
+        return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
+    }
+
 
     public async Task<Result<AuthorDetail, (Error err, string message)>> GetAuthorByIdAsync(int id)
     {

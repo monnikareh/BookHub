@@ -22,7 +22,12 @@ public class AuthorController : BaseController
         var authors = await _authorService.GetAuthorsAsync(null, null, null);
         return View(authors);
     }
-
+    
+    public async Task<IActionResult> Search(string query)
+    {
+        var authors = await _authorService.GetSearchAuthorsAsync(query);
+        return View(authors);
+    }
 
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
