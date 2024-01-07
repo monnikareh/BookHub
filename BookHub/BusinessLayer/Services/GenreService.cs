@@ -33,6 +33,21 @@ public class GenreService : IGenreService
         var filteredGenres = await genres.ToListAsync();
         return filteredGenres.Select(EntityMapper.MapGenreToGenreDetail);
     }
+    
+    public async Task<IEnumerable<GenreDetail>> GetSearchGenresAsync(string? query)
+    {
+        var genres = _context.Genres
+            .Include(g => g.Books)
+            .AsQueryable();
+
+        if (query != null)
+        {
+            genres = genres.Where(genre => genre.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await genres.ToListAsync();
+        return result.Select(EntityMapper.MapGenreToGenreDetail);
+    }
 
     public async Task<Result<GenreDetail, (Error err, string message)>> GetGenreByIdAsync(int id)
     {

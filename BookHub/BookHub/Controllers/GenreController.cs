@@ -22,6 +22,12 @@ public class GenreController : BaseController
         var genres = await _genreService.GetGenresAsync(null);
         return View(genres);
     }
+    
+    public async Task<IActionResult> Search(string query)
+    {
+        var genres = await _genreService.GetSearchGenresAsync(query);
+        return View(genres);
+    }
 
 
     [Authorize(Roles = "Admin")]
