@@ -30,7 +30,7 @@ public class RatingController : BaseController
         var ret = TryParseId(out var userId);
         if (!ret)
         {
-            return ErrorView((Error.UserNotFound, "User not found"));
+            return ErrorView((Error.UserNotFound, "User not logged in"));
         }
         var ratings = await _ratingService.GetRatingsAsync(userId, null, null, null);
         return View(ratings);
@@ -41,7 +41,7 @@ public class RatingController : BaseController
     {
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
         var ret = TryParseId(out var userId);
-        return !ret ? ErrorView((Error.UserNotFound, "User not found")) : View(ratings.Where(r => r.User.Id == userId));
+        return ret ? View(ratings.Where(r => r.User.Id == userId)) : ErrorView((Error.UserNotFound, "User not logged in"));
     }
 
 

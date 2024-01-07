@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
 
-
 public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
@@ -27,9 +26,9 @@ public class HomeController : BaseController
 
     public IActionResult Index()
     {
-        return View();        
+        return View();
     }
-    
+
     public async Task<IActionResult> Search(string? query)
     {
         var authors = await _authorService.GetSearchAuthorsAsync(query);
@@ -37,7 +36,6 @@ public class HomeController : BaseController
         var genres = await _genreService.GetSearchGenresAsync(query);
         var publishers = await _publisherService.GetSearchPublishersAsync(query);
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
-        return View(new SearchType(authors, books, genres, publishers, ratings));        
+        return View(new SearchType(authors, books, genres, publishers, ratings));
     }
-    
 }

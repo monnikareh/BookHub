@@ -4,14 +4,16 @@
 @{
     ViewData["Title"] = "Ratings";
 }
-
-<h1>Ratings</h1>
-<form asp-action="Search" asp-controller="Rating" method="get">
-    <input type="text" name="query" placeholder="Search..." />
-    <button type="submit">Search</button>
-</form>
-<p>
-</p>
+@if (SignInManager.IsSignedIn(User))
+{
+    <h1>Ratings</h1>
+    <form asp-action="Search" asp-controller="Rating" method="get">
+        <input type="text" name="query" placeholder="Search..."/>
+        <button type="submit">Search</button>
+    </form>
+    <p>
+    </p>
+}
 
 @if (SignInManager.IsSignedIn(User))
 {
