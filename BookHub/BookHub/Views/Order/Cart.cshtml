@@ -43,7 +43,15 @@
     <h3>Order items</h3>
     @foreach (var book in Model.Books)
     {
-        <p>@Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id)?.Count x <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p>
+        <div class="row">
+            <div class="col">
+                <p>@Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id)?.Count x <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p>
+            </div>
+            <div class="col">
+                @Html.ActionLink("Delete", "DeleteItem", new { bookId = book.Id }, new { @class = "btn btn-sm btn-danger" })
+            </div>
+        </div>
+        
     }
 </div>
 

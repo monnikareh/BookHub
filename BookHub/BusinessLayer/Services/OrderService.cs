@@ -273,5 +273,41 @@ namespace BusinessLayer.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        
+        public async Task<Result<bool, (Error err, string message)>> RemoveBook(int userId, int bookId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+            if (user == null)
+            {
+                return ErrorMessages.UserNotFound(userId);
+            }
+
+            if (book == null)
+            {
+                return ErrorMessages.BookNotFound(bookId);
+            }
+
+            var order = await _context
+                .Orders
+                .Include(order => order.Books)
+                .FirstOrDefaultAsync(o =>
+                    o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+
+            if (order == null)
+            {
+                return ErrorMessages.OrderNotFound(userId, PaymentStatus.Unpaid);
+            }
+            
+            var orderItem =
+                await _context.BookOrders.FirstOrDefaultAsync(bo => bo.BookId == book.Id && bo.OrderId == order.Id);
+            if (orderItem == null)
+            {
+                return ErrorMessages.OrderItemNotFound(userId, bookId);
+            }
+            order.BookOrders.Remove(orderItem);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }

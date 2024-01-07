@@ -24,8 +24,9 @@ public class OrderController : BaseController
     [Authorize]
     public async Task<IActionResult> Append(int userId, int bookId)
     {
-        await _orderService.AppendBook(userId, bookId);
-        return RedirectToAction("Detail", "Book", new { id = bookId });
+        var res = await _orderService.AppendBook(userId, bookId);
+        return res.Match(_ => RedirectToAction("Detail", "Book", new { id = bookId }),
+            ErrorView);
     }
 
     [HttpGet("{id:int}/")]
@@ -62,10 +63,26 @@ public class OrderController : BaseController
         {
             return View("ErrorView", new ErrorViewModel { Message = "User not found" });
         }
+
         var order = await _orderService.GetUnpaidOrder(userId);
         return order.Match(
             View,
             _ => View("Empty")
         );
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> DeleteItem(int bookId)
+    {
+        var ret = TryParseId(out var userId);
+        if (!ret)
+        {
+            return View("ErrorView", new ErrorViewModel { Message = "User not found" });
+        }
+
+        var res = await _orderService.RemoveBook(userId, bookId);
+        return res.Match(o => View("Detail"),
+            ErrorView);
     }
 }

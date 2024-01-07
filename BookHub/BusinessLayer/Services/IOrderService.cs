@@ -18,4 +18,6 @@ public interface IOrderService
     Task<Result<OrderDetail, (Error err, string message)>> GetUnpaidOrder(int userId);
 
     Task<Result<bool, (Error err, string message)>> PayOrderAsync(int id);
+    Task<Result<bool, (Error err, string message)>> RemoveBook(int userId, int bookId);
+
 }

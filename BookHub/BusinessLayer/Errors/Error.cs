@@ -18,6 +18,8 @@ public enum Error
     UserAlreadyExists,
 
     OrderNotFound,
+    OrderItemNotFound,
+    
     PublisherNotFound,
     RatingNotFound,
 }
