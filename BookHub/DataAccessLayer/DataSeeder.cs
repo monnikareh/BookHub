@@ -530,12 +530,12 @@ public static class DataSeeder
         };
         for (var i = 0; i < names.Count; i++)
         {
-            var name = names[i].Substring(0, names[i].IndexOf(' '));
+            var name = names[i].Substring(0, names[i].IndexOf(' ')).ToLower();
             var email = $"{name}@gmail.com";
             users.Add(new User
             {
                 Id = i + 1,
-                UserName = name.ToLower(),
+                UserName = name,
                 NormalizedUserName = name.ToUpper(),
                 Name = names[i],
                 Email = email,
