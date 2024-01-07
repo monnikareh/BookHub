@@ -150,11 +150,6 @@ public class BookService : IBookService
             return ErrorMessages.GenreNotFound();
         }
 
-        if (bookCreate.Authors == null)
-        {
-            return ErrorMessages.AuthorNotFound();
-        }
-
         var authorNames = bookCreate.Authors.Select(a => a.Name).ToHashSet();
         var authorIds = bookCreate.Authors.Select(a => a.Id).ToHashSet();
         var authors = await _context.Authors.Where(a => authorNames.Contains(a.Name) || authorIds.Contains(a.Id))

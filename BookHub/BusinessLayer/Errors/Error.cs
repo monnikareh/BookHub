@@ -2,18 +2,22 @@ namespace BusinessLayer.Errors;
 
 public enum Error
 {
-    UserNotFound,
-    OrderNotFound,
-    PublisherNotFound,
-    GenreNotFound,
-    AuthorNotFound,
     BookNotFound,
-    RatingNotFound,
-    MultipleGenresNotFound,
     MultipleBooksNotFound,
+    BookFieldEmpty,
+
+    AuthorNotFound,
     MultipleAuthorsNotFound,
     AuthorFieldEmpty,
+
+    GenreNotFound,
+    MultipleGenresNotFound,
     GenreFieldEmpty,
-    BookFieldEmpty,
-    UserAlreadyExists
+
+    UserNotFound,
+    UserAlreadyExists,
+
+    OrderNotFound,
+    PublisherNotFound,
+    RatingNotFound,
 }

@@ -1,5 +1,8 @@
 namespace BusinessLayer.Errors;
 
+// Proudly stolen from:
+// https://dev.to/ephilips/better-error-handling-in-c-with-result-types-4aan
+
 public readonly struct Result<T, E> {
     private readonly bool _success;
     public readonly T Value;
