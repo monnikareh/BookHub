@@ -36,7 +36,6 @@ public class RatingController : BaseController
         return View(ratings);
     }
     
-    [Authorize]
     public async Task<IActionResult> Search(string query)
     {
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
@@ -94,7 +93,6 @@ public class RatingController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
