@@ -5,8 +5,10 @@ namespace BusinessLayer.Services;
 
 public interface IBookService
 {
-    public Task<IEnumerable<BookDetail>> GetBooksAsync(string? bookName, int? genreId, string? genreName,
+    Task<IEnumerable<BookDetail>> GetBooksAsync(string? bookName, int? genreId, string? genreName,
         int? publisherId, string? publisherName, int? authorId, string? authorName);
+
+    Task<IEnumerable<BookDetail>> GetSearchBooksAsync(string? query);
 
     Task<Result<BookDetail, (Error err, string message)>> GetBookByIdAsync(int id);
     Task<Result<BookDetail, (Error err, string message)>> CreateBookAsync(BookCreate bookCreate);

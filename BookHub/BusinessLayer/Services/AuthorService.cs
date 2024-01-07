@@ -52,8 +52,8 @@ public class AuthorService : IAuthorService
             authors = authors.Where(author => author.Name.ToLower().Contains(query.ToLower()));
         }
 
-        var authorsList = await authors.ToListAsync();
-        return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
+        var result = await authors.ToListAsync();
+        return result.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
 
 

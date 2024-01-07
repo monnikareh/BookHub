@@ -26,6 +26,12 @@ public class BookFacade
         return books;
     }
     
+    public async Task<IEnumerable<BookDetail>> GetSearchBooks(string? query)
+    {
+        var books = await _bookService.GetSearchBooksAsync(query);
+        return books;
+    }
+    
     public async Task<Result<BookDetail, (Error err, string message)>> AddNewBook(BookCreate model)
     {
         return await _bookService.CreateBookAsync(model);

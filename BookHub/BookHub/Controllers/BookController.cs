@@ -34,7 +34,13 @@ public class BookController : BaseController
         return View(books);
     }
 
-
+    public async Task<IActionResult> Search(string query)
+    {
+        var books = await _bookFacade.GetSearchBooks(query);
+        return View(books);
+    }
+    
+    
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {

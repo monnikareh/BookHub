@@ -6,12 +6,14 @@
 }
 
 <h1>Books</h1>
+
 <form asp-action="Search" asp-controller="Book" method="get">
     <input type="text" name="query" placeholder="Search..." />
     <button type="submit">Search</button>
 </form>
-    <p>
-    </p>
+<p>
+</p>
+
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <p>
