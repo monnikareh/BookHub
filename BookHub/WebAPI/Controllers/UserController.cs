@@ -98,13 +98,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<ActionResult<UserDetail>> DeleteUser(int id)
         {
             try
             {
                 var res = await _userService.DeleteUserAsync(id);
-                return res.Match<ActionResult>(
-                    _ => Ok(),
+                return res.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
                     e => NotFound(e)
                 );
             }

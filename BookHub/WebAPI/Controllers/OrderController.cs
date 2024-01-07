@@ -40,7 +40,7 @@ namespace WebAPI.Controllers
             {
                 var order = await _orderService.GetOrderByIdAsync(id);
                 return order.Match<ActionResult<OrderDetail>>(
-                    g => Ok(g),
+                    o => Ok(o),
                     e => NotFound(e)
                 );
             }
@@ -61,7 +61,7 @@ namespace WebAPI.Controllers
             {
                 var order = await _orderService.CreateOrderAsync(orderCreate);
                 return order.Match<ActionResult<OrderDetail>>(
-                    g => Ok(g),
+                    o => Ok(o),
                     e => NotFound(e)
                 );
             }
@@ -82,7 +82,7 @@ namespace WebAPI.Controllers
             {
                 var order = await _orderService.UpdateOrderAsync(id, orderUpdate);
                 return order.Match<ActionResult<OrderDetail>>(
-                    g => Ok(g),
+                    o => Ok(o),
                     e => NotFound(e)
                 );
             }
@@ -93,13 +93,13 @@ namespace WebAPI.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteOrder(int id)
+        public async Task<ActionResult<OrderDetail>> DeleteOrder(int id)
         {
             try
             {
-                var res= await _orderService.DeleteOrderAsync(id);
-                return res.Match<ActionResult>(
-                    g => Ok(),
+                var order= await _orderService.DeleteOrderAsync(id);
+                return order.Match<ActionResult<OrderDetail>>(
+                    o => Ok(o),
                     e => NotFound(e)
                 );
             }

@@ -64,7 +64,7 @@ namespace WebAPI.Controllers
             {
                 var book = await _bookService.CreateBookAsync(bookCreate);
                 return book.Match<ActionResult<BookDetail>>(
-                    a => Ok(a),
+                    b => Ok(b),
                     e => NotFound(e)
                 );
             }
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBook(int id, BookCreate bookUpdate)
+        public async Task<ActionResult<BookDetail>> UpdateBook(int id, BookCreate bookUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -85,8 +85,8 @@ namespace WebAPI.Controllers
             try
             {
                 var book = await _bookService.UpdateBookAsync(id, bookUpdate);
-                return book.Match<ActionResult>(
-                    a => Ok(),
+                return book.Match<ActionResult<BookDetail>>(
+                    b => Ok(b),
                     e => NotFound(e)
                 );
             }
@@ -98,13 +98,13 @@ namespace WebAPI.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<ActionResult<BookDetail>> DeleteBook(int id)
         {
             try
             {
                 var res = await _bookService.DeleteBookAsync(id);
-                return res.Match<ActionResult>(
-                    a => Ok(),
+                return res.Match<ActionResult<BookDetail>>(
+                    b => Ok(b),
                     e => NotFound(e)
                 );
             }

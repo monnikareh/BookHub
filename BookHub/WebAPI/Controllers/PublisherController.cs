@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
             {
                 var publisher = await _publisherService.GetPublisherByIdAsync(id);
                 return publisher.Match<ActionResult<PublisherDetail>>(
-                    g => Ok(g),
+                    p => Ok(p),
                     e => NotFound(e)
                 );
             }
@@ -67,7 +67,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePublisher(int id, PublisherUpdate publisherUpdate)
+        public async Task<ActionResult<PublisherDetail>> UpdatePublisher(int id, PublisherUpdate publisherUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -76,8 +76,8 @@ namespace WebAPI.Controllers
             try
             {
                 var publisher = await _publisherService.UpdatePublisherAsync(id, publisherUpdate);
-                return publisher.Match<ActionResult>(
-                    g => Ok(),
+                return publisher.Match<ActionResult<PublisherDetail>>(
+                    p => Ok(p),
                     e => NotFound(e)
                 );
             }
@@ -89,13 +89,13 @@ namespace WebAPI.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePublisher(int id)
+        public async Task<ActionResult<PublisherDetail>> DeletePublisher(int id)
         {
             try
             {
                 var res = await _publisherService.DeletePublisherAsync(id);
-                return res.Match<ActionResult>(
-                    g => Ok(),
+                return res.Match<ActionResult<PublisherDetail>>(
+                    p => Ok(p),
                     e => NotFound(e)
                 );
             }
