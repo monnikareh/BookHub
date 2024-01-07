@@ -21,10 +21,12 @@ public class OrderController : BaseController
         _orderService = orderService;
     }
 
-    [HttpGet("{userId:int}/{bookId:int}")]
+    [HttpGet("{bookId:int}")]
     [Authorize]
-    public async Task<IActionResult> Append(int userId, int bookId)
+    public async Task<IActionResult> AppendItem(int bookId)
     {
+        var ret = TryParseId(out var userId);
+        if (!ret) return RedirectToPage("/Account/Login", new { area = "Identity" });
         var res = await _orderService.AppendBookToOrder(userId, bookId);
         return res.Match(_ => RedirectToAction("Detail", "Book", new { id = bookId }),
             ErrorView);
@@ -93,6 +95,7 @@ public class OrderController : BaseController
         {
             await _orderService.DeleteOrderAsync(order.Value.Id);
         }
+
         return res.Match(o => RedirectToAction("Cart"),
             ErrorView);
     }
