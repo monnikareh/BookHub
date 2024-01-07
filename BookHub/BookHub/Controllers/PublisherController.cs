@@ -22,7 +22,12 @@ public class PublisherController : BaseController
         var publishers = await _publisherService.GetPublishersAsync(null);
         return View(publishers);
     }
-
+    
+    public async Task<IActionResult> Search(string query)
+    {
+        var publishers = await _publisherService.GetSearchPublishersAsync(query);
+        return View(publishers);
+    }
 
     [Authorize(Roles = "Admin")]
     public IActionResult Create()

@@ -34,6 +34,21 @@ public class PublisherService : IPublisherService
         var filteredPublishers = await publishers.ToListAsync();
         return filteredPublishers.Select(EntityMapper.MapPublisherToPublisherDetail);
     }
+    
+    public async Task<IEnumerable<PublisherDetail>> GetSearchPublishersAsync(string? query)
+    {
+        var publishers = _context.Publishers
+            .Include(p => p.Books)
+            .AsQueryable();
+
+        if (query != null)
+        {
+            publishers = publishers.Where(publisher => publisher.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await publishers.ToListAsync();
+        return result.Select(EntityMapper.MapPublisherToPublisherDetail);
+    }
 
     public async Task<Result<PublisherDetail, (Error err, string message)>> GetPublisherByIdAsync(int id)
     {
