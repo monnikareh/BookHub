@@ -1,7 +1,6 @@
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
