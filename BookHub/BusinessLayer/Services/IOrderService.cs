@@ -14,10 +14,10 @@ public interface IOrderService
     Task<Result<OrderDetail, (Error err, string message)>> CreateOrderAsync(OrderCreate orderCreate);
     Task<Result<OrderDetail, (Error err, string message)>> UpdateOrderAsync(int id, OrderUpdate orderUpdate);
     Task<Result<bool, (Error err, string message)>> DeleteOrderAsync(int id);
-    Task<Result<bool, (Error err, string message)>> AppendBook(int userId, int bookId);
+    Task<Result<bool, (Error err, string message)>> AppendBookToOrder(int userId, int bookId);
     Task<Result<OrderDetail, (Error err, string message)>> GetUnpaidOrder(int userId);
 
     Task<Result<bool, (Error err, string message)>> PayOrderAsync(int id);
-    Task<Result<bool, (Error err, string message)>> RemoveBook(int userId, int bookId);
+    Task<Result<bool, (Error err, string message)>> RemoveBookFromOrder(int userId, int bookId);
 
 }

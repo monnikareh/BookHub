@@ -179,16 +179,6 @@ namespace BusinessLayer.Services
             return true;
         }
 
-        private async Task<Order?> GetUnpaid(int userId)
-        {
-            var order = await _context.Orders
-                .Include(o => o.User)
-                .Include(o => o.Books)
-                .Include(o => o.BookOrders)
-                .FirstOrDefaultAsync(o => o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
-            return order;
-        }
-
 
         public async Task<Result<OrderDetail, (Error err, string message)>> GetUnpaidOrder(int userId)
         {
@@ -215,7 +205,7 @@ namespace BusinessLayer.Services
             return true;
         }
 
-        public async Task<Result<bool, (Error err, string message)>> AppendBook(int userId, int bookId)
+        public async Task<Result<bool, (Error err, string message)>> AppendBookToOrder(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
@@ -274,7 +264,7 @@ namespace BusinessLayer.Services
             return true;
         }
         
-        public async Task<Result<bool, (Error err, string message)>> RemoveBook(int userId, int bookId)
+        public async Task<Result<bool, (Error err, string message)>> RemoveBookFromOrder(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
@@ -298,16 +288,31 @@ namespace BusinessLayer.Services
             {
                 return ErrorMessages.OrderNotFound(userId, PaymentStatus.Unpaid);
             }
-            
+            order.TotalPrice -= book.Price;
             var orderItem =
                 await _context.BookOrders.FirstOrDefaultAsync(bo => bo.BookId == book.Id && bo.OrderId == order.Id);
             if (orderItem == null)
             {
                 return ErrorMessages.OrderItemNotFound(userId, bookId);
             }
-            order.BookOrders.Remove(orderItem);
+
+            orderItem.Count -= 1;
+            if (orderItem.Count <= 0)
+            {
+                order.BookOrders.Remove(orderItem);   
+            }
             await _context.SaveChangesAsync();
             return true;
+        }
+        
+        private async Task<Order?> GetUnpaid(int userId)
+        {
+            var order = await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Books)
+                .Include(o => o.BookOrders)
+                .FirstOrDefaultAsync(o => o.UserId == userId && o.PaymentStatus == PaymentStatus.Unpaid);
+            return order;
         }
     }
 }

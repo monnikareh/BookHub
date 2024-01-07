@@ -5,6 +5,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookHub.Controllers;
 
@@ -24,7 +25,7 @@ public class OrderController : BaseController
     [Authorize]
     public async Task<IActionResult> Append(int userId, int bookId)
     {
-        var res = await _orderService.AppendBook(userId, bookId);
+        var res = await _orderService.AppendBookToOrder(userId, bookId);
         return res.Match(_ => RedirectToAction("Detail", "Book", new { id = bookId }),
             ErrorView);
     }
@@ -81,8 +82,18 @@ public class OrderController : BaseController
             return View("ErrorView", new ErrorViewModel { Message = "User not found" });
         }
 
-        var res = await _orderService.RemoveBook(userId, bookId);
-        return res.Match(o => View("Detail"),
+        var res = await _orderService.RemoveBookFromOrder(userId, bookId);
+        var order = await _orderService.GetUnpaidOrder(userId);
+        if (!order.IsOk)
+        {
+            return ErrorView(order.Error);
+        }
+
+        if (order.Value.OrderItems.IsNullOrEmpty())
+        {
+            await _orderService.DeleteOrderAsync(order.Value.Id);
+        }
+        return res.Match(o => RedirectToAction("Cart"),
             ErrorView);
     }
 }
