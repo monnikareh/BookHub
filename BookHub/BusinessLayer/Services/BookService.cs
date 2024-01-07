@@ -283,11 +283,7 @@ public class BookService : IBookService
     {
         return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
     }
-
-    private string ErrorMessage(string entity, string name, int id)
-    {
-        return $"{entity} 'Name={name}' <OR> 'ID={id}' could not be found";
-    }
+    
 
     private void FixOverallRating()
     {
