@@ -7,7 +7,7 @@ public interface IRatingService
 {
     Task<IEnumerable<RatingDetail>> GetRatingsAsync(int? userId, string? userName,
         int? bookId, string? bookName);
-
+    Task<IEnumerable<RatingDetail>> GetSearchRatingsAsync(string? query);
     Task<Result<RatingDetail, (Error err, string message)>> GetRatingByIdAsync(int id);
     Task<Result<RatingDetail, (Error err, string message)>> CreateRatingAsync(RatingCreate ratingCreate);
     Task<Result<RatingDetail, (Error err, string message)>> UpdateRatingAsync(int id, RatingUpdate ratingUpdate);

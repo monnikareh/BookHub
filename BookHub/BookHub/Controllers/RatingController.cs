@@ -2,6 +2,7 @@ using System.Security.Claims;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
+using static System.Int32;
 
 namespace BookHub.Controllers;
 
@@ -25,8 +26,14 @@ public class RatingController : BaseController
     public async Task<IActionResult> Index()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        int.TryParse(userIdClaim, out int userId);
+        TryParse(userIdClaim, out var userId);
         var ratings = await _ratingService.GetRatingsAsync(userId, null, null, null);
+        return View(ratings);
+    }
+    
+    public async Task<IActionResult> Search(string query)
+    {
+        var ratings = await _ratingService.GetSearchRatingsAsync(query);
         return View(ratings);
     }
 

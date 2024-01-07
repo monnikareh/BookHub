@@ -45,6 +45,22 @@ public class RatingService : IRatingService
         return filteredRatings.Select(EntityMapper.MapRatingToRatingDetail);
     }
 
+    public async Task<IEnumerable<RatingDetail>> GetSearchRatingsAsync(string? query)
+    {
+        var ratings = _context.Ratings
+            .Include(r => r.User)
+            .Include(r => r.Book)
+            .AsQueryable();
+
+        if (query != null)
+        {
+            ratings = ratings.Where(rating => rating.Book.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await ratings.ToListAsync();
+        return result.Select(EntityMapper.MapRatingToRatingDetail);
+    }
+
     public async Task<Result<RatingDetail, (Error err, string message)>> GetRatingByIdAsync(int id)
     {
         var key = $"RatingById_{id}";
