@@ -100,12 +100,7 @@ public class RatingController : BaseController
     {
         var rating = await _ratingService.GetRatingByIdAsync(id);
         return rating.Match(
-            r =>
-            {
-                var ret = TryParseId(out var userId);
-                if (ret && r.User.Id == userId) return View(r);
-                return RedirectToAction("Index");
-            },
+            View,
             ErrorView);
     }
 }
