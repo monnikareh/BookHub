@@ -24,7 +24,7 @@ public class RatingController : BaseController
         _userService = userService;
         _bookService = bookService;
     }
-
+    
     public async Task<IActionResult> Index()
     {
         var ret = TryParseId(out var userId);
@@ -94,6 +94,7 @@ public class RatingController : BaseController
         return RedirectToAction("Index");
     }
 
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Detail(int id)
     {
