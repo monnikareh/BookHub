@@ -2,6 +2,7 @@ using System.Security.Claims;
 using BusinessLayer.Errors;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.Int32;
 
@@ -35,6 +36,7 @@ public class RatingController : BaseController
         return View(ratings);
     }
     
+    [Authorize]
     public async Task<IActionResult> Search(string query)
     {
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
@@ -43,6 +45,7 @@ public class RatingController : BaseController
     }
 
 
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
@@ -60,6 +63,7 @@ public class RatingController : BaseController
             });
     }
 
+    [Authorize]
     [HttpPost("{id:int}")]
     public async Task<IActionResult> Edit(int id, RatingUpdate model)
     {
@@ -83,7 +87,7 @@ public class RatingController : BaseController
         );
     }
 
-
+    [Authorize]
     public async Task<ActionResult> Delete(int id)
     {
         await _ratingService.DeleteRatingAsync(id);
