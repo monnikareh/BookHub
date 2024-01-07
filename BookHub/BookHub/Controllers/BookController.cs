@@ -202,15 +202,6 @@ public class BookController : BaseController
             Comment = null,
         };
         var result = await _ratingService.CreateRatingAsync(newRating);
-        await UpdateRating(id, value);
         return RedirectToAction("Detail", new { id = id });
-    }
-
-    [HttpPost("{id:int}")]
-    public async Task UpdateRating(int id, int value)
-    {
-        var book = (await _bookService.GetBookByIdAsync(id)).Value;
-        book.OverallRating += value;
-        await _bookService.UpdateBookAsync(id, EntityMapper.MapBookDetailToCreate(book));
     }
 }
