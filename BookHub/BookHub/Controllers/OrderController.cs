@@ -45,7 +45,7 @@ public class OrderController : BaseController
     
     [Authorize]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> Basket(int id)
+    public async Task<IActionResult> Cart(int id)
     {
   
             var order = await _orderService.GetUnpaidOrder(id);
