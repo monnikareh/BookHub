@@ -41,18 +41,28 @@
         </p>
     }
     <h3>Order items</h3>
-    @foreach (var book in Model.Books)
-    {
-        <div class="row">
-            <div class="col">
-                <p>@Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id)?.Count x <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p>
-            </div>
-            <div class="col">
-                @Html.ActionLink("Delete", "DeleteItem", new { bookId = book.Id }, new { @class = "btn btn-sm btn-danger" })
-            </div>
-        </div>
-        
-    }
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Book</th>
+            <th>Amount</th>
+            <th>Actions</th>
+            @* <th>Unit price</th> *@
+            @* <th>Total price per item</th> *@
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var book in Model.Books)
+        {
+            var orderItem = Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id);
+            <tr>
+                <td><p><a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p></td>
+                <td>@orderItem?.Count</td>
+                <td>@Html.ActionLink("Delete", "DeleteItem", new { bookId = book.Id }, new { @class = "btn btn-sm btn-danger" })</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>
 
 @section Scripts {
