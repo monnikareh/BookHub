@@ -26,7 +26,7 @@ public class PublisherController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var publishers = await _publisherService.GetSearchPublishersAsync(query);
-        return View(publishers);
+        return View("Index", publishers);
     }
 
     [Authorize(Roles = "Admin")]
