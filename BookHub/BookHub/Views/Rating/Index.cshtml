@@ -1,4 +1,6 @@
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BookHub.Models
 @inject SignInManager<User> SignInManager
 @model System.Collections.Generic.IEnumerable<BusinessLayer.Models.RatingDetail>
 @{
@@ -7,7 +9,7 @@
 
 <h1>Ratings</h1>
 <form asp-action="Search" asp-controller="Rating" method="get">
-    <input type="text" name="query" placeholder="Search..." />
+    <input type="text" name="query" placeholder="Search..."/>
     <button type="submit">Search</button>
 </form>
 <p>
@@ -30,13 +32,7 @@
                 <td>@Html.DisplayFor(i => item.Id)</td>
                 <td>@Html.DisplayFor(i => item.Book.Name)</td>
                 <td>
-                    <div class="btn-group" role="group" aria-label="Rating Actions">
-                        
-                        <div style="margin-left: 10px">@Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })</div>
-                        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
-                        <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })</div>
-                    
-                    </div>
+                    @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Rating" })
                 </td>
             </tr>
         }

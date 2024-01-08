@@ -1,4 +1,5 @@
 @using Microsoft.AspNetCore.Identity
+@using BookHub.Models
 @inject SignInManager<User> SignInManager
 @model System.Collections.Generic.IEnumerable<BusinessLayer.Models.BookDetail>
 @{
@@ -32,17 +33,7 @@
         <tr>
             <td>@Html.DisplayFor(i => item.Name)</td>
             <td>
-                <div class="btn-group" role="group" aria-label="Book Actions">
-                    <div>@Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })</div>
-                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
-                        <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
-                        </div>
-                        @* <a href="@Url.Action("Delete", "Book", new {id = item.Id})" class="material-icons" style="color: red">delete</a> *@
-                    }
-                </div>
-
+                @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Book" })
             </td>
         </tr>
     }

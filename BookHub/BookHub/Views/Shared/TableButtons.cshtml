@@ -1,0 +1,18 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model BookHub.Models.TableButton
+
+<div class="btn-group" role="group" aria-label="Book Actions">
+    @if (Model.ShowDetail)
+    {
+        <div>@Html.ActionLink("Detail", "Detail", @Model.ControllerName, new { id = Model.Id }, new { @class = "btn btn-sm btn-primary" })</div>
+    }
+    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+    {
+        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", Model.ControllerName, new { id = Model.Id }, new { @class = "btn btn-sm btn-warning" })</div>
+        <div style="margin-left: 10px">
+            @Html.ActionLink("Delete", "Delete", Model.ControllerName, new { id = Model.Id }, new { @class = "btn btn-sm btn-danger" })
+        </div>
+        @* <a href="@Url.Action("Delete", "Book", new {id = item.Id})" class="material-icons" style="color: red">delete</a> *@
+    }
+</div>

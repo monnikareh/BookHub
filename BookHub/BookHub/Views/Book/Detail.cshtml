@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using System.Security.Claims;
+@using BookHub.Models
 @model BusinessLayer.Models.BookDetail
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
@@ -26,13 +27,10 @@
         <div class="col-auto">
             <h2>@Model.Name</h2>
         </div>
-        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-        {
-            <div class="col-auto m-sm-1" style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-sm btn-warning" })</div>
-            <div class="col-auto m-sm-1" style="margin-left: 10px">
-                @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "btn btn-sm btn-danger" })
-            </div>
-        }
+        <div class="col-auto">
+            @await Html.PartialAsync("TableButtons", new TableButton { Id = Model.Id, ControllerName = "Book", ShowDetail = false })
+        </div>
+        
     </div>
 </div>
 
@@ -80,12 +78,12 @@
     <div class="btn-group" role="group" aria-label="Book Actions">
         <div style="margin-right: 10px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
         <div>
-        @if (User.Identity.IsAuthenticated)
-        {
-            <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
-                <button type="submit" class="btn btn-sm btn-info">Add to Wishlist</button>
-            </form>
-        }
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
+                    <button type="submit" class="btn btn-sm btn-info">Add to Wishlist</button>
+                </form>
+            }
             @if (TempData.ContainsKey("WishlistMessage"))
             {
                 <script>
