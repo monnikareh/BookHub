@@ -83,17 +83,20 @@ public class BookService : IBookService
 
         if (paginationSettings != null)
         {
+            var booksCount = await books.CountAsync();
+            var pageCount = booksCount / paginationSettings.pageSize + int.Min( booksCount % paginationSettings.pageSize, 1);
             books = books
                 .Skip((paginationSettings.pageNumber - 1) * paginationSettings.pageSize)
                 .Take(paginationSettings.pageSize);
+            var result = await books.ToListAsync();
+            return new BookView(result.Select(EntityMapper.MapBookToBookDetail),
+                paginationSettings.pageNumber, pageCount);
         }
+        var result2 = await books.ToListAsync(); 
+        return new BookView(result2.Select(EntityMapper.MapBookToBookDetail),
+                1, 1);
 
-        var result = await books.ToListAsync();
-        var totalBookCount = await books.CountAsync();
-        return new BookView(result.Select(EntityMapper.MapBookToBookDetail),
-            paginationSettings?.pageNumber ?? 1, 
-            (int)Math.Ceiling((double)totalBookCount / paginationSettings?.pageSize ?? 100));
-}
+    }
 
     public async Task<Result<BookDetail, (Error err, string message)>> GetBookByIdAsync(int id)
     {

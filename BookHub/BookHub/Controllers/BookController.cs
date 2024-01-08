@@ -6,7 +6,6 @@ using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Errors;
-using PagedListExtensions = X.PagedList.PagedListExtensions;
 
 namespace BookHub.Controllers;
 
