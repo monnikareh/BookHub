@@ -173,7 +173,7 @@ public class BookController : BaseController
 
     [Authorize]
     [HttpPost("{id:int}")]
-    public async Task<IActionResult> AddRating(int id, int value)
+    public async Task<IActionResult> AddRating(int id, int value, string? comment)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int userId);
@@ -208,7 +208,7 @@ public class BookController : BaseController
             User = EntityMapper.MapUserDetailToRelated(user.Value),
             Book = EntityMapper.MapBookDetailToRelated(book.Value),
             Value = value,
-            Comment = null,
+            Comment = comment,
         };
         var result = await _ratingService.CreateRatingAsync(newRating);
         return RedirectToAction("Detail", new { id = id });
