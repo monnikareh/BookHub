@@ -75,27 +75,31 @@
     <p>Stock: @Model.StockInStorage</p>
     <p id="ratingContainer">Overall Rating: @Model.OverallRating %</p>
     <p>Price: @Model.Price €</p>
-    
-    <div style="margin-left: 10px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
 
-    @if (User.Identity.IsAuthenticated)
-    {
-        <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
-            <button type="submit">Add to Wishlist</button>
-        </form>
-    }
 
-    @if (TempData.ContainsKey("WishlistMessage"))
-    {
-        <script>
-            alert('@TempData["WishlistMessage"]');
-        </script>
-    }
+    <div class="btn-group" role="group" aria-label="Book Actions">
+        <div style="margin-right: 10px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+        <div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
+                <button type="submit" class="btn btn-sm btn-info">Add to Wishlist</button>
+            </form>
+        }
+            @if (TempData.ContainsKey("WishlistMessage"))
+            {
+                <script>
+                    alert('@TempData["WishlistMessage"]');
+                </script>
+            }
+        </div>
+    </div>
+
     <h3>
-        <button id="showReviewsBtn" class="btn btn-primary">
-            Show all reviews
+        <button id="showReviewsBtn" class="btn btn-sm btn-primary">
+            Show Ratings
         </button>
-        <button id="addRatingBtn" class="btn btn-success">
+        <button id="addRatingBtn" class="btn btn-sm btn-success">
             Add Rating
         </button>
     </h3>
