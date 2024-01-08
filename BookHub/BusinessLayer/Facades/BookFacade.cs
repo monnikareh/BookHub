@@ -28,7 +28,7 @@ public class BookFacade
 
     public async Task<BookView> GetSearchBooks(PaginationSettings paginationSettings, string? query)
     {
-        var books = await _bookService.GetSearchBooksAsync(query, paginationSettings);
+        var books = await _bookService.GetSearchBooksAsync(paginationSettings, query);
         return books;
     }
     

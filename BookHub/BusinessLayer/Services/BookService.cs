@@ -66,8 +66,7 @@ public class BookService : IBookService
         return filteredBooks.Select(EntityMapper.MapBookToBookDetail);
     }
 
-    public async Task<BookView> GetSearchBooksAsync(string? query,
-        PaginationSettings? paginationSettings)
+    public async Task<BookView> GetSearchBooksAsync(PaginationSettings? paginationSettings, string? query)
     {
         var books = _context.Books
             .Include(pg => pg.PrimaryGenre)
