@@ -261,6 +261,7 @@ namespace BusinessLayer.Services
             }
 
             book.StockInStorage -= 1;
+            _memoryCache.Remove($"BookById_{book.Id}");
             await _context.SaveChangesAsync();
             return true;
         }
@@ -303,6 +304,7 @@ namespace BusinessLayer.Services
                 order.BookOrders.Remove(orderItem);   
             }
             book.StockInStorage += 1;
+            _memoryCache.Remove($"BookById_{book.Id}");
             await _context.SaveChangesAsync();
             return true;
         }
