@@ -32,15 +32,17 @@ public class BookController : BaseController
     public async Task<IActionResult> Index(int? page)
     {
         var books = await _bookFacade.GetAllBooks();
-        int pageSize = 3;
-        int pageNumber = (page ?? 1);
+        const int pageSize = 3;
+        var pageNumber = page ?? 1;
         return View(books.ToPagedList(pageNumber, pageSize));
     }
     
-    public async Task<IActionResult> Search(string query)
+    public async Task<IActionResult> Search(string query, int? page)
     {
+        const int pageSize = 3;
+        var pageNumber = page ?? 1;
         var books = await _bookFacade.GetSearchBooks(query);
-        return View("Index", books);
+        return View("Index", books.ToPagedList(pageNumber, pageSize));
     }
     
     

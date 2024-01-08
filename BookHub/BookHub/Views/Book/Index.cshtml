@@ -1,9 +1,8 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
-@model X.PagedList.IPagedList<BusinessLayer.Models.BookDetail>
+@model PagedList.IPagedList<BusinessLayer.Models.BookDetail>
 @using PagedList.Mvc;
 @using X.PagedList.Mvc.Core
-
 @{
     ViewData["Title"] = "Books";
 }
@@ -48,7 +47,6 @@
                         <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
                         <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
                         </div>
-                        @* <a href="@Url.Action("Delete", "Book", new {id = item.Id})" class="material-icons" style="color: red">delete</a> *@
                     }
                 </div>
 
@@ -60,4 +58,4 @@
 
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+@* @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter })) *@
