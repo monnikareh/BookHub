@@ -25,7 +25,7 @@ public class BookFacade
         var books = await _bookService.GetBooksAsync(null, null, null, null, null, null, null);
         return books;
     }
-    
+
     public async Task<IEnumerable<BookDetail>> GetSearchBooks(string? query)
     {
         var books = await _bookService.GetSearchBooksAsync(query);

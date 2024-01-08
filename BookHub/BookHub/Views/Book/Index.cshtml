@@ -1,6 +1,9 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
-@model System.Collections.Generic.IEnumerable<BusinessLayer.Models.BookDetail>
+@model X.PagedList.IPagedList<BusinessLayer.Models.BookDetail>
+@using PagedList.Mvc;
+@using X.PagedList.Mvc.Core
+
 @{
     ViewData["Title"] = "Books";
 }
@@ -22,9 +25,15 @@
 <table class="table">
     <thead>
     <tr>
-        <th>@Html.DisplayNameFor(model => model.Name)</th>
+    
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(i => item.Name)</td>
+            </tr>
+        }
         <th>Actions</th>
-    </tr>
+
     </thead>
     <tbody>
     @foreach (var item in Model)
@@ -45,6 +54,10 @@
 
             </td>
         </tr>
-    }
+    } 
     </tbody>
 </table>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

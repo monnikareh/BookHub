@@ -6,6 +6,7 @@ using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Errors;
+using PagedList;
 
 namespace BookHub.Controllers;
 
@@ -28,12 +29,14 @@ public class BookController : BaseController
         _bookFacade = bookFacade;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? page)
     {
         var books = await _bookFacade.GetAllBooks();
-        return View(books);
+        int pageSize = 3;
+        int pageNumber = (page ?? 1);
+        return View(books.ToPagedList(pageNumber, pageSize));
     }
-
+    
     public async Task<IActionResult> Search(string query)
     {
         var books = await _bookFacade.GetSearchBooks(query);
