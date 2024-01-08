@@ -1,0 +1,41 @@
+@model BusinessLayer.Models.RatingDetail
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<div class="col-12">
+    <div class="row">
+        <div class="col-auto">
+            <h2>@Model.Book.Name</h2>
+        </div>
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <div class="col-auto m-sm-1" style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-sm btn-warning" })</div>
+            <div class="col-auto m-sm-1" style="margin-left: 10px">
+                @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "btn btn-sm btn-danger" })
+            </div>
+        }
+    </div>
+</div>
+
+<div class="col-6">
+    <h3>Rating</h3>
+ 
+    <div class="border-bottom mb-2">
+        <p><strong>ID:</strong> @Model.Id</p>
+        <p><strong>Book:</strong><a href="@Url.Action("Detail", "Book", new {id = Model.Book.Id})"><p>@Model.Book.Name</p></a></p>
+        <p><strong>User:</strong> @Model.User.Name</p>
+        <p><strong>Value:</strong> @Model.Value</p>
+        @if (!string.IsNullOrEmpty(Model.Comment))
+        {
+            <p><strong>Comment:</strong> @Model.Comment</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

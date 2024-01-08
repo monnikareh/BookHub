@@ -1,4 +1,4 @@
-using BusinessLayer.Exceptions;
+using BusinessLayer.Errors;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using DataAccessLayer;
@@ -40,8 +40,24 @@ public class AuthorService : IAuthorService
         var authorsList = await authors.ToListAsync();
         return authorsList.Select(EntityMapper.MapAuthorToAuthorDetail);
     }
+    
+    public async Task<IEnumerable<AuthorDetail>> GetSearchAuthorsAsync(string? query)
+    {
+        var authors = _context.Authors
+            .Include(a => a.Books)
+            .AsQueryable();
 
-    public async Task<AuthorDetail> GetAuthorByIdAsync(int id)
+        if (query != null)
+        {
+            authors = authors.Where(author => author.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await authors.ToListAsync();
+        return result.Select(EntityMapper.MapAuthorToAuthorDetail);
+    }
+
+
+    public async Task<Result<AuthorDetail, (Error err, string message)>> GetAuthorByIdAsync(int id)
     {
         var key = $"AuthorById_{id}";
         if (_memoryCache.TryGetValue(key, out AuthorDetail? cached) && cached is not null)
@@ -59,7 +75,7 @@ public class AuthorService : IAuthorService
 
         if (author == null)
         {
-            throw new AuthorNotFoundException($"Author 'ID={id}' could not be found");
+            return ErrorMessages.AuthorNotFound(id);
         }
 
         var mapped = EntityMapper.MapAuthorToAuthorDetail(author);
@@ -80,14 +96,14 @@ public class AuthorService : IAuthorService
         return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
-    public async Task<AuthorDetail> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate)
+    public async Task<Result<AuthorDetail, (Error err, string message)>> UpdateAuthorAsync(int id, AuthorUpdate authorUpdate)
     {
         var author = await _context.Authors.Include(o => o.Books)
             .FirstOrDefaultAsync(a => a.Id == id);
 
         if (author == null)
         {
-            throw new AuthorNotFoundException($"Author 'ID={id}' could not be found");
+            return ErrorMessages.AuthorNotFound(id);
         }
 
         author.Name = authorUpdate.Name;
@@ -103,7 +119,7 @@ public class AuthorService : IAuthorService
 
             if (books.Count != authorUpdate.Books.Count)
             {
-                throw new BookNotFoundException("One or more books could not be found");
+                return ErrorMessages.BookNotFound();
             }
 
             author.Books.Clear();
@@ -114,15 +130,16 @@ public class AuthorService : IAuthorService
         return EntityMapper.MapAuthorToAuthorDetail(author);
     }
 
-    public async Task DeleteAuthorAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteAuthorAsync(int id)
     {
         var author = await _context.Authors.FindAsync(id);
         if (author == null)
         {
-            throw new AuthorNotFoundException($"Author 'ID={id}' could not be found");
+            return ErrorMessages.AuthorNotFound(id);
         }
 
         _context.Authors.Remove(author);
         await _context.SaveChangesAsync();
+        return true;
     }
 }

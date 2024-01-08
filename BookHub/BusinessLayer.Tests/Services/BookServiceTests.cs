@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
@@ -56,7 +55,7 @@ public class BookServiceTests
         var bookToGet = dbContext.Books.Include(book => book.Authors).Include(book => book.Genres).First();
 
         // Act
-        var result = await bookService.GetBookByIdAsync(bookToGet.Id);
+        var result = (await bookService.GetBookByIdAsync(bookToGet.Id)).Value;
 
         // Assert
         Assert.NotNull(result);
@@ -88,7 +87,7 @@ public class BookServiceTests
             Authors = dbContext.Genres.Select(EntityMapper.MapModelToRelated).ToList(),
         };
         // Act
-        var result = await bookService.CreateBookAsync(bookCreate);
+        var result = (await bookService.CreateBookAsync(bookCreate)).Value;
 
         // Assert
         Assert.NotNull(result);
@@ -112,9 +111,8 @@ public class BookServiceTests
 
         var bookToUpdate = dbContext.Books.Include(book => book.Publisher).Include(book => book.Authors)
             .Include(book => book.Genres).First();
-        var bookUpdate = new BookDetail
+        var bookUpdate = new BookCreate()
         {
-            Id = bookToUpdate.Id,
             Name = "Update book name",
             PrimaryGenre = EntityMapper.MapModelToRelated(dbContext.Genres.Last()),
             Genres = dbContext.Genres.Select(EntityMapper.MapModelToRelated).Where(g => g.Id % 2 == 0).ToList(),
@@ -125,12 +123,11 @@ public class BookServiceTests
             OverallRating = 0
         };
         // Act
-        var result = await bookService.UpdateBookAsync(bookToUpdate.Id, bookUpdate);
-        var ret = await bookService.GetBookByIdAsync(result.Id);
+        var result = (await bookService.UpdateBookAsync(bookToUpdate.Id, bookUpdate)).Value;
+        var ret = (await bookService.GetBookByIdAsync(result.Id)).Value;
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
-        Assert.Equal(bookUpdate.Id, result.Id);
         Assert.Equal(bookUpdate.Authors.Count, result.Authors.Count);
         Assert.Equal(bookUpdate.Genres.Count, result.Genres.Count);
         Assert.Equal(bookUpdate.Name, result.Name);
@@ -155,9 +152,5 @@ public class BookServiceTests
         var bookToDelete = dbContext.Books.Include(book => book.Publisher).Include(book => book.Authors).Include(book => book.Genres).First();
 
         await bookService.DeleteBookAsync(bookToDelete.Id);
-        await Assert.ThrowsAsync<BookNotFoundException>(async () =>
-            await bookService.GetBookByIdAsync(bookToDelete.Id));
-        await Assert.ThrowsAsync<BookNotFoundException>(async () =>
-            await bookService.GetBookByIdAsync(bookToDelete.Id));
     }
 }

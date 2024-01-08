@@ -4,5 +4,11 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+    <form asp-action="Search" asp-controller="Home" method="get">
+        <input type="text" name="query" placeholder="Search..." />
+        <button type="submit">Search</button>
+    </form>
+    <p>
+    </p>
     <p>This website is a work in progress. Try our Web API in the Swagger tab or <a href="https://gitlab.fi.muni.cz/xmarianc/pv179-bookhub">see our Gitlab repo for more details</a>.</p>
 </div>

@@ -20,6 +20,7 @@ public static class DataSeeder
         modelBuilder.Entity<Book>().HasData(PrepareBooks());
         modelBuilder.Entity<Rating>().HasData(PrepareRatings());
         modelBuilder.Entity<Order>().HasData(PrepareOrders());
+        modelBuilder.Entity<BookOrder>().HasData(PrepareBookOrders());
         modelBuilder.Entity("AuthorBook").HasData(
             new { AuthorsId = 15, BooksId = 1 },
             new { AuthorsId = 14, BooksId = 10 },
@@ -155,67 +156,19 @@ public static class DataSeeder
             new { BooksId = 35, UsersId = 3 },
             new { BooksId = 35, UsersId = 8 },
             new { BooksId = 35, UsersId = 5 });
-        modelBuilder.Entity("BookOrder").HasData(
-            new { BooksId = 1, OrdersId = 1 },
-            new { BooksId = 2, OrdersId = 2 },
-            new { BooksId = 3, OrdersId = 3 },
-            new { BooksId = 3, OrdersId = 8 },
-            new { BooksId = 3, OrdersId = 13 },
-            new { BooksId = 4, OrdersId = 3 },
-            new { BooksId = 5, OrdersId = 4 },
-            new { BooksId = 5, OrdersId = 30 },
-            new { BooksId = 6, OrdersId = 5 },
-            new { BooksId = 7, OrdersId = 6 },
-            new { BooksId = 7, OrdersId = 29 },
-            new { BooksId = 8, OrdersId = 7 },
-            new { BooksId = 9, OrdersId = 28 },
-            new { BooksId = 10, OrdersId = 27 },
-            new { BooksId = 12, OrdersId = 9 },
-            new { BooksId = 11, OrdersId = 10 },
-            new { BooksId = 12, OrdersId = 11 },
-            new { BooksId = 13, OrdersId = 26 },
-            new { BooksId = 14, OrdersId = 25 },
-            new { BooksId = 15, OrdersId = 12 },
-            new { BooksId = 16, OrdersId = 24 },
-            new { BooksId = 17, OrdersId = 23 },
-            new { BooksId = 18, OrdersId = 14 },
-            new { BooksId = 19, OrdersId = 15 },
-            new { BooksId = 19, OrdersId = 12 },
-            new { BooksId = 19, OrdersId = 22 },
-            new { BooksId = 20, OrdersId = 21 },
-            new { BooksId = 20, OrdersId = 20 },
-            new { BooksId = 21, OrdersId = 9 },
-            new { BooksId = 22, OrdersId = 10 },
-            new { BooksId = 23, OrdersId = 11 },
-            new { BooksId = 23, OrdersId = 3 },
-            new { BooksId = 24, OrdersId = 2 },
-            new { BooksId = 25, OrdersId = 1 },
-            new { BooksId = 26, OrdersId = 5 },
-            new { BooksId = 27, OrdersId = 6 },
-            new { BooksId = 28, OrdersId = 7 },
-            new { BooksId = 29, OrdersId = 13 },
-            new { BooksId = 30, OrdersId = 15 },
-            new { BooksId = 31, OrdersId = 7 },
-            new { BooksId = 32, OrdersId = 16 },
-            new { BooksId = 33, OrdersId = 16 },
-            new { BooksId = 33, OrdersId = 17 },
-            new { BooksId = 34, OrdersId = 18 },
-            new { BooksId = 35, OrdersId = 3 },
-            new { BooksId = 35, OrdersId = 8 },
-            new { BooksId = 35, OrdersId = 19 });
         modelBuilder.Entity<IdentityUserRole<int>>().HasData(
             new { UserId = 1, RoleId = 1 },
             new { UserId = 2, RoleId = 1 },
-            new { UserId = 3, RoleId = 1 },            
+            new { UserId = 3, RoleId = 1 },
             new { UserId = 4, RoleId = 2 },
             new { UserId = 5, RoleId = 2 },
             new { UserId = 6, RoleId = 2 },
             new { UserId = 7, RoleId = 2 },
-            new { UserId = 8, RoleId = 2 },            
+            new { UserId = 8, RoleId = 2 },
             new { UserId = 9, RoleId = 2 },
             new { UserId = 10, RoleId = 2 },
             new { UserId = 11, RoleId = 2 },
-            new { UserId = 12, RoleId = 2 },            
+            new { UserId = 12, RoleId = 2 },
             new { UserId = 13, RoleId = 2 },
             new { UserId = 14, RoleId = 2 },
             new { UserId = 15, RoleId = 2 });
@@ -496,7 +449,8 @@ public static class DataSeeder
     {
         var books = new List<Book>();
         var random = new Random();
-        var names = new List<string> {
+        var names = new List<string>
+        {
             "To Kill a Mockingbird",
             "1984",
             "James Bond",
@@ -532,7 +486,8 @@ public static class DataSeeder
             "Macbeth",
             "Othello",
             "The Divine Comedy",
-            "Don Quixote"};
+            "Don Quixote"
+        };
 
         for (var i = 0; i < names.Count; i++)
         {
@@ -541,18 +496,19 @@ public static class DataSeeder
             {
                 Id = i + 1,
                 Name = names[i],
-                PublisherId = 1,
-                PrimaryGenreId = random.Next(1,20),
+                PublisherId = random.Next(1, 15),
+                PrimaryGenreId = random.Next(1, 20),
                 StockInStorage = random.Next(1, 50),
                 Price = randomPrice,
                 OverallRating = random.Next(30, 100)
             });
         }
+
         return books;
     }
 
     private static IEnumerable<User> PrepareUsers()
-    {        
+    {
         var users = new List<User>();
         var names = new List<string>
         {
@@ -564,8 +520,8 @@ public static class DataSeeder
             "Filip Strong",
             "Random Guy",
             "Jack Black",
-            "Tom Smart", 
-            "Ali Willy", 
+            "Tom Smart",
+            "Ali Willy",
             "Rubber Duck",
             "Olaf Snow",
             "Good Programmer",
@@ -574,12 +530,12 @@ public static class DataSeeder
         };
         for (var i = 0; i < names.Count; i++)
         {
-            var name = names[i].Substring(0, names[i].IndexOf(' '));
+            var name = names[i].Substring(0, names[i].IndexOf(' ')).ToLower();
             var email = $"{name}@gmail.com";
             users.Add(new User
             {
                 Id = i + 1,
-                UserName = name.ToLower(),
+                UserName = name,
                 NormalizedUserName = name.ToUpper(),
                 Name = names[i],
                 Email = email,
@@ -589,37 +545,65 @@ public static class DataSeeder
                 PasswordHash = Hasher.HashPassword(null, "Aa123!")
             });
         }
+
         return users;
     }
 
     private static IEnumerable<Order> PrepareOrders()
-    {        
+    {
+        var paymentStatuses = new List<PaymentStatus>
+        {
+            PaymentStatus.Unpaid, PaymentStatus.Paid, PaymentStatus.AwaitingShipment, PaymentStatus.Shipped,
+            PaymentStatus.Delivered
+        };
         var random = new Random();
         var orders = new List<Order>();
-        for (var i = 1; i <= 30; i++)
+        for (var i = 1; i <= 149; i++)
         {
             var randomPrice = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2);
             orders.Add(new Order
             {
                 Id = i,
-                UserId = random.Next(1, 15),
-                TotalPrice = randomPrice
+                UserId = i / 10 + 1,
+                TotalPrice = randomPrice,
+                PaymentStatus = paymentStatuses[random.Next(1, 5)]
             });
         }
+
         return orders;
+    }
+
+    private static IEnumerable<BookOrder> PrepareBookOrders()
+    {
+        var bookOrders = new List<BookOrder>();
+        var random = new Random();
+        for (var i = 1; i <= 149; i++)
+        {
+            for (var j = 0; j <= random.Next(1, 5); j++)
+            {
+                bookOrders.Add(new BookOrder
+                {
+                    OrderId = i,
+                    BookId = j == 0 ? j + 1 : j * 5,
+                    Count = random.Next(1, 3)
+                });
+            }
+        }
+
+        return bookOrders;
     }
 
     private static IEnumerable<IdentityRole<int>> PrepareRoles()
     {
         return new List<IdentityRole<int>>
         {
-            new IdentityRole<int>
+            new()
             {
                 Id = 1,
                 Name = UserRoles.Admin,
                 NormalizedName = UserRoles.Admin.ToUpper(),
             },
-            new IdentityRole<int>
+            new()
             {
                 Id = 2,
                 Name = UserRoles.User,
@@ -677,7 +661,7 @@ public static class DataSeeder
         };
         for (var i = 0; i < 50; i++)
         {
-            ratings.Add( new Rating
+            ratings.Add(new Rating
             {
                 Id = i + 1,
                 UserId = random.Next(1,
@@ -689,6 +673,7 @@ public static class DataSeeder
                 Comment = comments[i % comments.Count]
             });
         }
+
         return ratings;
     }
 }

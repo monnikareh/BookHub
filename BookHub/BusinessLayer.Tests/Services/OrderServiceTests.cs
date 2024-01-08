@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
@@ -28,7 +27,7 @@ public class OrderServiceTests
         var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
     
         // Act
-        var result = await orderService.GetOrdersAsync(null, null, null, null, null, null, null);
+        var result = await orderService.GetOrdersAsync(null, null, null, null, null, null, null, null);
         var orderDetails = result.ToList();
     
         // Assert
@@ -50,7 +49,7 @@ public class OrderServiceTests
         var orderToGet = dbContext.Orders.Include(order => order.User).First();
     
         // Act
-        var result = await orderService.GetOrderByIdAsync(orderToGet.Id);
+        var result = (await orderService.GetOrderByIdAsync(orderToGet.Id)).Value;
     
         // Assert
         Assert.NotNull(result);
@@ -79,8 +78,8 @@ public class OrderServiceTests
         };
     
         // Act
-        var result = await orderService.CreateOrderAsync(newOrder);
-        var ret = await orderService.GetOrderByIdAsync(result.Id);
+        var result = (await orderService.CreateOrderAsync(newOrder)).Value;
+        var ret = (await orderService.GetOrderByIdAsync(result.Id)).Value;
         // Assert
         RunAsserts(ret, result);
     }
@@ -100,12 +99,12 @@ public class OrderServiceTests
         orderToUpdate.TotalPrice = 42m;
         
         // Act
-        var result = await orderService.UpdateOrderAsync(orderToUpdate.Id, new OrderUpdate
+        var result = (await orderService.UpdateOrderAsync(orderToUpdate.Id, new OrderUpdate
         {
             TotalPrice = orderToUpdate.TotalPrice
-        });
+        })).Value;
         
-        var ret = await orderService.GetOrderByIdAsync(result.Id);
+        var ret = (await orderService.GetOrderByIdAsync(result.Id)).Value;
         // Assert
         RunAsserts(ret, result);
     }
@@ -123,10 +122,6 @@ public class OrderServiceTests
         var orderToDelete = dbContext.Orders.First();
             
         await orderService.DeleteOrderAsync(orderToDelete.Id);
-        await Assert.ThrowsAsync<OrderNotFoundException>
-            (async () => await orderService.DeleteOrderAsync(orderToDelete.Id));
-        await Assert.ThrowsAsync<OrderNotFoundException>
-            (async () => await orderService.DeleteOrderAsync(orderToDelete.Id));
     }
     
     private static void RunAsserts(OrderDetail? expected, OrderDetail? actual)

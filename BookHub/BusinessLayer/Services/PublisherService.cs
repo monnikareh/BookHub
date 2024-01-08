@@ -1,6 +1,6 @@
+using BusinessLayer.Errors;
 using DataAccessLayer;
 using BusinessLayer.Mapper;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -34,8 +34,23 @@ public class PublisherService : IPublisherService
         var filteredPublishers = await publishers.ToListAsync();
         return filteredPublishers.Select(EntityMapper.MapPublisherToPublisherDetail);
     }
+    
+    public async Task<IEnumerable<PublisherDetail>> GetSearchPublishersAsync(string? query)
+    {
+        var publishers = _context.Publishers
+            .Include(p => p.Books)
+            .AsQueryable();
 
-    public async Task<PublisherDetail> GetPublisherByIdAsync(int id)
+        if (query != null)
+        {
+            publishers = publishers.Where(publisher => publisher.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await publishers.ToListAsync();
+        return result.Select(EntityMapper.MapPublisherToPublisherDetail);
+    }
+
+    public async Task<Result<PublisherDetail, (Error err, string message)>> GetPublisherByIdAsync(int id)
     {
         var key = $"BookById_{id}";
         if (_memoryCache.TryGetValue(key, out PublisherDetail? cached) && cached is not null)
@@ -50,7 +65,7 @@ public class PublisherService : IPublisherService
 
         if (publisher == null)
         {
-            throw new PublisherNotFoundException($"Publisher with ID:'{id}' not found");
+            return ErrorMessages.PublisherNotFound(id);
         }
 
         var mapped = EntityMapper.MapPublisherToPublisherDetail(publisher);
@@ -71,14 +86,14 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
 
-    public async Task<PublisherDetail> UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
+    public async Task<Result<PublisherDetail, (Error err, string message)>> UpdatePublisherAsync(int id, PublisherUpdate publisherUpdate)
     {
         var publisher = await _context.Publishers.Include(g => g.Books)
             .FirstOrDefaultAsync(g => g.Id == id);
 
         if (publisher == null)
         {
-            throw new PublisherNotFoundException($"Publisher with ID {id} not found");
+            return ErrorMessages.PublisherNotFound(id);
         }
 
         publisher.Name = publisherUpdate.Name;
@@ -94,7 +109,7 @@ public class PublisherService : IPublisherService
 
             if (books.Count != publisherUpdate.Books.Count)
             {
-                throw new BookNotFoundException("One or more books could not be found");
+                return ErrorMessages.BookNotFound();
             }
 
             publisher.Books.Clear();
@@ -105,16 +120,17 @@ public class PublisherService : IPublisherService
         return EntityMapper.MapPublisherToPublisherDetail(publisher);
     }
 
-    public async Task DeletePublisherAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeletePublisherAsync(int id)
     {
         var publisher = await _context.Publishers.FindAsync(id);
         if (publisher == null)
         {
-            throw new PublisherNotFoundException($"Publisher with ID:'{id}' not found");
+            return ErrorMessages.PublisherNotFound(id);
         }
 
         _context.Publishers.Remove(publisher);
         await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> DoesPublishersExistAsync(IEnumerable<int> ids)

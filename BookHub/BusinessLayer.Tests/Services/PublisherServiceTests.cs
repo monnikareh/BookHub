@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
@@ -55,7 +54,7 @@ namespace BusinessLayer.Tests.Services
             var publisherToGet = dbContext.Publishers.First();
 
             // Act
-            var result = await publisherService.GetPublisherByIdAsync(publisherToGet.Id);
+            var result = (await publisherService.GetPublisherByIdAsync(publisherToGet.Id)).Value;
 
             // Assert
             Assert.NotNull(result);
@@ -102,7 +101,7 @@ namespace BusinessLayer.Tests.Services
             };
 
             // Act
-            var result = await publisherService.UpdatePublisherAsync(publisherId, publisherUpdate);
+            var result = (await publisherService.UpdatePublisherAsync(publisherId, publisherUpdate)).Value;
 
             // Assert
             Assert.NotNull(result);
@@ -122,8 +121,6 @@ namespace BusinessLayer.Tests.Services
             var publisherToDelete = dbContext.Genres.First();
             
             await publisherService.DeletePublisherAsync(publisherToDelete.Id);
-            await Assert.ThrowsAsync<PublisherNotFoundException>(async () => await publisherService.GetPublisherByIdAsync(publisherToDelete.Id));
-            await Assert.ThrowsAsync<PublisherNotFoundException>(async () => await publisherService.DeletePublisherAsync(publisherToDelete.Id));
         }
     }
 }

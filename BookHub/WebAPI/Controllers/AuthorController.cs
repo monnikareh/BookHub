@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,7 +36,11 @@ namespace WebAPI.Controllers
         {
            try
            {
-               return Ok(await _authorService.GetAuthorByIdAsync(id));
+               var author = await _authorService.GetAuthorByIdAsync(id);
+               return author.Match<ActionResult<AuthorDetail>>(
+                   a => Ok(a),
+                   e => NotFound(e)
+               );
            }
            catch (Exception e)
            {
@@ -64,7 +67,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAuthor(int id, AuthorUpdate authorUpdate)
+        public async Task<ActionResult<AuthorDetail>> UpdateAuthor(int id, AuthorUpdate authorUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +75,11 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _authorService.UpdateAuthorAsync(id, authorUpdate));
+                var author = await _authorService.UpdateAuthorAsync(id, authorUpdate);
+                return author.Match<ActionResult<AuthorDetail>> (
+                    a => Ok(a),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -81,12 +88,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAuthor(int id)
+        public async Task<ActionResult<AuthorDetail>>DeleteAuthor(int id)
         {
             try
             {
-                await _authorService.DeleteAuthorAsync(id);
-                return Ok();
+                var res = await _authorService.DeleteAuthorAsync(id);
+                return res.Match<ActionResult<AuthorDetail>>(
+                    a => Ok(a),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -96,9 +106,7 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleAuthorException(Exception e)
         {
-            return e is AuthorNotFoundException or BookNotFoundException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }

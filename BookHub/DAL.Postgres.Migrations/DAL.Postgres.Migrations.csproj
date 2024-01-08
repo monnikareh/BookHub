@@ -10,4 +10,8 @@
       <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\BookHubDbContextModelSnapshot.cs" />
+    </ItemGroup>
+
 </Project>

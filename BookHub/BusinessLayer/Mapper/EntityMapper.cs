@@ -14,6 +14,15 @@ public static class EntityMapper
             Name = model.Name
         };
     }
+
+    public static OrderItem MapBookOrderToOrderItem(BookOrder bookOrder)
+    {
+        return new OrderItem
+        {
+            BookId = bookOrder.BookId,
+            Count = bookOrder.Count
+        };
+    }
     
     public static AuthorDetail MapAuthorToAuthorDetail(Author author)
     {
@@ -77,8 +86,10 @@ public static class EntityMapper
             Id = order.Id,
             User = MapModelToRelated(order.User),
             TotalPrice = order.TotalPrice,
+            PaymentStatus = order.PaymentStatus,
             Date = order.Date,
-            Books = order.Books.Select(MapModelToRelated).ToList()
+            Books = order.Books.Select(MapModelToRelated).ToList(),
+            OrderItems = order.BookOrders.Where(bo => bo.OrderId == order.Id).Select(MapBookOrderToOrderItem).ToList()
         };
     }
     
@@ -91,6 +102,39 @@ public static class EntityMapper
             UserName = user.UserName ?? "",
             Email = user.Email ?? "",
             Books = user.Books.Select(MapModelToRelated).ToList(),
+        };
+    }
+    
+    public static ModelRelated MapBookDetailToRelated(BookDetail model)
+    {
+        return new ModelRelated
+        {
+            Id = model.Id,
+            Name = model.Name
+        };
+    }
+    
+    public static ModelRelated MapUserDetailToRelated(UserDetail model)
+    {
+        return new ModelRelated
+        {
+            Id = model.Id,
+            Name = model.Name
+        };
+    }
+
+    public static BookCreate MapBookDetailToCreate(BookDetail book)
+    {
+        return new BookCreate
+        {
+            Name = book.Name,
+            Authors = book.Authors,
+            Publisher = book.Publisher,
+            PrimaryGenre = book.PrimaryGenre,
+            Genres = book.Genres,
+            OverallRating = book.OverallRating,
+            StockInStorage = book.StockInStorage,
+            Price = book.Price
         };
     }
 }

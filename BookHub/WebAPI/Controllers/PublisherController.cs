@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,7 +36,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _publisherService.GetPublisherByIdAsync(id));
+                var publisher = await _publisherService.GetPublisherByIdAsync(id);
+                return publisher.Match<ActionResult<PublisherDetail>>(
+                    p => Ok(p),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -64,7 +67,7 @@ namespace WebAPI.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePublisher(int id, PublisherUpdate publisherUpdate)
+        public async Task<ActionResult<PublisherDetail>> UpdatePublisher(int id, PublisherUpdate publisherUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +75,11 @@ namespace WebAPI.Controllers
             }
             try
             {
-                return Ok(await _publisherService.UpdatePublisherAsync(id, publisherUpdate));
+                var publisher = await _publisherService.UpdatePublisherAsync(id, publisherUpdate);
+                return publisher.Match<ActionResult<PublisherDetail>>(
+                    p => Ok(p),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -82,12 +89,15 @@ namespace WebAPI.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePublisher(int id)
+        public async Task<ActionResult<PublisherDetail>> DeletePublisher(int id)
         {
             try
             {
-                await _publisherService.DeletePublisherAsync(id);
-                return Ok();
+                var res = await _publisherService.DeletePublisherAsync(id);
+                return res.Match<ActionResult<PublisherDetail>>(
+                    p => Ok(p),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -97,10 +107,7 @@ namespace WebAPI.Controllers
         
         private ActionResult HandlePublisherException(Exception e)
         {
-            return e is PublisherNotFoundException or UserNotFoundException
-                or BookNotFoundException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,7 +39,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _userService.GetUserByIdAsync(id));
+                var user = await _userService.GetUserByIdAsync(id);
+                return user.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -58,7 +61,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _userService.CreateUserAsync(userCreate));
+                var user = await _userService.CreateUserAsync(userCreate);
+                return user.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -76,7 +83,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _userService.UpdateUserAsync(id, userUpdate));
+                var user = await _userService.UpdateUserAsync(id, userUpdate);
+                return user.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -86,12 +97,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<ActionResult<UserDetail>> DeleteUser(int id)
         {
             try
             {
-                await _userService.DeleteUserAsync(id);
-                return Ok();
+                var res = await _userService.DeleteUserAsync(id);
+                return res.Match<ActionResult<UserDetail>>(
+                    u => Ok(u),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -101,13 +115,7 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleUserException(Exception e)
         {
-            return e switch
-            {
-                OrderNotFoundException or UserNotFoundException
-                    or BookNotFoundException => NotFound(e.Message),
-                UserAlreadyExistsException => Conflict(e.Message),
-                _ => Problem($"{e}Unknown problem occured")
-            };
+            return Problem($"{e}Unknown problem occured");
         }
     }
 }

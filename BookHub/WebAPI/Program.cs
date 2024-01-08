@@ -122,7 +122,7 @@ else
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseMiddleware<RequestLoggerMiddleware>();
+app.UseMiddleware<RequestLoggerMiddleware>("BookHubAPI");
 
 app.UseHttpsRedirection();
 

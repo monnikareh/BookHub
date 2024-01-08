@@ -1,5 +1,5 @@
 using System.Text;
-using BusinessLayer.Exceptions;
+using BusinessLayer.Errors;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -50,8 +50,25 @@ public class UserService : IUserService
             .ToListAsync();
         return users.Select(EntityMapper.MapUserToUserDetail);
     }
+    
+    public async Task<IEnumerable<UserDetail>> GetSearchUsersAsync(string? query)
+    {
+        var users = _context.Users
+            .Include(u => u.Orders)
+            .Include(u => u.Books)
+            .AsQueryable();
 
-    public async Task<UserDetail> GetUserByIdAsync(int id)
+        if (query != null)
+        {
+            users = users.Where(user => user.Name.ToLower().Contains(query.ToLower()));
+        }
+
+        var result = await users.ToListAsync();
+        return result.Select(EntityMapper.MapUserToUserDetail);
+    }
+
+
+    public async Task<Result<UserDetail, (Error err, string message)>> GetUserByIdAsync(int id)
     {
         var key = $"BookById_{id}";
         if (_memoryCache.TryGetValue(key, out UserDetail? cached) && cached is not null)
@@ -62,17 +79,17 @@ public class UserService : IUserService
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
-            throw new UserNotFoundException($"User 'ID={id}' could not be found");
+            return ErrorMessages.UserNotFound(id);
         }
 
         var mapped = EntityMapper.MapUserToUserDetail(user);
         var cacheEntryOptions = new MemoryCacheEntryOptions()
-            .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+            .SetAbsoluteExpiration(TimeSpan.FromSeconds(1));
         _memoryCache.Set(key, mapped, cacheEntryOptions);
         return mapped;
     }
 
-    public async Task<UserDetail> CreateUserAsync(UserCreate userCreate)
+    public async Task<Result<UserDetail, (Error err, string message)>> CreateUserAsync(UserCreate userCreate)
     {
         User user;
         try
@@ -92,7 +109,7 @@ public class UserService : IUserService
             books = await _context.Books.Where(a => bookNames.Contains(a.Name) || bookIds.Contains(a.Id)).ToListAsync();
             if (books.Count != userCreate.Books.Count)
             {
-                throw new BooksEmptyException("One or more books could not be found");
+                return ErrorMessages.BookNotFound();
             }
         }
 
@@ -109,7 +126,7 @@ public class UserService : IUserService
                 errors.Append($"{err.Code} - {err.Description}\n");
             }
 
-            throw new UserAlreadyExistsException($"User could not be created: {errors.ToString()}");
+            return ErrorMessages.UserAlreadyExists(userCreate.UserName);
         }
 
         if (await _roleManager.RoleExistsAsync(UserRoles.User))
@@ -120,7 +137,7 @@ public class UserService : IUserService
         return EntityMapper.MapUserToUserDetail(user);
     }
 
-    public async Task<UserDetail> UpdateUserAsync(int id, UserUpdate userUpdate)
+    public async Task<Result<UserDetail, (Error err, string message)>> UpdateUserAsync(int id, UserUpdate userUpdate)
     {
         var user = await _context.Users
             .Include(b => b.Books)
@@ -128,7 +145,7 @@ public class UserService : IUserService
 
         if (user == null)
         {
-            throw new UserNotFoundException($"User with ID {id} not found");
+            return ErrorMessages.UserNotFound(id);
         }
 
         user.Name = userUpdate.Name;
@@ -143,7 +160,7 @@ public class UserService : IUserService
 
             if (books.Count != userUpdate.Books.Count)
             {
-                throw new BooksEmptyException("One or more books could not be found");
+                return ErrorMessages.BookNotFound();
             }
 
             user.Books.Clear();
@@ -158,14 +175,97 @@ public class UserService : IUserService
         return EntityMapper.MapUserToUserDetail(user);
     }
 
-    public async Task DeleteUserAsync(int id)
+    public async Task<Result<bool, (Error err, string message)>> DeleteUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
-            throw new UserNotFoundException($"User with ID {id} not found");
+            return ErrorMessages.UserNotFound(id);
         }
 
         await _userManager.DeleteAsync(user);
+        return true;
+    }
+
+    public async Task<Result<(string, User user), (Error err, string message)>> GetUserAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return ErrorMessages.UserNotFound(id);
+        }
+
+        return (await _userManager.GeneratePasswordResetTokenAsync(user), user);
+    }
+
+    public async Task<Result<bool, (Error err, string message)>> AddBookToWishlist(int id, int bookId)
+    {
+        var user = await _context.Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            return ErrorMessages.UserNotFound(id);
+        }
+
+        var toBeAddedBook = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+
+        if (toBeAddedBook == null)
+        {
+            return ErrorMessages.BookNotFound(bookId);
+        }
+
+        if (user.Books.Any(b => b.Id == bookId))
+        {
+            return false;
+        }
+
+        user.Books.Add(toBeAddedBook);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<Result<IEnumerable<BookDetail>, (Error err, string message)>> GetBooksInWishlist(int id)
+    {
+        var user = await _context
+            .Users
+            .Include(b => b.Books)
+            .ThenInclude(pg => pg.PrimaryGenre)
+            .Include(b => b.Books)
+            .ThenInclude(g => g.Genres)
+            .Include(b => b.Books)
+            .ThenInclude(b => b.Publisher)
+            .Include(b => b.Books)
+            .ThenInclude(b => b.Authors)
+            .FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null)
+        {
+            return ErrorMessages.UserNotFound(id);
+        }
+
+        return user.Books.Select(EntityMapper.MapBookToBookDetail).ToList();
+    }
+
+    public async Task<Result<bool, (Error err, string message)>> DeleteBookFromWishlist(int userId, int bookId)
+    {
+        var user = await _context
+            .Users
+            .Include(b => b.Books)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+        {
+            return ErrorMessages.UserNotFound(userId);
+        }
+
+        var book = await _context.Books.FindAsync(bookId);
+        if (book == null)
+        {
+            return ErrorMessages.BookNotFound(bookId);
+        }
+
+        user.Books.Remove(book);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }
