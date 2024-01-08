@@ -76,7 +76,14 @@
 
 
     <div class="btn-group" role="group" aria-label="Book Actions">
-        <div style="margin-right: 10px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+        @if (Model.StockInStorage > 0)
+        {
+            <div style="margin-right: 7px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+        }
+        else
+        {
+            <span style="margin-right: 7px" class="badge btn-danger">Currently unavailable</span>   
+        }
         <div>
             @if (User.Identity.IsAuthenticated)
             {
