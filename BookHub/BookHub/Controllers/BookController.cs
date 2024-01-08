@@ -39,8 +39,8 @@ public class BookController : BaseController
         var books = await _bookFacade.GetSearchBooks(query);
         return View("Index", books);
     }
-    
-    
+
+
     [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
@@ -62,14 +62,16 @@ public class BookController : BaseController
         {
             return RedirectToAction("Index");
         }
-        
+
         switch (book.Error.err)
         {
             case Error.GenreNotFound or Error.MultipleGenresNotFound:
-                ModelState.AddModelError(nameof(model.PrimaryGenre.Name), "Genre does not exist, you must create it first");
+                ModelState.AddModelError(nameof(model.PrimaryGenre.Name),
+                    "Genre does not exist, you must create it first");
                 break;
             case Error.PublisherNotFound:
-                ModelState.AddModelError(nameof(model.Publisher.Name), "Publisher does not exist, you must create it first");
+                ModelState.AddModelError(nameof(model.Publisher.Name),
+                    "Publisher does not exist, you must create it first");
                 break;
             case Error.AuthorNotFound or Error.MultipleAuthorsNotFound or Error.AuthorFieldEmpty:
                 ModelState.AddModelError(nameof(model.Authors), "Authors do not exist, you must create it first");
@@ -78,7 +80,7 @@ public class BookController : BaseController
                 ModelState.AddModelError(nameof(model.Genres), "Genres do not exist, you must create it first");
                 break;
         }
-        
+
         return View(model);
     }
 
@@ -158,6 +160,7 @@ public class BookController : BaseController
         {
             return ErrorView(user.Error);
         }
+
         var result = await _userService.AddBookToWishlist(user.Value.Id, id);
         if (result is { IsOk: true, Value: true })
         {
@@ -195,7 +198,7 @@ public class BookController : BaseController
         {
             return ErrorView(book.Error);
         }
-        
+
         var rating = await _ratingService.ExistRatingForUser(user.Value.Id, book.Value.Id);
         if (rating != null)
         {
@@ -203,6 +206,7 @@ public class BookController : BaseController
             ViewBag.ExistingRatingId = rating.Id;
             return RedirectToAction("Detail", new { id = id });
         }
+
         var newRating = new RatingCreate
         {
             User = EntityMapper.MapUserDetailToRelated(user.Value),
@@ -211,7 +215,9 @@ public class BookController : BaseController
             Comment = comment,
         };
         var result = await _ratingService.CreateRatingAsync(newRating);
-        return RedirectToAction("Detail", new { id = id });
+        return result.Match(
+            _ => RedirectToAction("Detail", new { id = id }),
+            ErrorView);
     }
 
 
@@ -237,14 +243,15 @@ public class BookController : BaseController
         {
             return ErrorView(book.Error);
         }
-        
+
         var rating = await _ratingService.ExistRatingForUser(user.Value.Id, book.Value.Id);
-       
+
         if (rating != null)
         {
             var editUrl = Url.Action("Edit", "Rating", new { id = rating.Id });
             return Json(new { ratingExists = true, editUrl });
         }
+
         return Json(new { ratingExists = false });
     }
 }
