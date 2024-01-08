@@ -7,7 +7,7 @@
 }
 
 <h1>Books</h1>
-<form asp-action="Search" asp-controller="Book" method="get">
+<form asp-action="Search" asp-area="" asp-controller="Book" asp-route-page="1" method="get">
     <input type="text" name="query" placeholder="Search..." />
     <button type="submit">Search</button>
 </form>

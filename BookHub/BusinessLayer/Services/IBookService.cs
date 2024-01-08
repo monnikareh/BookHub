@@ -8,7 +8,7 @@ public interface IBookService
     Task<IEnumerable<BookDetail>> GetBooksAsync(string? bookName, int? genreId, string? genreName,
         int? publisherId, string? publisherName, int? authorId, string? authorName);
 
-    Task<BookView> GetSearchBooksAsync(string? query, PaginationSettings? paginationSettings);
+    Task<BookView> GetSearchBooksAsync(PaginationSettings? paginationSettings, string? query);
 
     Task<Result<BookDetail, (Error err, string message)>> GetBookByIdAsync(int id);
     Task<Result<BookDetail, (Error err, string message)>> CreateBookAsync(BookCreate bookCreate);

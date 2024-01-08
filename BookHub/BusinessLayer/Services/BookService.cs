@@ -66,8 +66,7 @@ public class BookService : IBookService
         return filteredBooks.Select(EntityMapper.MapBookToBookDetail);
     }
 
-    public async Task<BookView> GetSearchBooksAsync(string? query,
-        PaginationSettings? paginationSettings)
+    public async Task<BookView> GetSearchBooksAsync(PaginationSettings? paginationSettings, string? query)
     {
         var books = _context.Books
             .Include(pg => pg.PrimaryGenre)
@@ -84,13 +83,13 @@ public class BookService : IBookService
         if (paginationSettings != null)
         {
             var booksCount = await books.CountAsync();
-            var pageCount = booksCount / paginationSettings.pageSize + int.Min( booksCount % paginationSettings.pageSize, 1);
+            var pageCount = booksCount / paginationSettings.PageSize + int.Min( booksCount % paginationSettings.PageSize, 1);
             books = books
-                .Skip((paginationSettings.pageNumber - 1) * paginationSettings.pageSize)
-                .Take(paginationSettings.pageSize);
+                .Skip((paginationSettings.PageNumber - 1) * paginationSettings.PageSize)
+                .Take(paginationSettings.PageSize);
             var result = await books.ToListAsync();
             return new BookView(result.Select(EntityMapper.MapBookToBookDetail),
-                paginationSettings.pageNumber, pageCount);
+                paginationSettings.PageNumber, pageCount);
         }
         var result2 = await books.ToListAsync(); 
         return new BookView(result2.Select(EntityMapper.MapBookToBookDetail),
