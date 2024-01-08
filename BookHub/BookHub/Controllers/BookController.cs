@@ -30,14 +30,14 @@ public class BookController : BaseController
     [HttpGet("{page:int}")]
     public async Task<IActionResult> Index(int? page)
     {
-        var paginationSetting = new PaginationSettings(3, page ?? 1);
+        var paginationSetting = new PaginationSettings(10, page ?? 1);
         var books = await _bookFacade.GetSearchBooks(paginationSetting, null);
         return View(books);
     }
     [HttpGet("{page:int}")]
     public async Task<IActionResult> Search(string query, int? page)
     {
-        var paginationSetting = new PaginationSettings(3, page ?? 1);
+        var paginationSetting = new PaginationSettings(10, page ?? 1);
         var books = await _bookFacade.GetSearchBooks(paginationSetting, query);
         return View("Index", books);
     }

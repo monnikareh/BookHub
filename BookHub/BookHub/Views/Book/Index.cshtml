@@ -50,6 +50,8 @@
     </tbody>
 </table>
 
+Page @(Model.TotalPages < Model.CurrentPage ? 0 : Model.CurrentPage) of @Model.TotalPages
+
 <div class="pagination flex justify-center items-center my-4">
     @if (Model.CurrentPage > 1)
     {
