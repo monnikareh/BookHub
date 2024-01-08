@@ -9,38 +9,24 @@
 </div>
 
 <div class="col-6">
-    <p>ID: @Model.Id</p>
-    <p>Total Price: @Model.TotalPrice</p>
-    <p>Order status: </p>
-    @if (Model.PaymentStatus == PaymentStatus.Unpaid)
-    {
-        <div style="margin-left: 10px">@Html.ActionLink("Pay", "Pay", new { id = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
-    }
-    else if (Model.PaymentStatus == PaymentStatus.Paid)
-    {
-        <p>
-            <span class="badge btn-warning">@Model.PaymentStatus</span>
-        </p>
-    }
-    else if (Model.PaymentStatus == PaymentStatus.AwaitingShipment)
-    {
-        <p>
-            <span class="badge btn-info">@Model.PaymentStatus</span>
-        </p>
-    }
-    else if (Model.PaymentStatus == PaymentStatus.Shipped)
-    {
-        <p>
-            <span class="badge btn-primary">@Model.PaymentStatus</span>
-        </p>
-    }
-    else if (Model.PaymentStatus == PaymentStatus.Delivered)
-    {
-        <p>
-            <span class="badge btn-success">@Model.PaymentStatus</span>
-        </p>
-    }
-    <h3>Order items</h3>
+    <p>Order ID: @Model.Id</p>
+    <p>Total Price: @Model.TotalPrice €</p>
+    
+    <div class="row">
+        <div class="col">
+            <h3>Order items</h3>
+        </div>
+        
+        <div class="col-auto">
+            @if (Model.PaymentStatus == PaymentStatus.Unpaid)
+                {
+                    <div>@Html.ActionLink("Pay", "Pay", new { id = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+                }
+        </div>
+        <div class="col-auto">
+            <a asp-page="/Account/Manage/Order" asp-area="Identity" class="btn btn-sm btn-info">Order History</a>
+        </div>
+    </div>
     <table class="table">
         <thead>
         <tr>
@@ -56,7 +42,11 @@
         {
             var orderItem = Model.OrderItems.FirstOrDefault(i => i.BookId == book.Id);
             <tr>
-                <td><p><a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a></p></td>
+                <td>
+                    <p>
+                        <a href="@Url.Action("Detail", "Book", new { id = book.Id })">@book.Name</a>
+                    </p>
+                </td>
                 <td>@orderItem?.Count</td>
                 <td>@Html.ActionLink("Delete", "DeleteItem", new { bookId = book.Id }, new { @class = "btn btn-sm btn-danger" })</td>
             </tr>
