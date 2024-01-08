@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using BookHub.Models
+@using Microsoft.IdentityModel.Tokens
 @inject SignInManager<User> SignInManager
 @model System.Collections.Generic.IEnumerable<BusinessLayer.Models.RatingDetail>
 @{
@@ -22,6 +23,8 @@
         <tr>
             <th>ID</th>
             <th>Book</th>
+            <th>Value</th>
+            <th>Comment</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -31,6 +34,25 @@
             <tr>
                 <td>@Html.DisplayFor(i => item.Id)</td>
                 <td>@Html.DisplayFor(i => item.Book.Name)</td>
+                <td>@Html.DisplayFor(i => item.Value)</td>
+                <td>
+                    @if (!item.Comment.IsNullOrEmpty())
+                    {
+                        if (item.Comment.Length > 30)
+                        {
+                            <p>@item.Comment.Substring(0,30)k..</p>
+                        }
+                        else
+                        {
+                            <p>@item.Comment</p>
+                        }
+                        
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+                </td>
                 <td>
                     @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Rating" })
                 </td>
