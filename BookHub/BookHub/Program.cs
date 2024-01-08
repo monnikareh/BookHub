@@ -59,6 +59,7 @@ else
     app.UseHsts();
 }
 
+app.UseMiddleware<RequestLoggerMiddleware>("BookHubWeb");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
