@@ -260,6 +260,7 @@ namespace BusinessLayer.Services
                 });
             }
 
+            book.StockInStorage -= 1;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -301,6 +302,7 @@ namespace BusinessLayer.Services
             {
                 order.BookOrders.Remove(orderItem);   
             }
+            book.StockInStorage += 1;
             await _context.SaveChangesAsync();
             return true;
         }
