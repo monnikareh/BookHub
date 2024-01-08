@@ -76,7 +76,7 @@
       }
       </tbody>
   }
-   @if (!Model.Books.IsNullOrEmpty())
+   @if (!Model.Books.Books.IsNullOrEmpty())
    {
        <thead>
        <tr>
@@ -85,7 +85,7 @@
        </tr>
        </thead>
        <tbody>
-       @foreach (var item in Model.Books)
+       @foreach (var item in Model.Books.Books)
        {
            <tr>
                <td>@Html.DisplayFor(i => item.Name)</td>

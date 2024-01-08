@@ -25,10 +25,10 @@ public class BookFacade
         var books = await _bookService.GetBooksAsync(null, null, null, null, null, null, null);
         return books;
     }
-    
-    public async Task<IEnumerable<BookDetail>> GetSearchBooks(string? query)
+
+    public async Task<BookView> GetSearchBooks(PaginationSettings paginationSettings, string? query)
     {
-        var books = await _bookService.GetSearchBooksAsync(query);
+        var books = await _bookService.GetSearchBooksAsync(query, paginationSettings);
         return books;
     }
     

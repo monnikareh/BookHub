@@ -27,16 +27,18 @@ public class BookController : BaseController
         _userService = userService;
         _bookFacade = bookFacade;
     }
-
-    public async Task<IActionResult> Index()
+    [HttpGet("{page:int}")]
+    public async Task<IActionResult> Index(int? page)
     {
-        var books = await _bookFacade.GetAllBooks();
+        var paginationSetting = new PaginationSettings(10, page ?? 1);
+        var books = await _bookFacade.GetSearchBooks(paginationSetting, null);
         return View(books);
     }
-
-    public async Task<IActionResult> Search(string query)
+    [HttpGet("{page:int}")]
+    public async Task<IActionResult> Search(string query, int? page)
     {
-        var books = await _bookFacade.GetSearchBooks(query);
+        var paginationSetting = new PaginationSettings(10, page ?? 1);
+        var books = await _bookFacade.GetSearchBooks(paginationSetting, query);
         return View("Index", books);
     }
 
