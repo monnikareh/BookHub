@@ -1,11 +1,11 @@
 namespace BusinessLayer.Models;
 
-public class PaginationSetting
+public class PaginationSettings
 {
     public int pageSize { get; }
     public int pageNumber { get; }
     
-    public PaginationSetting(int pageSize, int pageNumber)
+    public PaginationSettings(int pageSize, int pageNumber)
     {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;

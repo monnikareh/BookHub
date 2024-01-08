@@ -6,7 +6,6 @@ using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.Errors;
-using PagedList;
 using PagedListExtensions = X.PagedList.PagedListExtensions;
 
 namespace BookHub.Controllers;
@@ -32,17 +31,15 @@ public class BookController : BaseController
 
     public async Task<IActionResult> Index(int? page)
     {
-        var books = await _bookFacade.GetAllBooks();
-        const int pageSize = 3;
-        var pageNumber = page ?? 1;
-        return View(PagedListExtensions.ToPagedList(books, pageNumber, pageSize));
+        var paginationSetting = new PaginationSettings(3, page ?? 1);
+        var books = await _bookFacade.GetSearchBooks(paginationSetting, null);
+        return View(books);
     }
     
     public async Task<IActionResult> Search(string query, int? page)
     {
-        const int pageSize = 3;
-        var pageNumber = page ?? 1;
-        var books = await _bookFacade.GetSearchBooks(query);
+        var paginationSetting = new PaginationSettings(3, page ?? 1);
+        var books = await _bookFacade.GetSearchBooks(paginationSetting, query);
         return View("Index", books);
     }
     

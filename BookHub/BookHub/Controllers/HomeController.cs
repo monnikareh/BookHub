@@ -32,7 +32,7 @@ public class HomeController : BaseController
     public async Task<IActionResult> Search(string? query)
     {
         var authors = await _authorService.GetSearchAuthorsAsync(query);
-        var books = await _bookService.GetSearchBooksAsync(query);
+        var books = await _bookService.GetSearchBooksAsync(query, null);
         var genres = await _genreService.GetSearchGenresAsync(query);
         var publishers = await _publisherService.GetSearchPublishersAsync(query);
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
