@@ -40,7 +40,7 @@ public class RatingController : BaseController
     {
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
         var ret = TryParseId(out var userId);
-        return ret ? View(ratings.Where(r => r.User.Id == userId)) : ErrorView((Error.UserNotFound, "User not logged in"));
+        return ret ? View("Index", ratings.Where(r => r.User.Id == userId)) : ErrorView((Error.UserNotFound, "User not logged in"));
     }
 
 
