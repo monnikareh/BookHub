@@ -30,7 +30,7 @@
         <div class="col-auto">
             @await Html.PartialAsync("TableButtons", new TableButton { Id = Model.Id, ControllerName = "Book", ShowDetail = false })
         </div>
-        
+
     </div>
 </div>
 
@@ -82,7 +82,7 @@
         }
         else
         {
-            <span style="margin-right: 7px" class="badge btn-danger">Currently unavailable</span>   
+            <span style="margin-right: 7px" class="badge btn-danger">Currently unavailable</span>
         }
         <div>
             @if (User.Identity.IsAuthenticated)
@@ -104,9 +104,12 @@
         <button id="showReviewsBtn" class="btn btn-sm btn-primary">
             Show Ratings
         </button>
-        <button id="addRatingBtn" class="btn btn-sm btn-success">
-            Add Rating
-        </button>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <button id="addRatingBtn" class="btn btn-sm btn-success">
+                Add Rating
+            </button>
+        }
     </h3>
 
     <div id="reviewsContainer">
