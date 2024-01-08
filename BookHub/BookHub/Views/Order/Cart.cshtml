@@ -9,7 +9,7 @@
 </div>
 
 <div class="col-6">
-    <p>Order ID: @Model.Id</p>
+    <p>Order ID: <a asp-action="Detail" asp-controller="Order" asp-route-id="@Model.Id">@Model.Id</a></p>
     <p>Total Price: @Model.TotalPrice €</p>
     
     <div class="row">
