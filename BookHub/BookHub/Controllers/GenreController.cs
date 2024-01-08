@@ -26,7 +26,7 @@ public class GenreController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var genres = await _genreService.GetSearchGenresAsync(query);
-        return View(genres);
+        return View("Index", genres);
     }
 
 

@@ -26,7 +26,7 @@ public class AuthorController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var authors = await _authorService.GetSearchAuthorsAsync(query);
-        return View(authors);
+        return View("Index", authors);
     }
 
     [Authorize(Roles = "Admin")]

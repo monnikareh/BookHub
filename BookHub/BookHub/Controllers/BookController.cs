@@ -40,7 +40,7 @@ public class BookController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var books = await _bookFacade.GetSearchBooks(query);
-        return View(books);
+        return View("Index", books);
     }
     
     

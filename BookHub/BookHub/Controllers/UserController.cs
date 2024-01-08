@@ -36,7 +36,7 @@ public class UserController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var users = await _userService.GetSearchUsersAsync(query);
-        return View(users);
+        return View("Index", users);
     }
     
     [Authorize(Roles = "Admin")]
