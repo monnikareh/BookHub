@@ -1,5 +1,6 @@
 @model BusinessLayer.Models.RatingDetail
 @using Microsoft.AspNetCore.Identity
+@using BookHub.Models
 @inject SignInManager<User> SignInManager
 
 @{
@@ -11,13 +12,9 @@
         <div class="col-auto">
             <h2>@Model.Book.Name</h2>
         </div>
-        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-        {
-            <div class="col-auto m-sm-1" style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-sm btn-warning" })</div>
-            <div class="col-auto m-sm-1" style="margin-left: 10px">
-                @Html.ActionLink("Delete", "Delete", new { id = Model.Id }, new { @class = "btn btn-sm btn-danger" })
-            </div>
-        }
+        <div class="col-auto">
+                    @await Html.PartialAsync("TableButtons", new TableButton { Id = Model.Id, ControllerName = "Rating", ShowDetail = false })
+                </div>
     </div>
 </div>
 
