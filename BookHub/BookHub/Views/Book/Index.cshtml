@@ -1,7 +1,6 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @model X.PagedList.IPagedList<BusinessLayer.Models.BookDetail>
-@using PagedList.Mvc;
 @using X.PagedList.Mvc.Core
 @{
     ViewData["Title"] = "Books";
@@ -25,12 +24,7 @@
     <thead>
     <tr>
     
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(i => item.Name)</td>
-            </tr>
-        }
+        <th>Name</th>
         <th>Actions</th>
 
     </thead>

@@ -35,7 +35,7 @@ public class BookController : BaseController
         var books = await _bookFacade.GetAllBooks();
         const int pageSize = 3;
         var pageNumber = page ?? 1;
-        return View(PagedListExtensions.ToPagedList(books));
+        return View(PagedListExtensions.ToPagedList(books, pageNumber, pageSize));
     }
     
     public async Task<IActionResult> Search(string query, int? page)
@@ -43,7 +43,7 @@ public class BookController : BaseController
         const int pageSize = 3;
         var pageNumber = page ?? 1;
         var books = await _bookFacade.GetSearchBooks(query);
-        return View("Index", PagedListExtensions.ToPagedList(books));
+        return View("Index", books);
     }
     
     
