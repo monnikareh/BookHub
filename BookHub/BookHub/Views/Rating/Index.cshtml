@@ -1,4 +1,7 @@
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BookHub.Models
+@using Microsoft.IdentityModel.Tokens
 @inject SignInManager<User> SignInManager
 @model System.Collections.Generic.IEnumerable<BusinessLayer.Models.RatingDetail>
 @{
@@ -7,7 +10,7 @@
 
 <h1>Ratings</h1>
 <form asp-action="Search" asp-controller="Rating" method="get">
-    <input type="text" name="query" placeholder="Search..." />
+    <input type="text" name="query" placeholder="Search..."/>
     <button type="submit">Search</button>
 </form>
 <p>
@@ -20,6 +23,8 @@
         <tr>
             <th>ID</th>
             <th>Book</th>
+            <th>Value</th>
+            <th>Comment</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -29,14 +34,27 @@
             <tr>
                 <td>@Html.DisplayFor(i => item.Id)</td>
                 <td>@Html.DisplayFor(i => item.Book.Name)</td>
+                <td>@Html.DisplayFor(i => item.Value)</td>
                 <td>
-                    <div class="btn-group" role="group" aria-label="Rating Actions">
+                    @if (!item.Comment.IsNullOrEmpty())
+                    {
+                        if (item.Comment.Length > 30)
+                        {
+                            <p>@item.Comment.Substring(0,30)k..</p>
+                        }
+                        else
+                        {
+                            <p>@item.Comment</p>
+                        }
                         
-                        <div style="margin-left: 10px">@Html.ActionLink("Detail", "Detail", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })</div>
-                        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })</div>
-                        <div style="margin-left: 10px">@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })</div>
-                    
-                    </div>
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+                </td>
+                <td>
+                    @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Rating" })
                 </td>
             </tr>
         }

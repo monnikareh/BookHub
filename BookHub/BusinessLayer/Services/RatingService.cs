@@ -112,29 +112,33 @@ public class RatingService : IRatingService
             Value = ratingCreate.Value,
             Comment = ratingCreate.Comment
         };
-        UpdateOverallRatingValue(book, ratingCreate.Value);
         _context.Ratings.Add(rating);
+        UpdateOverallRatingValue(book, ratingCreate.Value);
+        _memoryCache.Remove($"BookById_{book.Id}");
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
 
-    public async Task<Result<RatingDetail, (Error err, string message)>> UpdateRatingAsync(int id, RatingUpdate ratingUpdate)
+    public async Task<Result<RatingDetail, (Error err, string message)>> UpdateRatingAsync(int id,
+        RatingUpdate ratingUpdate)
     {
         var rating = await _context
             .Ratings
             .Include(r => r.Book)
             .Include(r => r.User)
-            .FirstOrDefaultAsync(r => r.Id ==id);
+            .FirstOrDefaultAsync(r => r.Id == id);
         if (rating == null)
         {
             return ErrorMessages.RatingNotFound(id);
         }
+
         var book = await _context.Books.FirstOrDefaultAsync(b => b.Name == rating.Book.Name
                                                                  || b.Id == rating.Book.Id);
         if (book == null)
         {
             return ErrorMessages.BookNotFound(rating.Book.Id, rating.Book.Name);
         }
+
         rating.Value = ratingUpdate.Value;
         UpdateOverallRatingValue(book, ratingUpdate.Value);
 
@@ -142,7 +146,8 @@ public class RatingService : IRatingService
         {
             rating.Comment = ratingUpdate.Comment;
         }
-        
+
+        _memoryCache.Remove($"BookById_{book.Id}");
         await _context.SaveChangesAsync();
         return EntityMapper.MapRatingToRatingDetail(rating);
     }
@@ -155,24 +160,29 @@ public class RatingService : IRatingService
             return ErrorMessages.RatingNotFound(id);
         }
 
+        _memoryCache.Remove($"BookById_{rating.BookId}");
         _context.Ratings.Remove(rating);
         await _context.SaveChangesAsync();
         return true;
     }
-    
+
     public async Task<RatingDetail?> ExistRatingForUser(int userId, int bookId)
     {
         var ratings = await GetRatingsAsync(userId, null, bookId, null);
         return ratings.FirstOrDefault();
     }
 
-    private void UpdateOverallRatingValue(Book book, int ratingValue)
+    private void UpdateOverallRatingValue(Book book, int value)
     {
-        var bookRatings = _context.Ratings
-            .Where(r => r.Book.Id == book.Id).ToList();
-        if (!bookRatings.IsNullOrEmpty())
+        _memoryCache.Remove($"BookById_{book.Id}");
+        var ratings = _context.Ratings.Where(r => r.BookId == book.Id).ToList();
+        if (!ratings.IsNullOrEmpty())
         {
-            book.OverallRating = (bookRatings.Sum(r => r.Value) + ratingValue) / bookRatings.Count;    
+            book.OverallRating = (ratings.Sum(r => r.Value) + value) / (ratings.Count + 1);
+        }
+        else
+        {
+            book.OverallRating = value;
         }
     }
 }
