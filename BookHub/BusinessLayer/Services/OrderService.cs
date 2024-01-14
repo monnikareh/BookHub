@@ -256,7 +256,8 @@ namespace BusinessLayer.Services
                     Order = order,
                     BookId = book.Id,
                     Book = book,
-                    Count = 1
+                    Count = 1,
+                    BuyUnitPrice = book.Price
                 });
             }
 
@@ -321,9 +322,21 @@ namespace BusinessLayer.Services
 
         private void FixPrices()
         {
-            foreach (var order in _context.Orders.Include(order => order.Books))
+            var orders = _context.Orders
+                .Include(order => order.Books)
+                .Include(order => order.BookOrders).ToList();
+            
+            foreach (var order in orders)
             {
                 order.TotalPrice = order.BookOrders.Sum(bk => bk.Book.Price * bk.Count);
+            }
+            
+            foreach (var order in orders)
+            {
+                foreach (var bookOrder in order.BookOrders)
+                {
+                    bookOrder.BuyUnitPrice = _context.Books.FirstOrDefault(b => b.Id == bookOrder.BookId)!.Price;
+                }
             }
 
             _context.SaveChanges();

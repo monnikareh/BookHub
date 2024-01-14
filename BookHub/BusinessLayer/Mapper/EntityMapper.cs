@@ -20,7 +20,8 @@ public static class EntityMapper
         return new OrderItem
         {
             BookId = bookOrder.BookId,
-            Count = bookOrder.Count
+            Count = bookOrder.Count,
+            BuyUnitPrice = bookOrder.BuyUnitPrice
         };
     }
     

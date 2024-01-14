@@ -32,9 +32,9 @@
         <tr>
             <th>Book</th>
             <th>Amount</th>
+            <th>Unit price</th>
+            <th>Sum</th>
             <th>Actions</th>
-            @* <th>Unit price</th> *@
-            @* <th>Total price per item</th> *@
         </tr>
         </thead>
         <tbody>
@@ -48,6 +48,8 @@
                     </p>
                 </td>
                 <td>@orderItem?.Count</td>
+                <td>@orderItem?.BuyUnitPrice</td>
+                <td>@(orderItem?.BuyUnitPrice * orderItem?.Count)</td>
                 <td>@Html.ActionLink("Delete", "DeleteItem", new { bookId = book.Id }, new { @class = "btn btn-sm btn-danger" })</td>
             </tr>
         }
