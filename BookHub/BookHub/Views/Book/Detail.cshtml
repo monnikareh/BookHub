@@ -230,8 +230,11 @@
                     type: 'GET',
                     success: function (result) {
                         if (result.ratingExists) {
-                            alert('Rating already exists.');
-                            window.location.href = result.editUrl;
+                            if (confirm('Rating already exists. Do you wish to edit it?')) {
+                                window.location.href = result.editUrl;
+                            } else {
+                                $('#addRatingModal').modal('hide');
+                            }
                         } else {
                             $('#addRatingModal').modal('show');
                         }
