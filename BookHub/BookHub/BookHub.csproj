@@ -71,4 +71,9 @@
       <AdditionalFiles Include="Views\_ViewImports.cshtml" />
       <AdditionalFiles Include="Views\_ViewStart.cshtml" />
     </ItemGroup>
+    
+
+    <ItemGroup>
+      <Folder Include="Images\" />
+    </ItemGroup>
 </Project>

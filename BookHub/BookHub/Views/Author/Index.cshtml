@@ -8,10 +8,14 @@
 }
 
 <h1>Authors</h1>
-<form asp-action="Search" asp-controller="Author" method="get">
-    <input type="text" name="query" placeholder="Search..."/>
-    <button type="submit">Search</button>
-</form>
+<form asp-action="Search" asp-controller="Home" method="get" class="mt-4">
+    <div class="input-group mx-left" style="max-width: 300px;">
+        <input type="text" name="query" class="form-control" placeholder="Search..." />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    </form>
 <p>
 </p>
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
