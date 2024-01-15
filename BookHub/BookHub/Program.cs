@@ -1,4 +1,3 @@
-using BusinessLayer.Facades;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -45,7 +44,6 @@ builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
 builder.Services.AddTransient<IPublisherService, PublisherService>();
-builder.Services.AddTransient<BookFacade>();
 
 var app = builder.Build();
 

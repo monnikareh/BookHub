@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using BusinessLayer.Facades;
 using BusinessLayer.Mapper;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
@@ -16,29 +15,27 @@ public class BookController : BaseController
     private readonly IBookService _bookService;
     private readonly IRatingService _ratingService;
     private readonly IUserService _userService;
-    private readonly BookFacade _bookFacade;
 
     public BookController(ILogger<BookController> logger, IBookService bookService, IRatingService ratingService,
-        IUserService userService, BookFacade bookFacade)
+        IUserService userService)
     {
         _logger = logger;
         _bookService = bookService;
         _ratingService = ratingService;
         _userService = userService;
-        _bookFacade = bookFacade;
     }
     [HttpGet("{page:int}")]
     public async Task<IActionResult> Index(int? page)
     {
         var paginationSetting = new PaginationSettings(10, page ?? 1);
-        var books = await _bookFacade.GetSearchBooks(paginationSetting, null);
+        var books = await _bookService.GetSearchBooksAsync(paginationSetting, null);
         return View(books);
     }
     [HttpGet("{page:int}")]
     public async Task<IActionResult> Search(string query, int? page)
     {
         var paginationSetting = new PaginationSettings(10, page ?? 1);
-        var books = await _bookFacade.GetSearchBooks(paginationSetting, query);
+        var books = await _bookService.GetSearchBooksAsync(paginationSetting, query);
         return View("Index", books);
     }
 
@@ -59,7 +56,7 @@ public class BookController : BaseController
             return View(model);
         }
 
-        var book = await _bookFacade.AddNewBook(model);
+        var book = await _bookService.CreateBookAsync(model);
         if (book.IsOk)
         {
             return RedirectToAction("Index");
@@ -151,12 +148,6 @@ public class BookController : BaseController
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int userId);
 
-        /*
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Account");
-        } */
-
         var user = await _userService.GetUserByIdAsync(userId);
         if (!user.IsOk)
         {
@@ -182,12 +173,6 @@ public class BookController : BaseController
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int userId);
-
-        /*
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Account");
-        } */
 
         var user = (await _userService.GetUserByIdAsync(userId));
         var book = (await _bookService.GetBookByIdAsync(id));
@@ -227,12 +212,6 @@ public class BookController : BaseController
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int userId);
-
-        /*
-        if (userId == null)
-        {
-            return RedirectToAction("Login", "Account");
-        } */
 
         var user = (await _userService.GetUserByIdAsync(userId));
         var book = (await _bookService.GetBookByIdAsync(id));
