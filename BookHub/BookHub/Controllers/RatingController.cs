@@ -13,16 +13,11 @@ public class RatingController : BaseController
 {
     private readonly ILogger<RatingController> _logger;
     private readonly IRatingService _ratingService;
-    private readonly IUserService _userService;
-    private readonly IBookService _bookService;
 
-    public RatingController(ILogger<RatingController> logger, IRatingService ratingService, IUserService userService,
-        IBookService bookService)
+    public RatingController(ILogger<RatingController> logger, IRatingService ratingService)
     {
         _logger = logger;
         _ratingService = ratingService;
-        _userService = userService;
-        _bookService = bookService;
     }
     
     public async Task<IActionResult> Index()
