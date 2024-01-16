@@ -20,3 +20,27 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.detail-link-underline:link {
+  position: relative;
+  text-decoration: none;
+  background-color: transparent;
+  color: black;
+}
+
+.detail-link-underline:visited {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.detail-link-underline:hover {
+  color: red;
+  background-color: transparent;
+  text-decoration: underline;
+}
+.detail-link-underline:active {
+  color: yellow;
+  background-color: transparent;
+  text-decoration: underline;
+}

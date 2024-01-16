@@ -36,9 +36,11 @@
     @foreach (var item in Model.Books)
     {
         <tr>
-            <td>@Html.DisplayFor(i => item.Name)</td>
             <td>
-                @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Book" })
+            @Html.ActionLink(item.Name, "Detail", new { id = item.Id }, new { @class = "detail-link-underline"})
+            </td>
+            <td>
+                @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Book", ShowDetail = false})
             </td>
         </tr>
     }
