@@ -37,7 +37,9 @@
         {
             <tr>
                 <td>@Html.DisplayFor(i => item.Id)</td>
-                <td>@Html.DisplayFor(i => item.Book.Name)</td>
+                <td>
+                @Html.ActionLink(item.Book.Name, "Detail", new { id = item.Id }, new { @class = "detail-link-underline"})
+                </td>
                 <td>@Html.DisplayFor(i => item.Value)</td>
                 <td>
                     @if (!item.Comment.IsNullOrEmpty())
@@ -58,7 +60,7 @@
                     }
                 </td>
                 <td>
-                    @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Rating" })
+                    @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Rating", ShowDetail = false})
                 </td>
             </tr>
         }
