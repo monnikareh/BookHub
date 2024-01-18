@@ -2,6 +2,8 @@
 @inject SignInManager<User> SignInManager
 @model BookHub.Models.TableButton
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="btn-group" role="group" aria-label="Book Actions">
     @if (Model.ShowDetail)
     {
@@ -9,9 +11,11 @@
     }
     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
     {
-        <div style="margin-left: 10px">@Html.ActionLink("Edit", "Edit", Model.ControllerName, new { id = Model.Id }, new { @class = "btn btn-sm btn-warning" })</div>
+        <div>
+            <a href="@Url.Action("Edit", Model.ControllerName, new { id = Model.Id })" class="fa fa-edit" style="text-decoration: none; font-size: 40px;"></a>
+        </div>
         <div style="margin-left: 10px">
-            @Html.ActionLink("Delete", "Delete", Model.ControllerName, new { id = Model.Id }, new { @class = "btn btn-sm btn-danger" })
+            <a href="@Url.Action("Delete", Model.ControllerName, new { id = Model.Id })" class="fa fa-trash" style="text-decoration: none; font-size: 36px;"></a>
         </div>
         @* <a href="@Url.Action("Delete", "Book", new {id = item.Id})" class="material-icons" style="color: red">delete</a> *@
     }

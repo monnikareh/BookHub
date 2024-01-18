@@ -29,8 +29,8 @@
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
+            @Html.DisplayNameFor(model => model.Name)</th>
+            <th>Actions</th>
         <th></th>
     </tr>
     </thead>
@@ -43,7 +43,6 @@
             </td>
             <td>
                 @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Publisher", ShowDetail = false})
-
             </td>
         </tr>
     }
