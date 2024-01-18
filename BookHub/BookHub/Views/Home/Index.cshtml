@@ -20,21 +20,22 @@
             @foreach (var book in Model.Book)
             {
                 <div class="col-md-4 mb-3">
-                    <div class="card">
-                       <!-- <img src="@Model.ImageUrl" class="card-img-top" alt="Book Image" >-->
-                        <div class="card-body">
-                            <h5 class="card-title">@book.Name</h5>
-                            @foreach (var author in book.Authors)
-                            {
-                                <p class="card-text">@author.Name</p>
-                            }
-                            <a href="@Url.Action("Detail", "Book", new { id = book.Id })" class="btn btn-primary">View Details</a>
+                    <a href="@Url.Action("Detail", "Book", new { id = book.Id })" class="card-link">
+                        <div class="card" style="border: 2px solid #ddd; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                            <div class="card-body">
+                                <h5 class="card-title">@book.Name</h5>
+                                @foreach (var author in book.Authors)
+                                {
+                                    <p class="card-text">@author.Name</p>
+                                }
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             }
         </div>
     </div>
+
 
     <p>
     </p>

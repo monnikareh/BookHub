@@ -31,7 +31,7 @@ public class HomeController : BaseController
             null, null, null, null);
 
         var bookDetails = featuredBooks.ToList();
-        var firstFiveFeaturedBooks = bookDetails.Take(6).ToList();
+        var firstFiveFeaturedBooks = bookDetails.Take(9).ToList();
 
         var model = new FeaturedBookModel
         {
