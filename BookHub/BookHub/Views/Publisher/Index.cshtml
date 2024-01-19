@@ -12,7 +12,7 @@
     <div class="input-group mx-left" style="max-width: 300px;">
         <input type="text" name="query" class="form-control" placeholder="Search..." />
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn">Search</button>
         </div>
     </div>
     </form>
@@ -21,7 +21,7 @@
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <p>
-        @Html.ActionLink("Create Publisher", "Create", new { }, new { @class = "btn btn-sm btn-success" })
+        @Html.ActionLink("Create Publisher", "Create", new { }, new { @class = "btn" })
     </p>
 }
 
