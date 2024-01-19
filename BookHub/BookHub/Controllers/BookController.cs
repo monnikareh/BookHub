@@ -114,14 +114,14 @@ public class BookController : BaseController
         }
 
         await _bookService.UpdateBookAsync(id, model);
-        return RedirectToAction("Index");
+        return RedirectToAction("Search", "Book", new { id = 1 });
     }
 
     [Authorize(Roles = "Admin")]
     public async Task<ActionResult> Delete(int id)
     {
         await _bookService.DeleteBookAsync(id);
-        return RedirectToAction("Index");
+        return RedirectToAction("Search", "Book", new { id = 1 });
     }
 
     [AllowAnonymous]
