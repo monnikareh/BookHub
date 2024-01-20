@@ -17,7 +17,7 @@
             <a href="@Url.Action("Edit", Model.ControllerName, new { id = Model.Id })" class="fa fa-edit" style="text-decoration: none; font-size: 40px; color: #1a1e21;"></a>
         </div>
         <div style="margin-left: 10px">
-            <a href="#" class="fa fa-trash" style="text-decoration: none; font-size: 36px; color: #1a1e21;" onclick="showConfirmDeleteModal()"></a>
+        <a href="#" class="fa fa-trash" style="text-decoration: none; font-size: 36px; color: #1a1e21;" onclick="showConfirmDeleteModal('@Model.Id')"></a>
         </div>
 
         <div class="modal" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
@@ -43,10 +43,12 @@
 </div>
 
 <script>
-function redirectToSearch() {
-        window.location.href = "@Url.Action("Search", Model.ControllerName, new { id = Model.Id })";
-    }
-    function showConfirmDeleteModal() {
-        $('#confirmDeleteModal').modal('show');
-    }
+        function redirectToSearch(id) {
+            window.location.href = "@Url.Action("Search", Model.ControllerName)" + "?id=" + id;
+        }
+
+        function showConfirmDeleteModal(id) {
+            $('#deleteButton').attr('href', "@Url.Action("Delete", Model.ControllerName)" + "?id=" + id);
+            $('#confirmDeleteModal').modal('show');
+        }
 </script>
