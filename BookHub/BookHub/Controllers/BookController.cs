@@ -110,6 +110,10 @@ public class BookController : BaseController
     {
         if (!ModelState.IsValid)
         {
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"Error: {error.ErrorMessage}");
+            }
             return View(model);
         }
 
