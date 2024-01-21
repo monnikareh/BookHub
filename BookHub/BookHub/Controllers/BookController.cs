@@ -145,9 +145,10 @@ public class BookController : BaseController
     [HttpPost("{id:int}")]
     public async Task<IActionResult> AddToWishlist(int id)
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        int.TryParse(userIdClaim, out int userId);
-
+        if (!TryGetUserId(out var userId))
+        {
+            return ErrorView((Error.UserNotFound, "User not logged in"));
+        }
         var user = await _userService.GetUserByIdAsync(userId);
         if (!user.IsOk)
         {
@@ -175,8 +176,6 @@ public class BookController : BaseController
         {
             return ErrorView((Error.UserNotFound, "User not logged in"));
         }
-       
-
         var user = (await _userService.GetUserByIdAsync(userId));
         var book = (await _bookService.GetBookByIdAsync(id));
         if (!user.IsOk)
