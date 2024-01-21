@@ -208,12 +208,11 @@ namespace BusinessLayer.Services
         public async Task<Result<bool, (Error err, string message)>> AppendBookToOrder(int userId, int bookId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
             if (user == null)
             {
                 return ErrorMessages.UserNotFound(userId);
             }
-
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
             if (book == null)
             {
                 return ErrorMessages.BookNotFound(bookId);
