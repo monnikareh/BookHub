@@ -25,7 +25,7 @@ public class BookController : BaseController
         _userService = userService;
     }
     [HttpGet("{page:int}")]
-    public async Task<IActionResult> Index(int? page)
+    public async Task<IActionResult> Index(int? page = 1)
     {
         var paginationSetting = new PaginationSettings(10, page ?? 1);
         var books = await _bookService.GetSearchBooksAsync(paginationSetting, null);
@@ -171,8 +171,11 @@ public class BookController : BaseController
     [HttpPost("{id:int}")]
     public async Task<IActionResult> AddRating(int id, int value, string? comment)
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        int.TryParse(userIdClaim, out int userId);
+        if (!TryGetUserId(out var userId))
+        {
+            return ErrorView((Error.UserNotFound, "User not logged in"));
+        }
+       
 
         var user = (await _userService.GetUserByIdAsync(userId));
         var book = (await _bookService.GetBookByIdAsync(id));
