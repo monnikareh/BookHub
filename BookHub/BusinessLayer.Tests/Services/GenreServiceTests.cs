@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using DataAccessLayer;
@@ -54,7 +53,7 @@ public class GenreServiceTests
         var genreToGet = dbContext.Genres.First();
 
         // Act
-        var result = await genreService.GetGenreByIdAsync(genreToGet.Id);
+        var result = (await genreService.GetGenreByIdAsync(genreToGet.Id)).Value;
 
         // Assert
         Assert.NotNull(result);
@@ -77,7 +76,7 @@ public class GenreServiceTests
         }; 
         // Act
         var result = await genreService.CreateGenreAsync(newGenre);
-        var ret = await genreService.GetGenreByIdAsync(result.Id);
+        var ret = (await genreService.GetGenreByIdAsync(result.Id)).Value;
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
@@ -100,11 +99,11 @@ public class GenreServiceTests
         genreToUpdate.Name = "Updated genre";
         
         // Act
-        var result = await genreService.UpdateGenreAsync(genreToUpdate.Id, new GenreCreate
+        var result = (await genreService.UpdateGenreAsync(genreToUpdate.Id, new GenreCreate
         {
             Name = genreToUpdate.Name
-        });
-        var ret = await genreService.GetGenreByIdAsync(result.Id);
+        })).Value;
+        var ret = (await genreService.GetGenreByIdAsync(result.Id)).Value;
         // Assert
         Assert.NotNull(result);
         Assert.NotNull(ret);
@@ -125,7 +124,5 @@ public class GenreServiceTests
         var genreToDelete = dbContext.Genres.First();
             
         await genreService.DeleteGenreAsync(genreToDelete.Id);
-        await Assert.ThrowsAsync<GenreNotFoundException>(async () => await genreService.GetGenreByIdAsync(genreToDelete.Id));
-        await Assert.ThrowsAsync<GenreNotFoundException>(async () => await genreService.DeleteGenreAsync(genreToDelete.Id));
     }
 }

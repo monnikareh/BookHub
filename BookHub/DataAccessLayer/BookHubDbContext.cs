@@ -14,7 +14,9 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<Order> Orders { get; set; }
     public DbSet<Publisher> Publishers { get; set; }
     public DbSet<Rating> Ratings { get; set; }
+    public DbSet<BookOrder> BookOrders { get; set; }
     public DbSet<User> Users { get; set; }
+
 
     public BookHubDbContext(DbContextOptions options) : base(options)
     {
@@ -36,6 +38,16 @@ public class BookHubDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     // https://docs.microsoft.com/en-us/ef/core/modeling/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Book>()
+            .HasOne(book => book.PrimaryGenre)
+            .WithMany(genre => genre.PrimaryGenreBooks)
+            .HasForeignKey(book => book.PrimaryGenreId);
+
+        modelBuilder.Entity<Order>()
+            .HasMany(o => o.Books)
+            .WithMany(b => b.Orders)
+            .UsingEntity<BookOrder>();
+
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;

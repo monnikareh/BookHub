@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using System.Security.Claims
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
@@ -23,7 +25,13 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>
     }
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Cart">Cart</a>
+        </li>
+    }
     <li class="nav-item">
-        <a class="nav-link text-dark" href="/api/swagger/index.html">Swagger</a>
+        <a class="nav-link text-dark" href="/api/swagger/index.html">API</a>
     </li>
 </ul>

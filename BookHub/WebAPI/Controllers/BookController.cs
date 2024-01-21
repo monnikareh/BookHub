@@ -1,4 +1,3 @@
-using BusinessLayer.Exceptions;
 using BusinessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +39,11 @@ namespace WebAPI.Controllers
         {
             try
             {
-                return Ok(await _bookService.GetBookByIdAsync(id));
+                var book = await _bookService.GetBookByIdAsync(id);
+                return book.Match<ActionResult<BookDetail>>(
+                    b => Ok(b),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -59,7 +62,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _bookService.CreateBookAsync(bookCreate));
+                var book = await _bookService.CreateBookAsync(bookCreate);
+                return book.Match<ActionResult<BookDetail>>(
+                    b => Ok(b),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -68,7 +75,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBook(int id, BookDetail bookDetail)
+        public async Task<ActionResult<BookDetail>> UpdateBook(int id, BookCreate bookUpdate)
         {
             if (!ModelState.IsValid)
             {
@@ -77,7 +84,11 @@ namespace WebAPI.Controllers
 
             try
             {
-                return Ok(await _bookService.UpdateBookAsync(id, bookDetail));
+                var book = await _bookService.UpdateBookAsync(id, bookUpdate);
+                return book.Match<ActionResult<BookDetail>>(
+                    b => Ok(b),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -87,12 +98,15 @@ namespace WebAPI.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<ActionResult<BookDetail>> DeleteBook(int id)
         {
             try
             {
-                await _bookService.DeleteBookAsync(id);
-                return Ok();
+                var res = await _bookService.DeleteBookAsync(id);
+                return res.Match<ActionResult<BookDetail>>(
+                    b => Ok(b),
+                    e => NotFound(e)
+                );
             }
             catch (Exception e)
             {
@@ -102,10 +116,7 @@ namespace WebAPI.Controllers
 
         private ActionResult HandleBookException(Exception e)
         {
-            return e is PublisherNotFoundException or GenreNotFoundException or AuthorNotFoundException
-                or BookNotFoundException or AuthorsEmptyException
-                ? NotFound(e.Message)
-                : Problem("Unknown problem occured");
+            return Problem("Unknown problem occured");
         }
     }
 }

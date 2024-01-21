@@ -1,4 +1,3 @@
-using Azure.Core;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -159,6 +158,7 @@ public static class TestData
                 Id = 1,
                 Name = "To Kill a Mockingbird",
                 PublisherId = 1,
+                PrimaryGenreId = 1,
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
@@ -169,6 +169,7 @@ public static class TestData
                 Id = 2,
                 Name = "Harry Potter",
                 PublisherId = 2,
+                PrimaryGenreId = 2,
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
@@ -179,6 +180,7 @@ public static class TestData
                 Id = 3,
                 Name = "Narnia",
                 PublisherId = 3,
+                PrimaryGenreId = 3,
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
@@ -188,6 +190,7 @@ public static class TestData
                 Id = 4,
                 Name = "Pride and Prejudice",
                 PublisherId = 4,
+                PrimaryGenreId = 4,
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),
@@ -197,6 +200,7 @@ public static class TestData
                 Id = 5,
                 Name = "Eragon",
                 PublisherId = 5,
+                PrimaryGenreId = 5,
                 StockInStorage = random.Next(1, 50),
                 Price = (decimal)Math.Round(random.NextDouble() * (55 - 5) + 5, 2),
                 OverallRating = random.Next(30, 100),

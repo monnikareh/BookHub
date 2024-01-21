@@ -1,0 +1,47 @@
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using BookHub.Models
+@inject SignInManager<User> SignInManager
+@model System.Collections.Generic.IEnumerable<BusinessLayer.Models.PublisherDetail>
+@{
+    ViewData["Title"] = "Publishers";
+}
+
+<h1>Publishers</h1>
+<form asp-action="Search" asp-controller="Publisher" method="get">
+    <input type="text" name="query" placeholder="Search..."/>
+    <button type="submit">Search</button>
+</form>
+<p>
+</p>
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create Publisher", "Create", new { }, new { @class = "btn btn-sm btn-success" })
+    </p>
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Publisher" })
+
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

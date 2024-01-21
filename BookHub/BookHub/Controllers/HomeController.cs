@@ -1,16 +1,27 @@
-﻿using System.Diagnostics;
-using BookHub.Models;
+﻿using BusinessLayer.Models;
+using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IAuthorService _authorService;
+    private readonly IBookService _bookService;
+    private readonly IGenreService _genreService;
+    private readonly IPublisherService _publisherService;
+    private readonly IRatingService _ratingService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IAuthorService authorService, IBookService bookService,
+        IGenreService genreService, IPublisherService publisherService, IRatingService ratingService)
     {
         _logger = logger;
+        _authorService = authorService;
+        _bookService = bookService;
+        _genreService = genreService;
+        _publisherService = publisherService;
+        _ratingService = ratingService;
     }
 
     public IActionResult Index()
@@ -18,14 +29,13 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult Privacy()
+    public async Task<IActionResult> Search(string? query)
     {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var authors = await _authorService.GetSearchAuthorsAsync(query);
+        var books = await _bookService.GetSearchBooksAsync(null, query);
+        var genres = await _genreService.GetSearchGenresAsync(query);
+        var publishers = await _publisherService.GetSearchPublishersAsync(query);
+        var ratings = await _ratingService.GetSearchRatingsAsync(query);
+        return View(new SearchType(authors, books, genres, publishers, ratings));
     }
 }

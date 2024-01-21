@@ -1,10 +1,10 @@
+using BusinessLayer.Facades;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Middleware;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -14,18 +14,9 @@ var postgresConnectionString = configuration.GetConnectionString("PostgresConnec
                                throw new InvalidOperationException(
                                    "Connection string 'PostgresConnectionString' not found.");
 
-var mariadbConnectionString = configuration.GetConnectionString("MariaDBConnectionString") ??
-                              throw new InvalidOperationException(
-                                  "Connection string 'MariaDBConnectionString' not found.");
-
-// builder.Services.AddDbContext<BookHubDbContext>(options =>
-//     options.UseNpgsql(postgresConnectionString,
-//         x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
-
-builder.Services.AddDbContext<BookHubDbContext>(
-    options => options
-        .UseMySql(mariadbConnectionString, ServerVersion.Create(new Version(10, 5, 4), ServerType.MariaDb),
-            x => x.MigrationsAssembly("DAL.MariaDB.Migrations")));
+builder.Services.AddDbContext<BookHubDbContext>(options =>
+    options.UseNpgsql(postgresConnectionString,
+        x => x.MigrationsAssembly("DAL.Postgres.Migrations")));
 
 builder.Services.AddLogging();
 
@@ -54,6 +45,7 @@ builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
 builder.Services.AddTransient<IPublisherService, PublisherService>();
+builder.Services.AddTransient<BookFacade>();
 
 var app = builder.Build();
 
@@ -63,14 +55,11 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-
-// WE WANT SWAGGER IN PRODUCTION AS WELL
-app.UseMiddleware<RequestLoggerMiddleware>();
+app.UseMiddleware<RequestLoggerMiddleware>("BookHubWeb");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
