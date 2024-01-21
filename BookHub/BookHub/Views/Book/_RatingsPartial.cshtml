@@ -6,11 +6,11 @@
     {
         <div class="border-bottom mb-2">
             <p>@review.User.Name </p>
-            <p>Rating: @review.Value</p>
+            <p><strong>Rating: </strong>@review.Value</p>
             
             @if (review.Comment != null)
             {
-                <p>Comment: @review.Comment</p>
+                <p><strong>Comment: </strong>@review.Comment</p>
             }
             
         </div>
