@@ -25,7 +25,7 @@ public class OrderController : BaseController
     [Authorize]
     public async Task<IActionResult> AppendItem(int bookId)
     {
-        var ret = TryParseId(out var userId);
+        var ret = TryGetUserId(out var userId);
         if (!ret) return RedirectToPage("/Account/Login", new { area = "Identity" });
         var res = await _orderService.AppendBookToOrder(userId, bookId);
         return res.Match(_ => RedirectToAction("Detail", "Book", new { id = bookId }),
@@ -49,7 +49,7 @@ public class OrderController : BaseController
         return order.Match(
             o =>
             {
-                var ret = TryParseId(out var userId);
+                var ret = TryGetUserId(out var userId);
                 if (ret && o.User.Id == userId) return View(o);
                 return RedirectToPage("/Account/Manage/Order", new { area = "Identity" });
             },
@@ -61,7 +61,7 @@ public class OrderController : BaseController
     [HttpGet]
     public async Task<IActionResult> Cart()
     {
-        var ret = TryParseId(out var userId);
+        var ret = TryGetUserId(out var userId);
         if (!ret)
         {
             return View("ErrorView", new ErrorViewModel { Message = "User not found" });
@@ -78,7 +78,7 @@ public class OrderController : BaseController
     [HttpGet]
     public async Task<IActionResult> DeleteItem(int bookId)
     {
-        var ret = TryParseId(out var userId);
+        var ret = TryGetUserId(out var userId);
         if (!ret)
         {
             return View("ErrorView", new ErrorViewModel { Message = "User not found" });

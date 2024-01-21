@@ -22,7 +22,7 @@ public class RatingController : BaseController
     
     public async Task<IActionResult> Index()
     {
-        var ret = TryParseId(out var userId);
+        var ret = TryGetUserId(out var userId);
         if (!ret)
         {
             return ErrorView((Error.UserNotFound, "User not logged in"));
@@ -34,7 +34,7 @@ public class RatingController : BaseController
     public async Task<IActionResult> Search(string query)
     {
         var ratings = await _ratingService.GetSearchRatingsAsync(query);
-        var ret = TryParseId(out var userId);
+        var ret = TryGetUserId(out var userId);
         return ret ? View("Index", ratings.Where(r => r.User.Id == userId)) : ErrorView((Error.UserNotFound, "User not logged in"));
     }
 
