@@ -7,20 +7,18 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <div class="btn-group" role="group" aria-label="Book Actions">
-    @if (Model.ShowDetail)
-    {
-        <div>@Html.ActionLink("Detail", "Detail", @Model.ControllerName, new { id = Model.Id }, new { @class = "btn btn-sm btn-primary" })</div>
-    }
     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
     {
-        <div>
+        <div style="margin-left: 10px">
             <a href="@Url.Action("Edit", Model.ControllerName, new { id = Model.Id })" class="fa fa-edit" style="text-decoration: none; font-size: 40px; color: #1a1e21;"></a>
         </div>
         <div style="margin-left: 10px">
-        <a href="#" class="fa fa-trash" style="text-decoration: none; font-size: 36px; color: #1a1e21;" onclick="showConfirmDeleteModal('@Model.Id')"></a>
+            <a href="#" class="fa fa-trash" style="text-decoration: none; font-size: 36px; color: #1a1e21;" onclick="showConfirmDeleteModal('@Model.Id')"></a>
         </div>
+    }
+</div>
 
-        <div class="modal" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+<div class="modal" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -39,8 +37,6 @@
                 </div>
             </div>
         </div>
-    }
-</div>
 
 <script>
         function redirectToSearch(id) {
