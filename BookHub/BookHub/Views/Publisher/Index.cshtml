@@ -30,7 +30,10 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)</th>
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
             <th>Actions</th>
+        }
         <th></th>
     </tr>
     </thead>
