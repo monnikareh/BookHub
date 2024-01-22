@@ -71,4 +71,9 @@
       <AdditionalFiles Include="Views\_ViewImports.cshtml" />
       <AdditionalFiles Include="Views\_ViewStart.cshtml" />
     </ItemGroup>
+    
+
+    <ItemGroup>
+      <None Include="wwwroot\images\BOOKHUB LOGO.png" />
+    </ItemGroup>
 </Project>

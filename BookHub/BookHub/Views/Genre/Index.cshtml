@@ -8,16 +8,20 @@
 }
 
 <h1>Genres</h1>
-<form asp-action="Search" asp-controller="Genre" method="get">
-    <input type="text" name="query" placeholder="Search..."/>
-    <button type="submit">Search</button>
+<form asp-action="Search" asp-controller="Genre" method="get" class="mt-4">
+    <div class="input-group mx-left" style="max-width: 300px;">
+        <input type="text" name="query" class="form-control" placeholder="Search..."/>
+        <div class="input-group-append">
+            <button type="submit" class="btn">Search</button>
+        </div>
+    </div>
 </form>
 <p>
 </p>
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <p>
-        @Html.ActionLink("Create Genre", "Create", new { }, new { @class = "btn btn-sm btn-success" })
+        @Html.ActionLink("Create Genre", "Create", new { }, new { @class = "btn" })
     </p>
 }
 
@@ -25,16 +29,21 @@
     <thead>
     <tr>
         <th>@Html.DisplayNameFor(model => model.Name)</th>
-        <th>Actions</th>
+        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+        {
+            <th>Actions</th>
+        }
     </tr>
     </thead>
     <tbody>
     @foreach (var item in Model)
     {
         <tr>
-            <td>@Html.DisplayFor(i => item.Name)</td>
             <td>
-                @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Genre" })
+                @Html.ActionLink(item.Name, "Detail", new { id = item.Id }, new { @class = "detail-link-underline" })
+            </td>
+            <td>
+                @await Html.PartialAsync("TableButtons", new TableButton { Id = item.Id, ControllerName = "Genre", ShowDetail = false })
             </td>
         </tr>
     }

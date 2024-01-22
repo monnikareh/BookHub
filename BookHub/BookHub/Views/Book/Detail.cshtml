@@ -37,16 +37,19 @@
 <div class="col-6">
 
     <p>
-        Publisher: <a href="@Url.Action("Detail", "Publisher", new { id = Model.Publisher.Id })">@Model.Publisher.Name</a>
+        <strong>Publisher:</strong> @Html.ActionLink(Model.Publisher.Name, "Detail","Publisher", new { id = Model.Publisher.Id }, new { @class = "detail-link-underline"})
     </p>
-    <p>Primary Genre: @Model.PrimaryGenre.Name</p>
+    <p> <strong>Primary Genre:</strong> @Html.ActionLink(Model.PrimaryGenre.Name, "Detail","Genre", new { id = Model.PrimaryGenre.Id }, new { @class = "detail-link-underline"})
+    </p>
+
     <p>
-        Genres:
+        <strong>Genres:</strong>
         @if (Model.Genres.Any())
         {
             foreach (var genre in Model.Genres)
             {
-                <a href="@Url.Action("Detail", "Genre", new { id = genre.Id })">@genre.Name</a>
+                @Html.ActionLink(genre.Name, "Detail","Genre", new { id = genre.Id }, new { @class = "detail-link-underline"})
+
                 @if (!genre.Equals(Model.Genres.Last()))
                 {
                     <span>,</span>
@@ -55,13 +58,14 @@
         }
     </p>
     <p>
-        Authors:
+        <strong>Authors:</strong>
         @if (Model.Authors.Any())
         {
             foreach (var author in Model.Authors)
             {
                 {
-                    <a href="@Url.Action("Detail", "Author", new { id = author.Id })">@author.Name</a>
+                    @Html.ActionLink(author.Name, "Detail","Author", new { id = author.Id }, new { @class = "detail-link-underline"})
+
                     @if (!author.Equals(Model.Authors.Last()))
                     {
                         <span>,</span>
@@ -70,15 +74,15 @@
             }
         }
     </p>
-    <p>Stock: @Model.StockInStorage</p>
-    <p id="ratingContainer">Overall Rating: @Model.OverallRating %</p>
-    <p>Price: @Model.Price €</p>
+    <p><strong>Stock: </strong>@Model.StockInStorage</p>
+    <p id="ratingContainer"><strong>Overall Rating:</strong> @Model.OverallRating %</p>
+    <p><strong>Price: </strong>@Model.Price €</p>
 
 
     <div class="btn-group" role="group" aria-label="Book Actions">
         @if (Model.StockInStorage > 0)
         {
-            <div style="margin-right: 7px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn btn-sm btn-success" })</div>
+            <div style="margin-right: 7px">@Html.ActionLink("Buy", "AppendItem", "Order", new { bookId = Model.Id }, new { @class = "btn" })</div>
         }
         else
         {
@@ -88,7 +92,7 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <form method="post" action="@Url.Action("AddToWishlist", "Book", new { id = Model.Id })">
-                    <button type="submit" class="btn btn-sm btn-info">Add to Wishlist</button>
+                    <button type="submit" class="btn">Add to Wishlist</button>
                 </form>
             }
             @if (TempData.ContainsKey("WishlistMessage"))
@@ -101,12 +105,12 @@
     </div>
 
     <h3>
-        <button id="showReviewsBtn" class="btn btn-sm btn-primary">
+        <button id="showReviewsBtn" class="btn">
             Show Ratings
         </button>
         @if (SignInManager.IsSignedIn(User))
         {
-            <button id="addRatingBtn" class="btn btn-sm btn-success">
+            <button id="addRatingBtn" class="btn">
                 Add Rating
             </button>
         }
@@ -132,7 +136,7 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -156,7 +160,7 @@
                         <label for="comment">Comment:</label>
                         <input type="text" id="comment" name="comment" class="form-control" placeholder="Optional comment">
                     </div>
-                    <button type="submit" class="btn btn-success">Submit Rating</button>
+                    <button type="submit" class="btn">Submit Rating</button>
                 </form>
             </div>
             <div class="modal-footer">
@@ -230,8 +234,11 @@
                     type: 'GET',
                     success: function (result) {
                         if (result.ratingExists) {
-                            alert('Rating already exists.');
-                            window.location.href = result.editUrl;
+                            if (confirm('Rating already exists. Do you wish to edit it?')) {
+                                window.location.href = result.editUrl;
+                            } else {
+                                $('#addRatingModal').modal('hide');
+                            }
                         } else {
                             $('#addRatingModal').modal('show');
                         }

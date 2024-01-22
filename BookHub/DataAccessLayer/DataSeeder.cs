@@ -551,10 +551,10 @@ public static class DataSeeder
 
     private static IEnumerable<Order> PrepareOrders()
     {
-        var paymentStatuses = new List<PaymentStatus>
+        var orderStatuses = new List<OrderStatus>
         {
-            PaymentStatus.Unpaid, PaymentStatus.Paid, PaymentStatus.AwaitingShipment, PaymentStatus.Shipped,
-            PaymentStatus.Delivered
+            OrderStatus.Unpaid, OrderStatus.Paid, OrderStatus.AwaitingShipment, OrderStatus.Shipped,
+            OrderStatus.Delivered
         };
         var random = new Random();
         var orders = new List<Order>();
@@ -566,7 +566,7 @@ public static class DataSeeder
                 Id = i,
                 UserId = i / 10 + 1,
                 TotalPrice = randomPrice,
-                PaymentStatus = paymentStatuses[random.Next(1, 5)]
+                OrderStatus = orderStatuses[random.Next(1, 5)]
             });
         }
 

@@ -32,7 +32,7 @@ public static class ErrorMessages
     
     
     public static (Error err, string message) OrderNotFound(int id) => (Error.OrderNotFound, $"Order with 'ID={id}' could not be found");
-    public static (Error err, string message) OrderNotFound(int userId, PaymentStatus paymentStatus) => (Error.OrderNotFound, $"Order for User 'ID={userId}' with PaymentStatus: {paymentStatus.ToString()} could not be found");
+    public static (Error err, string message) OrderNotFound(int userId, OrderStatus orderStatus) => (Error.OrderNotFound, $"Order for User 'ID={userId}' with OrderStatus: {orderStatus.ToString()} could not be found");
     public static (Error err, string message) OrderItemNotFound(int userId, int bookId) => (Error.OrderItemNotFound, $"Order Item for User 'ID={userId}' that contains Book 'ID={bookId}' could not be found");
     
     public static (Error err, string message) RatingNotFound(int id) => (Error.RatingNotFound, $"Rating with 'ID={id}' could not be found");

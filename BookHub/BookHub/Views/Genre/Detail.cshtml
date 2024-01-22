@@ -26,7 +26,7 @@
         {
             {
                 <div class="border-bottom mb-2">
-                    <a href="@Url.Action("Detail", "Book", new {id = book.Id})"><p>@book.Name</p></a>
+                    @Html.ActionLink(book.Name, "Detail","Book", new { id = book.Id }, new { @class = "detail-link-underline"})
                 </div>
             }
         }

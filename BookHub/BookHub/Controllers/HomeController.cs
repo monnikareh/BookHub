@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Models;
+﻿using BookHub.Models;
+using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,9 +25,21 @@ public class HomeController : BaseController
         _ratingService = ratingService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var featuredBooks = await _bookService.GetBooksAsync(null, null, null,
+            null, null, null, null);
+
+        var bookDetails = featuredBooks.ToList();
+        var firstFiveFeaturedBooks = bookDetails.Take(9).ToList();
+
+        var model = new FeaturedBookModel
+        {
+            Book = firstFiveFeaturedBooks,
+            ImageUrl = "BookHub/BookHub/Images/Snímka obrazovky 2024-01-15 235623.png"
+        };
+
+        return View(model);
     }
 
     public async Task<IActionResult> Search(string? query)

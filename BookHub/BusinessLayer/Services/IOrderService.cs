@@ -8,7 +8,7 @@ public interface IOrderService
 {
     Task<IEnumerable<OrderDetail>> GetOrdersAsync(int? userId, string? username,
         DateTime? startDate, DateTime? endDate, decimal? totalPrice, int? bookId, string? bookName,
-        PaymentStatus? paymentStatus);
+        OrderStatus? orderStatus);
 
     Task<Result<OrderDetail, (Error err, string message)>> GetOrderByIdAsync(int id);
     Task<Result<OrderDetail, (Error err, string message)>> CreateOrderAsync(OrderCreate orderCreate);

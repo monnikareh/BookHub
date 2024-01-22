@@ -20,7 +20,8 @@ public static class EntityMapper
         return new OrderItem
         {
             BookId = bookOrder.BookId,
-            Count = bookOrder.Count
+            Count = bookOrder.Count,
+            BuyUnitPrice = bookOrder.BuyUnitPrice
         };
     }
     
@@ -86,7 +87,7 @@ public static class EntityMapper
             Id = order.Id,
             User = MapModelToRelated(order.User),
             TotalPrice = order.TotalPrice,
-            PaymentStatus = order.PaymentStatus,
+            OrderStatus = order.OrderStatus,
             Date = order.Date,
             Books = order.Books.Select(MapModelToRelated).ToList(),
             OrderItems = order.BookOrders.Where(bo => bo.OrderId == order.Id).Select(MapBookOrderToOrderItem).ToList()

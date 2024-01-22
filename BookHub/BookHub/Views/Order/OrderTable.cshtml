@@ -20,34 +20,34 @@
             </td>
             <td>@order.TotalPrice</td>
             <td>@order.Date</td>
-            @if (order.PaymentStatus == PaymentStatus.Unpaid)
+            @if (order.OrderStatus == OrderStatus.Unpaid)
             {
                 <td>
-                    <span class="badge btn-danger">@order.PaymentStatus</span>
+                    <span class="badge btn-danger">@order.OrderStatus</span>
                 </td>
             }
-            else if (order.PaymentStatus == PaymentStatus.Paid)
+            else if (order.OrderStatus == OrderStatus.Paid)
             {
                 <td>
-                    <span class="badge btn-warning">@order.PaymentStatus</span>
+                    <span class="badge btn-warning">@order.OrderStatus</span>
                 </td>
             }
-            else if (order.PaymentStatus == PaymentStatus.AwaitingShipment)
+            else if (order.OrderStatus == OrderStatus.AwaitingShipment)
             {
                 <td>
-                    <span class="badge btn-info">@order.PaymentStatus</span>
+                    <span class="badge btn-info">@order.OrderStatus</span>
                 </td>
             }
-            else if (order.PaymentStatus == PaymentStatus.Shipped)
+            else if (order.OrderStatus == OrderStatus.Shipped)
             {
                 <td>
-                    <span class="badge btn-primary">@order.PaymentStatus</span>
+                    <span class="badge btn-primary">@order.OrderStatus</span>
                 </td>
             }
-            else if (order.PaymentStatus == PaymentStatus.Delivered)
+            else if (order.OrderStatus == OrderStatus.Delivered)
             {
                 <td>
-                    <span class="badge btn-success">@order.PaymentStatus</span>
+                    <span class="badge btn-success">@order.OrderStatus</span>
                 </td>
             }
         </tr>

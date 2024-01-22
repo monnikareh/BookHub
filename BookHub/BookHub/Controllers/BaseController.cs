@@ -15,7 +15,7 @@ public class BaseController : Controller
                 { Message = error.message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-    protected bool TryParseId(out int id)
+    protected bool TryGetUserId(out int id)
     {
         var claim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (claim is null)
