@@ -9,9 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-var postgresConnectionString = configuration.GetConnectionString("PostgresConnectionString") ??
-                               throw new InvalidOperationException(
-                                   "Connection string 'PostgresConnectionString' not found.");
+var postgresConnectionString = "no conn string found";
+if (builder.Environment.IsDevelopment())
+{
+    postgresConnectionString = configuration.GetConnectionString("PostgresConnectionString") ??
+                                   throw new InvalidOperationException(
+                                       "Connection string 'PostgresConnectionString' not found.");
+}
+else
+{
+    postgresConnectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_KUBA");
+}
+
 
 builder.Services.AddDbContext<BookHubDbContext>(options =>
     options.UseNpgsql(postgresConnectionString,
