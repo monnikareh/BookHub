@@ -35,3 +35,6 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "1"
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: ProductionKube
