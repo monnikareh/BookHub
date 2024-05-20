@@ -23,6 +23,7 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
+        working-directory: ${{env.DOTNET_ROOT}}/BookHub
         run: dotnet build --configuration Release
 
       - name: dotnet publish
