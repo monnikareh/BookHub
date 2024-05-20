@@ -35,8 +35,8 @@ jobs:
         with:
           files: '${{env.DOTNET_ROOT}}/myapp/appsettings.json'
         env:
-          ConnectionStrings.PostgresConnectionString: ${{ secrets.POSTGRESCONNECTIONSTRING }}
-          JWT.Secret: ${{ env.JWTSECRET }}
+          ConnectionStrings.PostgresConnectionString: ${{ env.PG }}
+          JWT.Secret: ${{ env.JWT }}
 
       - name: Cat appsettings
         run: cat ${{env.DOTNET_ROOT}}/myapp/appsettings.json
