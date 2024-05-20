@@ -18,7 +18,7 @@ if (builder.Environment.IsDevelopment())
 }
 else
 {
-    postgresConnectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_KUBA");
+    postgresConnectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AZURE");
 }
 
 
