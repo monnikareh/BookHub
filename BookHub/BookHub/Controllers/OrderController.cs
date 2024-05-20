@@ -1,9 +1,6 @@
-using System.Security.Claims;
 using BookHub.Models;
 using BusinessLayer.Services;
-using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 

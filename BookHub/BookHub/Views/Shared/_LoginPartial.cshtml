@@ -2,7 +2,6 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@using System.Security.Claims
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))

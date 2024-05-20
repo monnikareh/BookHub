@@ -1,6 +1,8 @@
 using BusinessLayer.Errors;
 using BusinessLayer.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Packaging;
 
 namespace BusinessLayer.Services;
@@ -8,8 +10,6 @@ namespace BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
 using Mapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 public class BookService : IBookService
 {
@@ -91,7 +91,7 @@ public class BookService : IBookService
             return new BookView(result.Select(EntityMapper.MapBookToBookDetail),
                 paginationSettings.PageNumber, pageCount);
         }
-        var result2 = await books.ToListAsync(); 
+        var result2 = await books.ToListAsync();
         return new BookView(result2.Select(EntityMapper.MapBookToBookDetail),
                 1, 1);
 
@@ -131,7 +131,7 @@ public class BookService : IBookService
         {
             return ErrorMessages.AuthorsEmpty();
         }
-        
+
         if (bookCreate.Genres.IsNullOrEmpty())
         {
             return ErrorMessages.GenresEmpty();
@@ -296,7 +296,7 @@ public class BookService : IBookService
     {
         return (_context.Books?.Any(e => e.Id == id)).GetValueOrDefault();
     }
-    
+
 
     private void FixOverallRating()
     {
@@ -307,5 +307,5 @@ public class BookService : IBookService
         }
         _context.SaveChanges();
     }
-    
+
 }

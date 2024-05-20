@@ -1,10 +1,8 @@
-using System.Security.Claims;
 using BusinessLayer.Errors;
 using BusinessLayer.Models;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static System.Int32;
 
 namespace BookHub.Controllers;
 
