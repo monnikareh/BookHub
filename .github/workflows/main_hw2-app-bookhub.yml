@@ -30,6 +30,14 @@ jobs:
         working-directory: ./BookHub
         run: dotnet publish BookHub -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '${{env.DOTNET_ROOT}}/myapp/appsettings.Production.json'
+        env:
+          ConnectionStrings.PostgresConnectionString: ${{ secrets.POSTGRESCONNECTIONSTRING }}
+          JWT.Secret: ${{ env.JWTSECRET }}
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
@@ -46,14 +54,6 @@ jobs:
       id-token: write #This is required for requesting the JWT
 
     steps:
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: '${{env.DOTNET_ROOT}}/myapp/appsettings.Production.json'
-        env:
-          ConnectionStrings.PostgresConnectionString: ${{ secrets.POSTGRESCONNECTIONSTRING }}
-          JWT.Secret: ${{ env.JWTSECRET }}
-
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
