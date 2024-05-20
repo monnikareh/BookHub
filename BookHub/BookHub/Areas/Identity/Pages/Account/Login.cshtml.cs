@@ -112,6 +112,7 @@ namespace BookHub.Areas.Identity.Pages.Account
                            await _userManager.FindByNameAsync(Input.UsernameOrEmail);
                 if (user == null)
                 {
+                    ModelState.AddModelError(string.Empty, "User does not exist.");
                     return Page();
                 }
 
