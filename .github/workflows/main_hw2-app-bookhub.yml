@@ -38,6 +38,12 @@ jobs:
           ConnectionStrings.PostgresConnectionString: ${{ secrets.POSTGRESCONNECTIONSTRING }}
           JWT.Secret: ${{ env.JWTSECRET }}
 
+      - name: Cat appsettings
+        run: cat ${{env.DOTNET_ROOT}}/myapp/appsettings.json
+
+      - name: Echo con string
+        run: echo ${{ secrets.POSTGRESCONNECTIONSTRING }}
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
