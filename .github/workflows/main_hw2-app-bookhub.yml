@@ -6,7 +6,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - hw2-app-bookhub
 on:
   push:
     branches:
-      - main
+      - pa200-azure
   workflow_dispatch:
 
 jobs:
