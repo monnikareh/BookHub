@@ -30,14 +30,15 @@ else if (builder.Environment.IsEnvironment("ProductionAzure"))
         // Call managed identities for Azure resources endpoint.
         var sqlServerTokenProvider = new DefaultAzureCredential();
         accessToken = (await sqlServerTokenProvider.GetTokenAsync(
-            new Azure.Core.TokenRequestContext(scopes: new string[] { "https://hw2-db-pg.postgres.database.azure.com/.default" }) { })).Token;
-
+            new Azure.Core.TokenRequestContext(scopes: ["https://ossrdbms-aad.database.windows.net/.default"]))).Token;
     }
     catch (Exception e)
     {
-        Console.Out.WriteLine("{0} \n\n{1}", e.Message, e.InnerException != null ? e.InnerException.Message : "Acquire token failed");
-        System.Environment.Exit(1);
+        Console.Out.WriteLine("{0} \n\n{1}", e.Message,
+            e.InnerException != null ? e.InnerException.Message : "Acquire token failed");
+        Environment.Exit(1);
     }
+
     // postgresConnectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AZURE");
     postgresConnectionString = String.Format(
         "Server={0}; User Id={1}; Database={2}; Port={3}; Password={4}; SSLMode=Prefer",
