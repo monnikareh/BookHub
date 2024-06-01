@@ -1,4 +1,3 @@
-using Azure.Identity;
 using BusinessLayer.Services;
 using DataAccessLayer;
 using DataAccessLayer.Entities;
@@ -20,32 +19,7 @@ if (builder.Environment.IsEnvironment("ProductionKube"))
 }
 else if (builder.Environment.IsEnvironment("ProductionAzure"))
 {
-    Console.Out.WriteLine("Getting access token from Azure AD...");
-
-    // Azure AD resource ID for Azure Database for PostgreSQL Flexible Server is https://server-name.database.windows.net/
-    string accessToken = null;
-
-    try
-    {
-        // Call managed identities for Azure resources endpoint.
-        var sqlServerTokenProvider = new DefaultAzureCredential();
-        accessToken = (await sqlServerTokenProvider.GetTokenAsync(
-            new Azure.Core.TokenRequestContext(scopes: new string[] { "https://hw2-db-pg.postgres.database.azure.com/.default" }) { })).Token;
-
-    }
-    catch (Exception e)
-    {
-        Console.Out.WriteLine("{0} \n\n{1}", e.Message, e.InnerException != null ? e.InnerException.Message : "Acquire token failed");
-        System.Environment.Exit(1);
-    }
-    // postgresConnectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AZURE");
-    postgresConnectionString = String.Format(
-        "Server={0}; User Id={1}; Database={2}; Port={3}; Password={4}; SSLMode=Prefer",
-        "hw2-db-pg.postgres.database.azure.com",
-        "postgres",
-        "bookhub",
-        5432,
-        accessToken);
+    postgresConnectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_AZURE");
 }
 else
 {
